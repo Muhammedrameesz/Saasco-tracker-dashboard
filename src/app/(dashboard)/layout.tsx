@@ -18,8 +18,7 @@ export default function RootLayout({
         <SidebarProvider>
           <div className="w-64">
             <AppSidebar />
-                      <SidebarTrigger className="  md:hidden" />
-
+            <SidebarTrigger className="  md:hidden" />
           </div>
         </SidebarProvider>
         <main className="p-4 flex-1">{children}</main>
