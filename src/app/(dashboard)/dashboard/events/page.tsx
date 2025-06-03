@@ -9,9 +9,8 @@ export const metadata: Metadata = {
 };
 
 export default function page() {
-
   return (
-    <main className=" ">
+    <main>
       <PageTitle
         title="Events"
         breadcrumbs={[
