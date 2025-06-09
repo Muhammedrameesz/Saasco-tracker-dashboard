@@ -5,20 +5,48 @@ import { useUserStore } from "@/store/store";
 import { Loader } from "lucide-react";
 
 export default function WithProtectedRoute(Component: React.FC) {
-  
   return function ProtectedRoute() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const user = useUserStore((state) => state.user);
     const router = useRouter();
 
     useEffect(() => {
-      if (!user?.isLoading && !user?._id) {
-        router.push("/signin");
+      const token = user.token || localStorage.getItem("token");
+
+      if (!user._id && token) {
+        // Try verifying user again
+        fetch(
+          "/api/v1/admin/verify-admin",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+              credentials: "include",
+          }
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            if (data?.data?._id) {
+              useUserStore.getState().setUser({
+                isLoading: false,
+                _id: data.data._id,
+                name: data.data.name,
+                email: data.data.email,
+                phone: data.data.phone,
+                role: data.data.role,
+                token: token,
+              });
+            } else {
+              router.push("/signin");
+            }
+          })
+          .catch(() => router.push("/signin"))
+          .finally(() => setIsLoading(false));
       } else {
         setIsLoading(false);
       }
-    }, [user.isLoading, user._id]);
-    
+    }, [user._id]);
 
     const Loading = () => {
       return (

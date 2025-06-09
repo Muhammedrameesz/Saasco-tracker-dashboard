@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserStore, userType } from "@/store/store";
 import usePersistStore from "@/hooks/usePersistStore";
-import { useRouter } from "next/navigation";
+import { useRouter} from "next/navigation";
 import { toast } from "sonner";
 
 export function UserAuthForm({
@@ -18,40 +18,66 @@ export function UserAuthForm({
   const user = usePersistStore(useUserStore, (state) => state.user);
 
   const router = useRouter();
-
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
 
     const formData = new FormData(event.currentTarget as HTMLFormElement);
-
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      const res = await fetch(
+        "/api/v1/admin/admin-login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
-    // Check if login is admin (mock logic)
-    const isAdminLogin =
-      email === "admin@example.com" && password === "admin123";
+      const data = await res.json();
 
-    const userData: userType = {
-      isLoading: false,
-      _id: isAdminLogin ? "admin123" : "dummy-id",
-      name: isAdminLogin ? "Admin User" : "Dummy User",
-      email: email,
-      role: isAdminLogin ? "admin" : "user", // set role dynamically
-      token: "dummy-token",
-    };
+      if (!res.ok) {
+        toast.error(data?.message || "Login failed");
+        setIsLoading(false);
+        return;
+      }
 
-    // Update store manually
-    useUserStore.setState({ user: userData });
+      // ✅ Step 2: Verify admin with credentials
+      const verifyRes = await fetch(
+        "/api/v1/admin/verify-admin",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        }
+      );
+      console.log("Login response:", data);
 
-    toast.success(`Sign in successful as ${userData.role} (simulated)`);
-
-    setIsLoading(false);
-
-    router.push("/dashboard");
+      const verifyData = await verifyRes.json();
+      if (verifyRes.ok) {
+        useUserStore.getState().setUser({
+          isLoading: false,
+          _id: verifyData.data._id,
+          name: verifyData.data.name,
+          email: verifyData.data.email,
+          phone: verifyData.data.phone,
+          role: verifyData.data.role,
+          token: "", // no token, cookie handles auth
+        });
+        // Continue to dashboard
+        router.push("/dashboard");
+      } else {
+        toast.error("Admin verification failed");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   if (user === undefined) {

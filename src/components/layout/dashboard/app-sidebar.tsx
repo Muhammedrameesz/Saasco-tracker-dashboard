@@ -55,22 +55,20 @@ const adminItems = [
 ];
 
 export function AppSidebar() {
-  const user = usePersistStore(useUserStore, (state) => state.user);
+ const user = usePersistStore(useUserStore, (state) => state.user);
 
-  console.log("user--->");
-  console.log(user);
+  console.log("user--->", user);
 
-  type SidebarItem = {
-    title: string;
-    url: string;
-    icon: LucideIcon;
-  };
+  if (!user) {
+    return <div>Loading user...</div>; // Or a spinner or null
+  }
 
-  let items: SidebarItem[] = [];
+  let items = [];
 
-  if (user?.role === "admin") {
+  if (user?.role?.toLowerCase() === "admin") {
     items = adminItems;
   }
+
   console.log("User role:", user?.role);
   console.log("Items:", items);
   return (
@@ -90,7 +88,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>{/* Application */}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item: SidebarItem) => (
+        {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={item.url}>

@@ -13,45 +13,28 @@ export interface UserType {
 }
 
 interface States {
-  user: UserType ;
+  user: UserType;
 }
 
 interface Actions {
-  setUser: (user: UserType ) => void;
+  setUser: (user: UserType) => void;
   logout: () => void;
 }
 
-const initialUserState: UserType  = {
-  isLoading: true,
-  _id: null,
+const initialUserState: UserType = {
+  isLoading: false,
+  _id: "",
   name: "",
   email: "",
   role: "",
   token: "",
 };
 
-const getInitialUserState = (): UserType  => {
-  const ISSERVER = typeof window === "undefined";
-
-  let storedState = null;
-  if (!ISSERVER) {
-    storedState = localStorage.getItem("user-state");
-  }
-
-  if (!storedState) {
-    return {
-      ...initialUserState,
-      isLoading: false,
-    };
-  }
-  return initialUserState;
-};
-
 export const useUserStore = create(
   persist<States & Actions>(
     (set) => ({
-      user: getInitialUserState(),
-      setUser: (user: UserType ) =>
+      user: initialUserState,
+      setUser: (user: UserType) =>
         set({
           user: {
             ...user,

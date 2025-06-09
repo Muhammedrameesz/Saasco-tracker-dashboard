@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,7 +38,7 @@ function Navbar() {
           <DropdownMenuTrigger>
             <div className=" flex gap-2 justify-end items-center px-4 py-2 rounded-lg ">
               <Avatar className=" border">
-                <AvatarImage src="/assets/sanvira.png" />
+                {/* <AvatarImage src="/assets/sanvira.png" /> */}
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
               <div className=" text-left">

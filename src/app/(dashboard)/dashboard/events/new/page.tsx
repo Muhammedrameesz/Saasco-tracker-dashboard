@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEventStore } from "@/store/useEventStore";
+import { useUserStore } from "@/store/store";
 import {
   FileUploader,
   FileInput,
@@ -33,6 +34,11 @@ export default function NewEventPage() {
   const [ata, setAta] = useState("");
   const [eta, setEta] = useState("");
   const [driverName, setDriverName] = useState("");
+  const [eventName, setEventName] = useState("");
+  const [contactPersonNumber, setContactPersonNumber] = useState("");
+  const [driverEmail, setDriverEmail] = useState("");
+  const [driverPhone, setDriverPhone] = useState("");
+  const [driverRole, setDriverRole] = useState("");
 
   const dropZoneConfig = {
     maxFiles: 1,
@@ -51,32 +57,85 @@ export default function NewEventPage() {
     return diffDays <= 7;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const user = useUserStore((state) => state.user);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user || !user._id) {
+      alert("Please login first.");
+      return;
+    }
 
-    // Optional: validate if file is added
+    // Basic validations
+    if (!eventDate || !eventTime || !eventName || !contactPersonNumber) {
+      alert("Please fill all required fields");
+      return;
+    }
 
-    const eventData = {
-      place: eventPlace,
-      location: eventLocation,
-      date: eventDate,
-      time: eventTime,
-      pincode,
-      area,
-      city,
-      description,
-      image: files?.[0],
-      jobRole,
-      client,
-      ata,
-      eta,
-      ...(isWithinOneWeek() && { driverName }),
-    };
+    const locRegex = /^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/;
+    if (!locRegex.test(eventLocation)) {
+      alert("Enter location as 'latitude,longitude' (e.g., 10.12345,76.54321)");
+      return;
+    }
 
-    console.log("Submitted Event:", eventData);
+    if (!/^\d{10}$/.test(contactPersonNumber)) {
+      alert("Enter a valid 10-digit contact number");
+      return;
+    }
 
-    addEvent(eventData);
-    router.push("/dashboard/events");
+    const formData = new FormData();
+    formData.append("eventPlace", eventPlace);
+    formData.append("eventName", eventName);
+    formData.append("location", eventLocation);
+    formData.append("date", eventDate);
+    formData.append("time", eventTime);
+    formData.append("pincode", pincode);
+    formData.append("area", area);
+    formData.append("city", city);
+    formData.append("description", description);
+    if (files && files[0]) {
+      formData.append("files", files[0]);
+    }
+    formData.append("jobRole", jobRole);
+    formData.append("clientName", client);
+    formData.append("contactPersonNumber", contactPersonNumber);
+    formData.append("ata", ata);
+    formData.append("eta", eta);
+    formData.append("pickUpPersonEmail", driverEmail);
+    formData.append("pickUpPersonPhone", driverPhone);
+    formData.append("pickUpPersonRole", driverRole);
+
+    if (isWithinOneWeek()) {
+      formData.append("driverName", driverName);
+    }
+
+    console.log("Submitting FormData:");
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
+    try {
+      const response = await fetch("/api/v1/event/add-events", {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Raw error response:", errorText);
+        alert("Error adding event");
+        return;
+      }
+
+      const result = await response.json();
+      console.log("Event added", result);
+      addEvent(result);
+      router.push("/dashboard/events");
+    } catch (err) {
+      console.error("Failed to add event", err);
+      alert("Failed to add event, please try again later.");
+    }
   };
 
   return (
@@ -173,6 +232,55 @@ export default function NewEventPage() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
+            />
+          </div>
+          <div className="md:col-span-2">
+            <Label htmlFor="eventName">Event Name</Label>
+            <Input
+              id="eventName"
+              placeholder="Enter event name"
+              value={eventName}
+              onChange={(e) => setEventName(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <Label htmlFor="contactPersonNumber">Contact Person Number</Label>
+            <Input
+              id="contactPersonNumber"
+              placeholder="Enter contact number"
+              value={contactPersonNumber}
+              onChange={(e) => setContactPersonNumber(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <Label htmlFor="driverEmail">Driver Email</Label>
+            <Input
+              id="driverEmail"
+              placeholder="Enter driver email"
+              value={driverEmail}
+              onChange={(e) => setDriverEmail(e.target.value)}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <Label htmlFor="driverPhone">Driver Phone</Label>
+            <Input
+              id="driverPhone"
+              placeholder="Enter driver phone"
+              value={driverPhone}
+              onChange={(e) => setDriverPhone(e.target.value)}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <Label htmlFor="driverRole">Driver Role</Label>
+            <Input
+              id="driverRole"
+              placeholder="Enter driver role"
+              value={driverRole}
+              onChange={(e) => setDriverRole(e.target.value)}
             />
           </div>
         </div>
