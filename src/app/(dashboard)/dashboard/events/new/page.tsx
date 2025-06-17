@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,6 +24,7 @@ import Image from "next/image";
 import { useEventStore } from "@/store/useEventStore";
 import { toast } from "sonner";
 import Loading from "@/components/loading/loading";
+// import Maps from "@/components/Map/Map";
 
 const eventSchema = z.object({
   eventPlace: z.string().min(1, "Event place is required"),
@@ -54,6 +55,7 @@ type EventFormData = z.infer<typeof eventSchema>;
 
 export default function NewEventPage() {
   const { addEvent, loading } = useEventStore();
+  //  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   const {
     register,
@@ -79,7 +81,7 @@ export default function NewEventPage() {
   
 
     const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
+      Object.entries(data).forEach(([key, value]) => {
       if (key === "image") {
         formData.append("image", (value as File[])[0]);
       } else {
@@ -91,6 +93,7 @@ export default function NewEventPage() {
       for (const [key, value] of formData.entries()) {
         console.log(`${key}:`, value);
       }
+      console.log(location)
       await addEvent(formData);
     } catch (err) {
       console.error("Failed to add event", err);
@@ -208,6 +211,11 @@ export default function NewEventPage() {
                   <p className="text-xs text-gray-400">PNG or JPG up to 4MB</p>
                 </div>
               </FileInput>
+                  
+
+         
+
+
               <FileUploaderContent>
                 {files.map((file, i) => (
                   <FileUploaderItem key={i} index={i} className="relative">
@@ -227,6 +235,9 @@ export default function NewEventPage() {
                 {errors.image.message}
               </p>
             )}
+
+
+                    {/* <Maps onLocationSelect={(loc) => setLocation(loc)} /> */}
           </div>
         </div>
 

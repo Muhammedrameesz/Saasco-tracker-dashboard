@@ -1,13 +1,15 @@
-import ResetPasswordView from "./ResetPasswordView";
+// File: app/(auth)/resetPassword/[resetToken]/page.tsx
 
-interface ResetPasswordPageProps {
-  params: {
-    resetToken: string;
-  };
-}
+// import ResetPasswordView from "./ResetPasswordView";
 
-export default async function ResetPasswordPage({ params }: ResetPasswordPageProps) {
-  const { resetToken } = await params;
+// export default function ResetPasswordPage({params,}: {params: { resetToken: string };
+// }) {
+//   return <ResetPasswordView resetToken={params.resetToken} />;
+// }
 
-  return <ResetPasswordView resetToken={resetToken} />;
+
+export default function page() {
+  return (
+    <div>page</div>
+  )
 }
