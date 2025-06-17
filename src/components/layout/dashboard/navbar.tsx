@@ -14,7 +14,6 @@ import { useUserStore } from "@/store/store";
 import usePersistStore from "@/hooks/usePersistStore";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import WithProtectedRoute from "@/lib/withProtectedRoute";
 import Link from "next/link";
 
 function Navbar() {
@@ -29,7 +28,7 @@ function Navbar() {
   };
 
   return (
-    <div className=" bg-white top-0 left-0 w-full h-16 border-b  flex justify-between items-center px-5">
+    <div className=" sticky  z-40 bg-white top-0 left-0 w-full h-16 border-b border-gray-300 flex justify-between items-center px-5">
       <div className="pl-0 md:pl-64 ">
         <h1 className="text-2xl font-bold text-gray-950 ">Dashboard</h1>
       </div>
@@ -71,4 +70,4 @@ function Navbar() {
   );
 }
 
-export default WithProtectedRoute(Navbar);
+export default Navbar;

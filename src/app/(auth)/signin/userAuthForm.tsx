@@ -5,126 +5,145 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useUserStore, userType } from "@/store/store";
-import usePersistStore from "@/hooks/usePersistStore";
-import { useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { adminAuthStore } from "@/store/adminAuthStore";
+import ForgotEmailView from "./ForgotEmailView";
+import { FaLock } from "react-icons/fa";
+import { Eye, EyeOff } from "lucide-react";
+import { motion } from "framer-motion";
 
 export function UserAuthForm({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  const [isLoading, setIsLoading] = React.useState(false);
-  const user = usePersistStore(useUserStore, (state) => state.user);
+  const { updateData, submitData, loading } = adminAuthStore();
+  const [openEmailView, setOpenEmailView] = React.useState<boolean>(false);
+  const [showPassword, setShowPassword] = React.useState<boolean>(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev: boolean) => !prev);
+  };
 
   const router = useRouter();
+
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
-    setIsLoading(true);
-
     const formData = new FormData(event.currentTarget as HTMLFormElement);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
     try {
-      const res = await fetch(
-        "/api/v1/admin/admin-login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ email, password }),
-        }
-      );
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data?.message || "Login failed");
-        setIsLoading(false);
-        return;
-      }
-
-      // ✅ Step 2: Verify admin with credentials
-      const verifyRes = await fetch(
-        "/api/v1/admin/verify-admin",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-        }
-      );
-      console.log("Login response:", data);
-
-      const verifyData = await verifyRes.json();
-      if (verifyRes.ok) {
-        useUserStore.getState().setUser({
-          isLoading: false,
-          _id: verifyData.data._id,
-          name: verifyData.data.name,
-          email: verifyData.data.email,
-          phone: verifyData.data.phone,
-          role: verifyData.data.role,
-          token: "", // no token, cookie handles auth
-        });
-        // Continue to dashboard
+      updateData({ email, password });
+      const success = await submitData();
+      if (success) {
         router.push("/dashboard");
-      } else {
-        toast.error("Admin verification failed");
+        console.log("navigating dashboard");
       }
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Something went wrong");
-    } finally {
-      setIsLoading(false);
     }
   }
 
-  if (user === undefined) {
-    return <div>Loading...</div>;
-  }
+  const handleClick = async () => {
+    setOpenEmailView(true);
+  };
 
   return (
-    <div className={cn("grid gap-6", className)} {...props}>
-      <form onSubmit={onSubmit}>
-        <div className="grid gap-2">
-          <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="email">
-              Email
-            </Label>
-            <Input
-              id="email"
-              placeholder="name@example.com"
-              type="email"
-              name="email"
-              autoCapitalize="none"
-              autoComplete="email"
-              autoCorrect="off"
-              disabled={isLoading}
-              required
-            />
+    <main className="w-full max-w-lg mx-auto font-Lexend px-6 py-10 bg-white rounded-2xl shadow-xl dark:bg-gray-900 transition-all">
+      {openEmailView ? (
+        <ForgotEmailView setOpenEmailView={setOpenEmailView} />
+      ) : (
+        <motion.section
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className={cn("grid gap-6", className)} {...props}>
+            <div className="flex flex-col space-y-2 text-center mb-5">
+              <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+                Sign-in to Your Account
+              </h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Enter your email and password to sign in.
+              </p>
+            </div>
+
+            <form onSubmit={onSubmit} className="grid gap-4">
+              <div className="grid gap-1">
+                <Label
+                  className="text-sm font-medium text-gray-700"
+                  htmlFor="email"
+                >
+                  Email Address
+                </Label>
+                <Input
+                  id="email"
+                  placeholder="name@example.com"
+                  type="email"
+                  name="email"
+                  autoCapitalize="none"
+                  autoComplete="email"
+                  autoCorrect="off"
+                  disabled={loading}
+                  required
+                />
+              </div>
+              <div className="grid gap-1 relative">
+                <Label
+                  htmlFor="password"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Password
+                </Label>
+                <Input
+                  id="password"
+                  placeholder="*******"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  disabled={loading}
+                  required
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute right-3 top-8 text-gray-500 hover:text-gray-800 transition-colors"
+                  tabIndex={-1}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full mt-2 flex items-center justify-center gap-2 cursor-pointer text-white bg-gray-900 hover:bg-gray-800 transition-colors duration-200"
+              >
+                {loading && <Icons.spinner className="h-4 w-4 animate-spin" />}
+                Sign In
+              </Button>
+
+              <div className="flex justify-end">
+                <button
+                  onClick={handleClick}
+                  type="button"
+                  className="inline-flex items-center cursor-pointer gap-2 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors duration-300 group"
+                  title="Recover your password"
+                >
+                  <FaLock className="text-blue-500 group-hover:rotate-12 transition-transform duration-300" />
+                  Forgot Password?
+                </button>
+              </div>
+            </form>
           </div>
-          <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="password">
-              Password
-            </Label>
-            <Input
-              id="password"
-              placeholder="*******"
-              type="password"
-              name="password"
-              disabled={isLoading}
-              required
-            />
-          </div>
-          <Button disabled={isLoading}>
-            {isLoading && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            Sign In
-          </Button>
-        </div>
-      </form>
-    </div>
+        </motion.section>
+      )}
+    </main>
   );
 }

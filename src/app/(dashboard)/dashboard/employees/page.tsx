@@ -3,15 +3,16 @@ import { Metadata } from "next";
 import PageTitle from "@/components/pageTitle/pageTitle";
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import EmployeeTable from "./employeesTable";
 export const metadata: Metadata = {
   title: "Employees",
 };
 
+import EmployeesView from "@/components/Employees/VewEmployees";
+
 export default function page() {
 
   return (
-    <main className=" ">
+    <main className="">
       <PageTitle
         title="Employees"
         breadcrumbs={[
@@ -21,14 +22,15 @@ export default function page() {
       >
         <Link
           href="/dashboard/employees/new"
-          className="border flex items-center cursor-pointer py-2 gap-2  px-4 font-semibold rounded-md w-full  text-xs hover:bg-blue-900 hover:text-white hover:shadow-lg active:scale-95 transition-all bg-blue-950 text-white"
+          className="shadow-md flex items-center cursor-pointer py-2 gap-2  px-4 font-semibold rounded-md w-full  text-xs
+          hover:shadow-lg active:scale-95 transition-all duration-300 bg-white text-gray-800"
         >
           <Plus size={16} />
           Add Employees
         </Link>
       </PageTitle>
       <div className=" container mx-auto ">
-        <EmployeeTable />
+       <EmployeesView/>
       </div>
     </main>
   );

@@ -1,17 +1,20 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Spinner from "@/components/loading/Spinner";
 
 export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/signin");
-  }, []);
+    router.push("/dashboard");
+  },);
 
   return (
     <main className="">
-      <h1>Dashboard</h1>
+      <h1>
+        <Spinner/>
+      </h1>
     </main>
   );
 }

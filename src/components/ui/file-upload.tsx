@@ -22,6 +22,7 @@ import {
 import { toast } from "sonner";
 import { Trash2 as RemoveIcon } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import Image from "next/image";
 
 type DirectionOptions = "rtl" | "ltr" | undefined;
 
@@ -306,7 +307,7 @@ export const FileUploaderItem = forwardRef<
       <button
         type="button"
         className={cn(
-          "absolute",
+          "absolute text-red-500",
           direction === "rtl" ? "top-1 left-1" : "top-1 right-1"
         )}
         onClick={() => removeFileFromSet(index)}
@@ -333,11 +334,13 @@ export const FilePreview = () => {
             key={i}
             className="relative w-32 h-32 border rounded-md overflow-hidden shadow-sm"
           >
-            <img
+            <Image
+             width={32}
+              height={32}
               src={preview}
               alt={`preview-${i}`}
               className="object-cover w-full h-full"
-              onLoad={() => URL.revokeObjectURL(preview)} // cleanup
+              onLoad={() => URL.revokeObjectURL(preview)} 
             />
             <span className="absolute bottom-0 left-0 bg-black/60 text-white text-xs px-1 w-full text-center truncate">
               {file.name}

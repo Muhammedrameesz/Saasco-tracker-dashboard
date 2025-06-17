@@ -13,7 +13,7 @@ type PageTitleProps = {
 
 export default function PageTitle(props: Readonly<PageTitleProps>) {
   return (
-    <div className=" flex justify-between items-center flex-wrap  w-full  px-3">
+    <div className=" flex justify-between items-center flex-wrap  w-full  px-8">
       <div>
         <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
           {props.title}

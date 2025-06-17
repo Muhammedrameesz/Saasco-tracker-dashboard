@@ -1,68 +1,46 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
+import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useUserStore } from "@/store/store";
+import { adminAuthStore } from "@/store/adminAuthStore";
 import { Loader } from "lucide-react";
 
-export default function WithProtectedRoute(Component: React.FC) {
-  return function ProtectedRoute() {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const user = useUserStore((state) => state.user);
-    const router = useRouter();
+interface ProtectedRouteProps {
+  children: ReactNode;
+  redirectPath?: string;
+}
 
-    useEffect(() => {
-      const token = user.token || localStorage.getItem("token");
+const ProtectedRoute = ({
+  children,
+  redirectPath = "/signin",
+}: ProtectedRouteProps) => {
+  const { isAuth, validateToken, loading, initialized } = adminAuthStore();
+  const router = useRouter();
 
-      if (!user._id && token) {
-        // Try verifying user again
-        fetch(
-          "/api/v1/admin/verify-admin",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-              credentials: "include",
-          }
-        )
-          .then((res) => res.json())
-          .then((data) => {
-            if (data?.data?._id) {
-              useUserStore.getState().setUser({
-                isLoading: false,
-                _id: data.data._id,
-                name: data.data.name,
-                email: data.data.email,
-                phone: data.data.phone,
-                role: data.data.role,
-                token: token,
-              });
-            } else {
-              router.push("/signin");
-            }
-          })
-          .catch(() => router.push("/signin"))
-          .finally(() => setIsLoading(false));
-      } else {
-        setIsLoading(false);
-      }
-    }, [user._id]);
+  useEffect(() => {
+    if (!initialized) {
+      validateToken(true); 
+    }
+  }, [initialized, validateToken]);
 
-    const Loading = () => {
-      return (
-        <div className=" absolute top-0 right-0 w-full h-full z-50 ">
+  useEffect(() => {
+    if (initialized && !loading && !isAuth) {
+      router.push(redirectPath);
+    }
+  }, [initialized, loading, isAuth, router, redirectPath]);
+
+  if (!initialized || loading) {
+    return (
+      <div className=" absolute top-0 right-0 w-full h-full z-50 ">
           <div className="bg-black/20 backdrop-blur z-50  w-full h-full  flex flex-col justify-center items-center">
             <Loader size="25" className=" animate-spin" />
             <h1 className="">Loading...</h1>
           </div>
         </div>
-      );
-    };
+    );
+  }
 
-    if (isLoading) {
-      return <Loading />;
-    }
+  return <>{children}</>;
+};
 
-    return <Component />;
-  };
-}
+export default ProtectedRoute;
