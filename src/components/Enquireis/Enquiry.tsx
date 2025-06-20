@@ -244,7 +244,7 @@ export default function Enquiry() {
 
   return (
     <div className="w-full min-h-screen p-4 sm:p-6 bg-gradient-to-br from-gray-50 via-white to-gray-100 font-sans">
-      <section className="bg-white py-8 px-6 md:px-12 border-b border-gray-200 rounded-xl shadow-sm mb-10 overflow-hidden relative font-Lexend">
+      <section className="bg-white py-8 px-6 md:px-12 border-b border-gray-200 rounded-xl shadow-sm mb-10 overflow-hidden relative ">
         
         {/* <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-orange-400 to-[#cb301b] rounded-full opacity-20"></div> */}
         <div className="absolute -bottom-12 -left-12 w-40 h-40 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full opacity-10"></div>

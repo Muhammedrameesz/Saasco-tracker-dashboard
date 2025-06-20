@@ -24,7 +24,7 @@ export default function AdminActionsPanel() {
     {
       label: "View Enquiries",
       icon: <FaEnvelopeOpenText />,
-      link: "/dashboard/enquiries",
+      link: "/dashboard/enquiry",
     },
   ];
 

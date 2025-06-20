@@ -28,13 +28,17 @@ import { EmployeeI } from "@/Types/EmployeeTypes";
 import Image from "next/image";
 import { useEmployeeStore } from "@/store/useEmployeeStore";
 import { FaEdit } from "react-icons/fa";
+import { useFlaggedEmployeeStore } from "@/store/flaggedUserStore";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email"),
-  phone: z.string().min(10, "Invalid phone"),
+   phone: z
+  .string()
+  .min(10, "Phone must be at least 10 digits")
+  .regex(/^\d+$/, "Phone must contain only numbers"),
   role: z.string(),
-  LicenceImage: z.any().optional(), // for file
+  LicenceImage: z.any().optional(), 
   LicenceValidityDate: z.date().optional(),
 });
 
@@ -47,7 +51,7 @@ export default function EditEmployeeDialog({
 }) {
   const [open, setOpen] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
+  const {fetchBannedAndRejected} = useFlaggedEmployeeStore()
   const updateEmployee = useEmployeeStore((state) => state.updateEmployee);
   const loading = useEmployeeStore((state) => state.loading);
 
@@ -96,7 +100,7 @@ export default function EditEmployeeDialog({
 
     formData.append("name", data.name);
     formData.append("email", data.email);
-    formData.append("phone", data.phone);
+    formData.append("phone", data.phone.toString());
     formData.append("role", data.role);
 
     if (data.LicenceValidityDate) {
@@ -112,6 +116,7 @@ export default function EditEmployeeDialog({
 
     try {
       await updateEmployee(employee._id, formData);
+      await fetchBannedAndRejected()
       setOpen(false);
     } catch (error) {
       console.error(error);
@@ -136,7 +141,9 @@ export default function EditEmployeeDialog({
           title="Edit Employees"
           className="bg-indigo-500/20 hover:bg-indigo-500/40 text-white w-fit duration-200 cursor-pointer"
         >
-          <span className="text-indigo-500">< FaEdit /></span>
+          <span className="text-indigo-500">
+            <FaEdit />
+          </span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md bg-white rounded-xl shadow-lg p-6 max-h-[90%] overflow-y-auto">
@@ -214,6 +221,12 @@ export default function EditEmployeeDialog({
                       selected={watch("LicenceValidityDate")}
                       onSelect={(date) => setValue("LicenceValidityDate", date)}
                       initialFocus
+                      captionLayout="dropdown"
+                      fromYear={new Date().getFullYear()}
+                      toYear={new Date().getFullYear() + 50}
+                      disabled={(date) =>
+                        date < new Date(new Date().setHours(0, 0, 0, 0))
+                      }
                     />
                   </PopoverContent>
                 </Popover>
@@ -223,12 +236,11 @@ export default function EditEmployeeDialog({
 
           <DialogFooter>
             <Button
-            disabled={loading}
+              disabled={loading}
               type="submit"
               className="bg-[#cb301b] hover:bg-orange-600 text-white"
             >
-                {loading?"Please waite..":"Update"}
-              
+              {loading ? "Please waite.." : "Update"}
             </Button>
           </DialogFooter>
         </form>

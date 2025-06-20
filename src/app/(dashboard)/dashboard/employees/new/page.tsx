@@ -46,15 +46,36 @@ import clsx from "clsx";
 
 const roles = ["Driver", "Manager", "Event-Organiser"];
 
-const formSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  email: z.string().email("Invalid email"),
-  phone: z.string().min(10, "Phone is required"),
-  role: z.string(),
-  // password: z.string().min(6, "Password must be at least 6 characters"),
-  LicenceImage: z.string().optional(),
-  LicenceValidityDate: z.date().optional(),
-});
+const formSchema = z
+  .object({
+    name: z.string().min(2, "Name is required"),
+    email: z.string().email("Invalid email"),
+    phone: z
+      .string()
+      .min(10, "Phone must be at least 10 digits")
+      .regex(/^\d+$/, "Phone must contain only numbers"),
+    role: z.string(),
+    LicenceImage: z.string().optional(),
+    LicenceValidityDate: z.date().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.role === "Driver") {
+      if (!data.LicenceImage) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Licence image is required for Drivers.",
+          path: ["LicenceImage"],
+        });
+      }
+      if (!data.LicenceValidityDate) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Licence validity date is required for Drivers.",
+          path: ["LicenceValidityDate"],
+        });
+      }
+    }
+  });
 
 type FormData = z.infer<typeof formSchema>;
 
@@ -71,6 +92,7 @@ export default function AddEmployeeForm() {
       phone: "",
       role: "Driver",
       LicenceImage: "",
+      LicenceValidityDate: undefined,
     },
   });
 
@@ -84,9 +106,8 @@ export default function AddEmployeeForm() {
 
       formData.append("name", data.name);
       formData.append("email", data.email);
-      formData.append("phone", data.phone);
+      formData.append("phone", data.phone.toString());
       formData.append("role", data.role);
-      // formData.append("password", data.password);
 
       if (date) {
         formData.append("LicenceValidityDate", date.toISOString());
@@ -231,7 +252,6 @@ export default function AddEmployeeForm() {
             />
           </div>
 
-          {/* Show license fields if role is Driver */}
           {watchRole === "Driver" && (
             <motion.div
               className="flex flex-col  gap-6 mt-6 bg-green-50 p-6 rounded-lg"
@@ -276,30 +296,50 @@ export default function AddEmployeeForm() {
                 )}
               />
 
-              <div className="flex-1">
-                <FormLabel className="text-sm font-medium text-green-700">
-                  <FaCalendarAlt className="inline mr-2 text-green-600" />{" "}
-                  Licence Validity
-                </FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start text-left font-normal mt-2"
-                    >
-                      {date ? format(date, "PPP") : <span>Select date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={(d) => setDate(d)}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
+              <FormField
+                control={form.control}
+                name="LicenceValidityDate"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel className="text-sm font-medium text-green-700">
+                      <FaCalendarAlt className="inline mr-2 text-green-600" />{" "}
+                      Licence Validity
+                    </FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start text-left font-normal mt-2"
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Select date</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={(d) => {
+                            setDate(d);
+                            field.onChange(d);
+                          }}
+                          initialFocus
+                          captionLayout="dropdown"
+                          fromYear={new Date().getFullYear()}
+                          toYear={new Date().getFullYear() + 50}
+                          disabled={(date) =>
+                            date < new Date(new Date().setHours(0, 0, 0, 0))
+                          }
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </motion.div>
           )}
 

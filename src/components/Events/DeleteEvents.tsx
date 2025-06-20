@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useEventStore } from "@/store/useEventStore";
 import { FaTrash } from "react-icons/fa";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface DeleteConfirmationDialogProps {
   eventId: string;
@@ -23,10 +24,14 @@ export default function DeleteConfirmationDialog({
 }: DeleteConfirmationDialogProps) {
   const [open, setOpen] = useState(false);
   const { deleteEvent,loading } = useEventStore();
+  const router = useRouter()
 
   const handleDelete = async () => {
    const result = await deleteEvent(eventId);
-   if(result)setOpen(false);
+   if(result){
+    setOpen(false)
+    router.replace("/dashboard/events")
+  };
   };
 
   return (

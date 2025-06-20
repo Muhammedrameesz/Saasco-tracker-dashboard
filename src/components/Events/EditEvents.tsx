@@ -27,16 +27,15 @@ import { useEventStore } from "@/store/useEventStore";
 import { toast } from "sonner";
 
 const eventSchema = z.object({
-  eventPlace: z.string(),
-  location: z.string(),
+  
   date: z.date(),
   time: z.string(),
-  pincode: z.string(),
-  area: z.string(),
-  city: z.string(),
   eventName: z.string(),
   clientName: z.string(),
-  contactPersonNumber: z.string(),
+  contactPersonNumber: z
+    .string()
+    .min(10, "Phone must be at least 10 digits")
+    .regex(/^\d+$/, "Phone must contain only numbers"),
   description: z.string(),
   // pickUpPerson: z.string().optional(),
   image: z.instanceof(File).optional(),
@@ -49,18 +48,16 @@ type EditEventsProps = {
 };
 
 export default function EditEvents({ eventId }: EditEventsProps) {
-  const { events, updateEvent, loading, fetchPickUpPerson } =
-    useEventStore();
+  const { events, updateEvent, loading, fetchPickUpPerson } = useEventStore();
   const event = events.find((e) => e._id === eventId);
 
- useEffect(() => {
-  const fetchOnce = async () => {
-    await fetchPickUpPerson();
-  };
+  useEffect(() => {
+    const fetchOnce = async () => {
+      await fetchPickUpPerson();
+    };
 
-  fetchOnce();
-}, [fetchPickUpPerson]);
-
+    fetchOnce();
+  }, [fetchPickUpPerson]);
 
   const {
     register,
@@ -80,18 +77,13 @@ export default function EditEvents({ eventId }: EditEventsProps) {
   useEffect(() => {
     if (event) {
       reset({
-        eventPlace: event.eventPlace,
-        location: event.location,
+       
         date: new Date(event.date),
         time: event.time,
-        pincode: event.pincode,
-        area: event.area,
-        city: event.city,
         eventName: event.eventName,
         clientName: event.clientName,
         contactPersonNumber: event.contactPersonNumber,
         description: event.description,
-      
       });
     }
   }, [event, reset]);
@@ -117,16 +109,11 @@ export default function EditEvents({ eventId }: EditEventsProps) {
     }
   };
 
-  if (!event) return null;
+  // if (!event) return null;
 
   type FieldName = keyof EventFormData;
 
   const fields: [FieldName, string][] = [
-    ["eventPlace", "Event Place"],
-    ["location", "Location"],
-    ["pincode", "Pincode"],
-    ["area", "Area"],
-    ["city", "City"],
     ["eventName", "Event Name"],
     ["clientName", "Client Name"],
     ["contactPersonNumber", "Contact Number"],
@@ -162,7 +149,6 @@ export default function EditEvents({ eventId }: EditEventsProps) {
               </div>
             ))}
 
-           
             <div>
               <Label>Date</Label>
               <Controller
@@ -185,6 +171,12 @@ export default function EditEvents({ eventId }: EditEventsProps) {
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
+                        captionLayout="dropdown"
+                        fromYear={new Date().getFullYear()}
+                        toYear={new Date().getFullYear() + 50}
+                        disabled={(date) =>
+                          date < new Date(new Date().setHours(0, 0, 0, 0))
+                        }
                       />
                     </PopoverContent>
                   </Popover>
@@ -195,7 +187,6 @@ export default function EditEvents({ eventId }: EditEventsProps) {
               )}
             </div>
 
-           
             <div>
               <Label htmlFor="time">Time</Label>
               <Input type="time" id="time" {...register("time")} />
@@ -205,7 +196,6 @@ export default function EditEvents({ eventId }: EditEventsProps) {
             </div>
           </section>
 
-       
           <div>
             <Label>Image</Label>
             <Input
@@ -237,7 +227,6 @@ export default function EditEvents({ eventId }: EditEventsProps) {
             )}
           </div>
 
-       
           <Button
             disabled={loading}
             type="submit"

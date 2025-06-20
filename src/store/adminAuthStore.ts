@@ -1,4 +1,4 @@
-// adminAuthStore.ts
+"use client";
 import { create } from "zustand";
 import axios, { AxiosError } from "axios";
 import { localUrl } from "@/api/const";
@@ -37,6 +37,7 @@ type Store = {
   setAdminDatas: (data: adminData) => void;
   updateAdminProfile: (data: adminData) => Promise<void>;
   changePassword: (data: adminPasswordData) => Promise<boolean>;
+  logout: () => Promise<boolean>;
 };
 
 export const adminAuthStore = create<Store>((set, get) => ({
@@ -186,26 +187,60 @@ export const adminAuthStore = create<Store>((set, get) => ({
     }
   },
 
-  changePassword: async ({ currentPassword, newPassword }: adminPasswordData) => {
-  try {
-    const res = await axios.put(
-      `${localUrl}/admin/change-password/${get().adminDatas.id}`,
-      { currentPassword, newPassword },
-      { withCredentials: true }
-    );
+  changePassword: async ({
+    currentPassword,
+    newPassword,
+  }: adminPasswordData) => {
+    try {
+      const res = await axios.put(
+        `${localUrl}/admin/change-password/${get().adminDatas.id}`,
+        { currentPassword, newPassword },
+        { withCredentials: true }
+      );
 
-    if (res.status === 200) {
-      toast.success(res.data.message || "Password updated successfully");
-      return true;
+      if (res.status === 200) {
+        toast.success(res.data.message || "Password updated successfully");
+        return true;
+      }
+      return false;
+    } catch (error) {
+      const err = error as AxiosError<{ message?: string }>;
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to update password";
+      toast.error(errorMessage);
+      return false;
     }
-    return false;
-  } catch (error) {
-    const err = error as AxiosError<{ message?: string }>;
-    const errorMessage =
-      err.response?.data?.message || err.message || "Failed to update password";
-    toast.error(errorMessage);
-    return false
-  }
-}
+  },
 
+  logout: async () => {
+    try {
+      const response = await axios.post(
+        `${localUrl}/admin/logout`,
+        {},
+        { withCredentials: true }
+      );
+      toast.success(response.data?.message || "Logged out successfully");
+      set({
+        adminDatas: {
+          id: "",
+          email: "",
+          name: "",
+          phone: "",
+          role: "",
+          create: "",
+        },
+        isAuth:false,
+        initialized:false
+      });
+      return true;
+    } catch (error) {
+      const err = error as AxiosError<{ message?: string }>;
+      const message =
+        err.response?.data?.message || err.message || "Logout failed";
+      toast.error(`Error: ${message}`);
+      return false;
+    }
+  },
 }));

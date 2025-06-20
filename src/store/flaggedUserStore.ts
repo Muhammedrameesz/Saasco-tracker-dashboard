@@ -1,50 +1,48 @@
 import { create } from "zustand";
 import axios, { AxiosError } from "axios";
-import { localUrl } from "@/api/const";
-import { EmployeeI } from "@/Types/EmployeeTypes";
 import { toast } from "sonner";
+import { EmployeeI } from "@/Types/EmployeeTypes";
+import { localUrl } from "@/api/const";
+
+const LIMIT = 10;
 
 interface EmployeeState {
   employees: EmployeeI[];
-  loading: boolean;
-  error: string | null;
   currentPage: number;
   totalPages: number;
   totalEmployees: number;
+  loading: boolean;
+  error: string | null;
 
-  fetchEmployees: (page?: number) => Promise<void>;
+  fetchBannedAndRejected: (page?: number) => Promise<void>;
   deleteEmployee: (id: string) => Promise<void>;
-  updateEmployee: (id: string, updateData: FormData) => Promise<void>;
-  getEmployeeById: (id: string) => EmployeeI | undefined;
-  setEmployees: (employees: EmployeeI[]) => void;
-  updateEmployeeStatus: (
-    id: string,
-    status: "approved" | "rejected"
-  ) => Promise<void>;
+  updateEmployeeStatus: (id: string, status: string) => Promise<void>;
   updateEmployeeActiveStatus: (id: string, isActive: boolean) => Promise<void>;
-  getPendingEmployees: () => Promise<void>;
-  pendingEmployees: EmployeeI[];
+  updateEmployee: (
+    id: string,
+    updatedData: Partial<EmployeeI>
+  ) => Promise<void>;
 }
 
-const LIMIT = 6;
-
-export const useEmployeeStore = create<EmployeeState>((set, get) => ({
+export const useFlaggedEmployeeStore = create<EmployeeState>((set, get) => ({
   employees: [],
-  loading: false,
-  error: null,
   currentPage: 1,
   totalPages: 1,
   totalEmployees: 0,
-  pendingEmployees: [],
+  loading: false,
+  error: null,
 
-  fetchEmployees: async (page = 1) => {
+  fetchBannedAndRejected: async (page = 1) => {
     set({ loading: true, error: null });
 
     try {
-      const res = await axios.get(`${localUrl}/employees/get-employees`, {
-        params: { page, limit: LIMIT },
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        `${localUrl}/employees/banned-rejected-employees`,
+        {
+          params: { page, limit: LIMIT },
+          withCredentials: true,
+        }
+      );
 
       const { data, currentPage, totalPages, totalEmployees } = res.data;
 
@@ -57,12 +55,13 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
       });
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;
-      toast.error(err.response?.data?.message || "Failed to fetch employees");
+      toast.error(
+        err.response?.data?.message || "Failed to fetch flagged employees"
+      );
       set({ loading: false, error: err.message });
     }
   },
 
-  // ✅ Delete employee and update store
   deleteEmployee: async (id: string) => {
     set({ loading: true, error: null });
     try {
@@ -95,23 +94,15 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
       );
 
       if (res.status === 200) {
-        await get().getPendingEmployees();
-        set(
-          (state): Partial<EmployeeState> => ({
-            employees: state.employees.map((emp) =>
-              emp._id === id
-                ? {
-                    ...emp,
-                    status: status as "approved" | "rejected" | "pending",
-                  }
-                : emp
-            ),
-          })
+        const updatedEmployees = get().employees.map((emp) =>
+          emp._id === id
+            ? { ...emp, status: status as "approved" | "pending" | "rejected" }
+            : emp
         );
-
-        toast.success(`Employee status ${status}`);
+        set({ employees: updatedEmployees });
+        toast.success(`Employee status updated to ${status}`);
       } else {
-        toast.error("Unexpected response from server");
+        toast.error("Unexpected server response");
       }
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;
@@ -122,7 +113,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     }
   },
 
-  updateEmployeeActiveStatus: async (id, isActive) => {
+  updateEmployeeActiveStatus: async (id: string, isActive: boolean) => {
     set({ loading: true, error: null });
     try {
       const res = await axios.patch(
@@ -135,7 +126,6 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         const updatedEmployees = get().employees.map((emp) =>
           emp._id === id ? { ...emp, isActive } : emp
         );
-
         set({ employees: updatedEmployees, loading: false });
         toast.success(
           `Employee has been ${isActive ? "re-activated" : "banned"}`
@@ -150,16 +140,14 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     }
   },
 
-  updateEmployee: async (id, updatedData) => {
+  updateEmployee: async (id: string, updatedData: Partial<EmployeeI>) => {
     set({ loading: true });
 
     try {
       const res = await axios.put(
         `${localUrl}/employees/edit-employees/${id}`,
         updatedData,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
 
       if (res.status === 200) {
@@ -175,31 +163,6 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
       toast.error(error.response?.data?.message || "Failed to update employee");
-      set({ loading: false });
-    }
-  },
-
-  getEmployeeById: (id: string) =>
-    get().employees.find((emp) => emp._id === id),
-
-  setEmployees: (employees: EmployeeI[]) => set({ employees }),
-
-  getPendingEmployees: async () => {
-    set({ loading: true, error: null });
-    try {
-      const res = await axios.get(`${localUrl}/employees/pendingEmployees`, {
-        withCredentials: true,
-      });
-
-      if (res.status === 200) {
-        set({ pendingEmployees: res.data.data });
-      }
-    } catch (err) {
-      const error = err as AxiosError<{ message?: string }>;
-      const errorMessage =
-        error?.response?.data?.message || "Failed to fetch pending employees";
-      set({ error: errorMessage });
-    } finally {
       set({ loading: false });
     }
   },

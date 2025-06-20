@@ -1,8 +1,7 @@
 "use client";
 
-import { BiSolidHelpCircle } from "react-icons/bi";
 import { IoSettingsSharp } from "react-icons/io5";
-import { FaUserCircle } from "react-icons/fa";
+import { FaFlag, FaQq, FaUserCircle } from "react-icons/fa";
 import { LuPackage } from "react-icons/lu";
 import { FaUsers } from "react-icons/fa6";
 import { FiLogOut } from "react-icons/fi";
@@ -21,13 +20,12 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 
-import { useUserStore } from "@/store/store";
-import usePersistStore from "@/hooks/usePersistStore";
 import { usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
 import { IconType } from "react-icons/lib";
 import Link from "next/link";
 import Image from "next/image";
+import { adminAuthStore } from "@/store/adminAuthStore";
 
 interface adminItemsI {
   title: string;
@@ -58,9 +56,16 @@ const adminItems: adminItemsI[] = [
   {
     title: "Enquiry",
     url: "/dashboard/enquiry",
-    icon: BiSolidHelpCircle,
+    icon: FaQq,
     section: "Management",
   },
+  {
+    title: "Flagged Users",
+    url: "/dashboard/flaggedUsers",
+    icon: FaFlag,
+    section: "Management",
+  },
+
   {
     title: "Settings",
     url: "/dashboard/settings",
@@ -76,18 +81,16 @@ const adminItems: adminItemsI[] = [
 ];
 
 export function AppSidebar() {
-  const user = usePersistStore(useUserStore, (state) => state.user);
-  const logout = useUserStore((state) => state.logout);
+  const { logout } = adminAuthStore();
   const pathname = usePathname();
   const router = useRouter();
 
-  if (!user) return <div>Loading user...</div>;
-
-  const handleLogout = () => {
-    logout();
-    router.push("/login");
+  const handleLogout = async () => {
+    const result = await logout();
+    if (result) {
+      router.replace("/signin");
+    }
   };
-
 
   const groupedItems = adminItems.reduce<Record<string, adminItemsI[]>>(
     (acc, item) => {
@@ -104,13 +107,15 @@ export function AppSidebar() {
         <SidebarHeader className="py-4 px-6 border-b border-gray-200">
           <span className="sr-only">Sidebar navigation</span>
 
-          <div className="relative w-full h-24 overflow-hidden rounded-md ">
+          <div className="relative w-full h-24 overflow-hidden rounded-md  ">
             <Image
               src="/logo/color.png"
               alt="Logo"
               fill
               quality={100}
               style={{ objectFit: "contain" }}
+              className="cursor-pointer"
+              onClick={() => router.push("/dashboard")}
             />
           </div>
         </SidebarHeader>

@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -23,44 +22,71 @@ import {
 import Image from "next/image";
 import { useEventStore } from "@/store/useEventStore";
 import { toast } from "sonner";
-import Loading from "@/components/loading/loading";
 // import Maps from "@/components/Map/Map";
+import { useState } from "react";
+import LoadingButton from "@/components/loading/LoadingButton";
+import AddressAutocomplete from "@/components/Map/AddressAutoComplete";
+import { FaMapMarkerAlt } from "react-icons/fa";
+import { motion } from "framer-motion";
+import Distance from "./Distance";
+
+export type SelectedLocation = {
+  lat: number;
+  lng: number;
+  address: string;
+  components?: google.maps.GeocoderAddressComponent[];
+};
 
 const eventSchema = z.object({
-  eventPlace: z.string().min(1, "Event place is required"),
-  location: z
-    .string()
-    .regex(
-      /^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/,
-      "Location must be in 'lat,lng' format"
-    ),
   date: z.string().min(1, "Date is required"),
   time: z.string().min(1, "Time is required"),
-  pincode: z.string().min(1, "Pincode is required"),
-  area: z.string().min(1, "Area is required"),
-  city: z.string().min(1, "City is required"),
+  // pincode: z.string().min(1, "Pincode is required"),
   eventName: z.string().min(1, "Event name is required"),
   clientName: z.string().min(1, "Client name is required"),
   contactPersonNumber: z
     .string()
-    .regex(/^\d{10}$/, "Enter a valid 10-digit number"),
+    .min(10, "Phone must be at least 10 digits")
+    .regex(/^\d+$/, "Phone must contain only numbers"),
   description: z.string().min(1, "Description is required"),
   image: z.custom<File[]>(
     (files) => files && files.length > 0,
     "Image is required"
   ),
+  startLocation: z.object({
+    lat: z.number(),
+    lng: z.number(),
+    address: z.string(),
+  }),
+  destinationLocation: z.object({
+    lat: z.number(),
+    lng: z.number(),
+    address: z.string(),
+  }),
 });
 
 type EventFormData = z.infer<typeof eventSchema>;
 
 export default function NewEventPage() {
   const { addEvent, loading } = useEventStore();
-  //  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [formKey, setFormKey] = useState<number>(0);
+
+  const [startLocation, setStartLocation] = useState<null | {
+    lat: number;
+    lng: number;
+    address: string;
+  }>(null);
+
+  const [destinationLocation, setDestinationLocation] = useState<null | {
+    lat: number;
+    lng: number;
+    address: string;
+  }>(null);
 
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
     watch,
   } = useForm<EventFormData>({
@@ -71,17 +97,15 @@ export default function NewEventPage() {
 
   const dropZoneConfig = {
     maxFiles: 1,
-    maxSize: 4 * 1024 * 1024,
+    maxSize: 10 * 1024 * 1024,
     accept: {
       "image/*": [".jpg", ".jpeg", ".png"],
     },
   };
 
   const onSubmit = async (data: EventFormData) => {
-  
-
     const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
+    Object.entries(data).forEach(([key, value]) => {
       if (key === "image") {
         formData.append("image", (value as File[])[0]);
       } else {
@@ -89,12 +113,21 @@ export default function NewEventPage() {
       }
     });
 
+    if (startLocation) {
+      formData.set("startLocation", JSON.stringify(startLocation));
+    }
+    if (destinationLocation) {
+      formData.set("destinationLocation", JSON.stringify(destinationLocation));
+    }
+
     try {
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
+      const res = await addEvent(formData);
+      if (res) {
+        reset();
+        setStartLocation(null);
+        setDestinationLocation(null);
+        setFormKey((prev) => prev + 2);
       }
-      console.log(location)
-      await addEvent(formData);
     } catch (err) {
       console.error("Failed to add event", err);
       toast.error("Failed to add event. Please try again.");
@@ -143,34 +176,37 @@ export default function NewEventPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {(
             [
-              ["eventPlace", "Event Place"],
-              ["location", "Event Location"],
+              ["eventName", "Event Name"],
+              ["clientName", "Client Name"],
               ["date", "Event Date", "date"],
               ["time", "Event Time", "time"],
-              ["pincode", "Pincode"],
-              ["area", "Area"],
-              ["city", "City"],
-              ["eventName", "Event Name"],
+              // ["pincode", "Pincode"],
               ["contactPersonNumber", "Contact Person Number"],
-              ["clientName", "Client Name"],
             ] as const
-          ).map(([name, label, type]) => (
-            <div key={name}>
-              <Label htmlFor={name}>{label}</Label>
-              <Input
-                id={name}
-                type={type || "text"}
-                placeholder={`Enter ${label.toLowerCase()}`}
-                {...register(name)}
-                className="mt-1"
-              />
-              {errors[name] && (
-                <p className="text-sm text-red-600 mt-1">
-                  {errors[name]?.message as string}
-                </p>
-              )}
-            </div>
-          ))}
+          ).map(([name, label, type = "text", isReadOnly = false]) => {
+            // Get today's date in yyyy-mm-dd format
+            const today = new Date().toISOString().split("T")[0];
+
+            return (
+              <div key={name}>
+                <Label htmlFor={name}>{label}</Label>
+                <Input
+                  id={name}
+                  type={type}
+                  readOnly={isReadOnly}
+                  placeholder={`Enter ${label.toLowerCase()}`}
+                  {...register(name)}
+                  className="mt-1"
+                  {...(type === "date" ? { min: today } : {})}
+                />
+                {errors[name] && (
+                  <p className="text-sm text-red-600 mt-1">
+                    {errors[name]?.message as string}
+                  </p>
+                )}
+              </div>
+            );
+          })}
 
           <div className="md:col-span-2">
             <Label htmlFor="description">Description</Label>
@@ -208,13 +244,9 @@ export default function NewEventPage() {
                     </span>{" "}
                     or drag and drop
                   </p>
-                  <p className="text-xs text-gray-400">PNG or JPG up to 4MB</p>
+                  <p className="text-xs text-gray-400">PNG or JPG up to 10MB</p>
                 </div>
               </FileInput>
-                  
-
-         
-
 
               <FileUploaderContent>
                 {files.map((file, i) => (
@@ -236,18 +268,102 @@ export default function NewEventPage() {
               </p>
             )}
 
+            {/* Location */}
+            <div className="grid md:grid-cols-2 gap-10 mt-10">
+              {/* Start Location */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.5 }}
+                className="   "
+              >
+                {errors.startLocation && (
+                  <p className="text-sm text-red-600 mt-1">
+                    {errors.startLocation.message}
+                  </p>
+                )}
+                <div className="flex items-center gap-2 mb-2">
+                  <FaMapMarkerAlt className="text-green-600" />
+                  <Label className="text-lg font-semibold text-gray-700">
+                    Start Location
+                  </Label>
+                </div>
 
-                    {/* <Maps onLocationSelect={(loc) => setLocation(loc)} /> */}
+                <div key={formKey}>
+                  <AddressAutocomplete
+                    value={startLocation?.address ?? ""}
+                    onSelect={(location: SelectedLocation) => {
+                      setStartLocation(location);
+                      setValue("startLocation", location, {
+                        shouldValidate: true,
+                      });
+                    }}
+                  />
+                </div>
+              </motion.div>
+
+              {/* Destination Location */}
+
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+                className=""
+              >
+                {errors.destinationLocation && (
+                  <p className="text-sm text-red-600 mt-1">
+                    {errors.destinationLocation.message}
+                  </p>
+                )}
+                <div className="flex items-center gap-2 mb-2">
+                  <FaMapMarkerAlt className="text-red-600" />
+                  <Label className="text-lg font-semibold text-gray-700">
+                    Destination Location
+                  </Label>
+                </div>
+
+                <div key={formKey + 1}>
+                  <AddressAutocomplete
+                    value={destinationLocation?.address ?? ""}
+                    onSelect={(location: SelectedLocation) => {
+                      setDestinationLocation(location);
+                      setValue("destinationLocation", location, {
+                        shouldValidate: true,
+                      });
+                    }}
+                  />
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Distance Calculation */}
+            {startLocation?.lat !== undefined &&
+              startLocation?.lng !== undefined &&
+              destinationLocation?.lat !== undefined &&
+              destinationLocation?.lng !== undefined && (
+                <Distance
+                  startLocation={{
+                    lat: startLocation.lat,
+                    lng: startLocation.lng,
+                    address: "Start Address",
+                  }}
+                  destinationLocation={{
+                    lat: destinationLocation.lat,
+                    lng: destinationLocation.lng,
+                    address: "Destination Address",
+                  }}
+                />
+              )}
           </div>
         </div>
 
-        <div className="pt-4">
+        <div className="pt-4 mt-20">
           {loading ? (
-            <Loading />
+            <LoadingButton />
           ) : (
             <Button
               type="submit"
-              className="w-full md:w-auto bg-[#ff6600] hover:bg-orange-600 text-white px-6 py-2 rounded-lg shadow-md transition"
+              className=" cursor-pointer w-full md:w-auto rounded-xl px-6 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-semibold shadow-lg hover:brightness-110 active:scale-95 transition-all duration-300"
             >
               Submit Event
             </Button>

@@ -11,7 +11,7 @@ const currentYear = new Date().getFullYear();
 
 export default function AuthenticationPage() {
   return (
-    <div className="container relative font-Lexend min-h-screen grid lg:grid-cols-2 items-center bg-white dark:bg-black text-gray-900 dark:text-white px-4 lg:px-0 overflow-hidden">
+    <div className="container relative  min-h-screen grid lg:grid-cols-2 items-center bg-white dark:bg-black text-gray-900 dark:text-white px-4 lg:px-0 overflow-hidden">
       <div
         className="relative hidden h-full lg:flex flex-col justify-between p-10 text-white bg-cover bg-center"
         style={{

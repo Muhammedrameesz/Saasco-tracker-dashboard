@@ -14,7 +14,7 @@ type SearchBarProps = {
 export default function SearchBar({
   searchValue,
   onChange,
-  placeholder = "Search by event, client, status...",
+  placeholder = "Search by name, email, phone...",
   className,
 }: SearchBarProps) {
   return (
@@ -31,7 +31,7 @@ export default function SearchBar({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className={cn(
-          "flex-1 text-sm bg-transparent border-none ring-0 focus:ring-0 active:border-0 focus:outline-none text-gray-700 placeholder:text-orange-400",
+          "flex-1 text-sm bg-transparent border-none ring-0 focus:ring-0 active:border-0 focus:outline-none text-gray-700 placeholder:text-orange-400"
         )}
       />
     </div>

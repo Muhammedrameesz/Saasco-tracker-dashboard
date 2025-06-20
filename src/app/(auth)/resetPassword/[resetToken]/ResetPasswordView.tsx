@@ -67,7 +67,7 @@ export default function ResetPasswordView({ resetToken }: ResetPasswordViewProps
       initial={{ opacity: 0, x: -100 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
-      className="max-w-md w-full rounded-xl shadow-newNormal bg-white font-Lexend "
+      className="max-w-md w-full rounded-xl shadow-newNormal bg-white  "
     >
       {/* Header Section with background */}
       <div

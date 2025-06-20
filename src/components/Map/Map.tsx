@@ -51,6 +51,8 @@ export default function Maps({
   if (loadError) return <div>Error loading map</div>;
   if (!isLoaded) return <div>Loading...</div>;
 
+  
+
   return (
     <GoogleMap
       mapContainerStyle={mapContainerStyle}
@@ -59,6 +61,7 @@ export default function Maps({
       onClick={onMapClick}
     >
       <Marker position={markerPosition} />
+      
     </GoogleMap>
   );
 }

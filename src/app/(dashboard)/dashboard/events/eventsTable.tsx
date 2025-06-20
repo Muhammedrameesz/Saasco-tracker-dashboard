@@ -10,13 +10,23 @@ import Spinner from "@/components/loading/Spinner";
 import { BsCalendar2EventFill } from "react-icons/bs";
 import Link from "next/link";
 import SearchBar from "@/components/Events/SearchBar";
+import NoSearchMatch from "@/components/ui/NoSearchMatchUI";
 
 export default function EventTable() {
   const router = useRouter();
   const { fetchEvents, events, currentPage, totalPage, loading } =
     useEventStore();
 
+  const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      setSearch(searchInput.toLowerCase().trim());
+    }, 800);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchInput]);
 
   useEffect(() => {
     fetchEvents(currentPage);
@@ -28,6 +38,17 @@ export default function EventTable() {
 
   if (loading) return <Spinner />;
 
+  const filteredEvents = events.filter((event) => {
+    const lowerSearch = search.toLowerCase();
+
+    return (
+      event.eventName.toLowerCase().includes(lowerSearch) ||
+      event.status.toLowerCase().includes(lowerSearch) ||
+      event.clientName.toLowerCase().includes(lowerSearch) ||
+      event.dateStatus?.toLowerCase().includes(lowerSearch)
+    );
+  });
+
   return (
     <motion.div
       className="rounded-2xl bg-white  overflow-hidden mt-10"
@@ -37,7 +58,11 @@ export default function EventTable() {
     >
       {/* Header */}
 
-      <SearchBar className="m-5" searchValue={search} onChange={setSearch} />
+      <SearchBar
+        className="m-5"
+        searchValue={searchInput}
+        onChange={setSearchInput}
+      />
 
       <section className="flex flex-col md:flex-row items-center md:items-center justify-between w-full gap-4 px-6 py-4 bg-white  rounded-lg mt-6 mb-2">
         <div className="flex items-center gap-3">
@@ -64,163 +89,182 @@ export default function EventTable() {
         </Link>
       </section>
 
+      {filteredEvents.length === 0 ? (
+        <div>
+          <NoSearchMatch />
+        </div>
+      ) : (
+        <>
+          <div className="overflow-x-auto border-b  border-gray-300 ">
+            <table className="min-w-full table-auto divide-y divide-gray-200">
+              <thead className="bg-gradient-to-r from-orange-50 to-red-50 text-gray-800 sticky top-0 rounded-t-md">
+                <tr>
+                  {[
+                    "#",
+                    "Event",
+                    "Client",
+                    "Date Status",
+                    "Date",
+                    "Contact",
+                    "Status",
+                    "View",
+                  ].map((head) => (
+                    <th
+                      key={head}
+                      className="px-4 py-3 text-left text-sm font-bold uppercase"
+                    >
+                      {head}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-300">
+                <AnimatePresence>
+                  {filteredEvents.map((event, idx) => (
+                    <motion.tr
+                      key={event._id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3, delay: idx * 0.05 }}
+                      className={clsx(
+                        "hover:bg-gray-50 transition-colors",
+                        idx % 2 === 0 && "bg-gray-0"
+                      )}
+                    >
+                      <td className="px-4 py-3 text-gray-600">{idx + 1}</td>
+                      <td className="flex  items-center px-4 py-3 space-x-3">
+                        <div className="w-10 h-10 rounded-full overflow-hidden border border-orange-500">
+                          <Image
+                            src={event.image || "/placeholder.png"}
+                            alt={event.eventName}
+                            width={40}
+                            height={40}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+
+                        <span className="font-medium text-gray-800">
+                          {event.eventName}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-gray-700">
+                        {event.clientName}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={clsx(
+                            " rounded-full px-3 py-1 text-xs font-semibold text-center  ",
+                            {
+                              "bg-red-100 text-red-600":
+                                event.dateStatus === "past",
+                              "bg-yellow-100 text-yellow-700":
+                                event.dateStatus === "current",
+                              "bg-green-100 text-green-600":
+                                event.dateStatus === "upcoming",
+                            }
+                          )}
+                        >
+                          {event.dateStatus
+                            ? event.dateStatus.charAt(0).toUpperCase() +
+                              event.dateStatus.slice(1)
+                            : "Unknown"}
+                        </span>
+                      </td>
+
+                      <td className="px-4 py-3 text-gray-700">
+                        {new Date(event.date).toLocaleDateString("en-GB", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </td>
+
+                      <td className="px-4 py-3 text-gray-700">
+                        {event.contactPersonNumber}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={clsx(
+                            "px-3 py-1 text-xs font-semibold rounded-full text-white",
+                            {
+                              "bg-green-500": event.status === "active",
+                              "bg-red-500": event.status === "cancelled",
+                              "bg-blue-500": event.status === "ongoing",
+                              "bg-yellow-500": event.status === "delayed",
+                              "bg-purple-500": event.status === "delivered",
+                            }
+                          )}
+                        >
+                          {event.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-red-600 flex space-x-4 justify-center">
+                        <Eye
+                          size={18}
+                          className="hover:text-blue-600 cursor-pointer"
+                          onClick={() =>
+                            router.push(`/dashboard/events/view/${event._id}`)
+                          }
+                        />
+                      </td>
+                    </motion.tr>
+                  ))}
+                </AnimatePresence>
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          <div className="flex justify-center items-center p-4 space-x-2 bg-white mt-5">
+            <button
+              type="button"
+              disabled={currentPage === 1}
+              className="px-4 py-2 rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed bg-orange-600 text-white hover:bg-orange-700"
+              onClick={() => {
+                if (currentPage !== null && currentPage > 1)
+                  handlePageChange(currentPage - 1);
+              }}
+            >
+              Previous
+            </button>
+
+            {Array.from({ length: totalPage || 0 }).map((_, i) => (
+              <button
+                type="button"
+                key={i}
+                className={clsx(
+                  "px-4 py-2 rounded-lg font-medium text-sm",
+                  currentPage === i + 1
+                    ? "bg-orange-600 text-white"
+                    : "bg-white text-gray-800 hover:bg-orange-100"
+                )}
+                onClick={() => handlePageChange(i + 1)}
+              >
+                {i + 1}
+              </button>
+            ))}
+
+            <button
+              type="button"
+              disabled={currentPage === totalPage}
+              className="px-4 py-2 rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed bg-orange-600 text-white hover:bg-orange-700"
+              onClick={() => {
+                if (
+                  currentPage !== null &&
+                  totalPage !== null &&
+                  currentPage < totalPage
+                )
+                  handlePageChange(currentPage + 1);
+              }}
+            >
+              Next
+            </button>
+          </div>
+        </>
+      )}
+
       {/* Table */}
-      <div className="overflow-x-auto border-b  border-gray-300 font-Lexend">
-        <table className="min-w-full table-auto divide-y divide-gray-200">
-          <thead className="bg-gradient-to-r from-orange-50 to-red-50 text-gray-800 sticky top-0 rounded-t-md">
-            <tr>
-              {[
-                "#",
-                "Event",
-                "Client",
-                "Date",
-                "Location",
-                "Contact",
-                "Status",
-                "View",
-              ].map((head) => (
-                <th
-                  key={head}
-                  className="px-4 py-3 text-left text-sm font-bold uppercase"
-                >
-                  {head}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-300">
-            <AnimatePresence>
-              {events.map((event, idx) => (
-                <motion.tr
-                  key={event._id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3, delay: idx * 0.05 }}
-                  className={clsx(
-                    "hover:bg-gray-50 transition-colors",
-                    idx % 2 === 0 && "bg-gray-0"
-                  )}
-                >
-                  <td className="px-4 py-3 text-gray-600">{idx + 1}</td>
-                  <td className="flex  items-center px-4 py-3 space-x-3">
-                    <div className="w-10 h-10 rounded-full overflow-hidden border border-orange-500">
-                      <Image
-                        src={event.image || "/placeholder.png"}
-                        alt={event.eventName}
-                        width={40}
-                        height={40}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-
-                    <span className="font-medium text-gray-800">
-                      {event.eventName}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-gray-700">
-                    {event.clientName}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={clsx(
-                        " rounded-full px-3 py-1 text-xs font-semibold text-center  ",
-                        {
-                          "bg-red-100 text-red-600":
-                            event.dateStatus === "past",
-                          "bg-yellow-100 text-yellow-700":
-                            event.dateStatus === "current",
-                          "bg-green-100 text-green-600":
-                            event.dateStatus === "upcoming",
-                        }
-                      )}
-                    >
-                      {event.dateStatus
-                        ? event.dateStatus.charAt(0).toUpperCase() +
-                          event.dateStatus.slice(1)
-                        : "Unknown"}
-                    </span>
-                  </td>
-
-                  <td className="px-4 py-3 text-gray-700">{event.location}</td>
-                  <td className="px-4 py-3 text-gray-700">
-                    {event.contactPersonNumber}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={clsx(
-                        "px-3 py-1 text-xs font-semibold rounded-full text-white",
-                        {
-                          "bg-green-500": event.status === "active",
-                          "bg-red-500": event.status === "cancelled",
-                          "bg-blue-500": event.status === "ongoing",
-                          "bg-yellow-500": event.status === "delayed",
-                          "bg-purple-500": event.status === "delivered",
-                        }
-                      )}
-                    >
-                      {event.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-red-600 flex space-x-4 justify-center">
-                    <Eye
-                      size={18}
-                      className="hover:text-blue-600 cursor-pointer"
-                      onClick={() =>
-                        router.push(`/dashboard/events/view/${event._id}`)
-                      }
-                    />
-                  </td>
-                </motion.tr>
-              ))}
-            </AnimatePresence>
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pagination */}
-      <div className="flex justify-center items-center p-4 space-x-2 bg-white mt-5">
-        <button
-          disabled={currentPage === 1}
-          className="px-4 py-2 rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed bg-orange-600 text-white hover:bg-orange-700"
-          onClick={() => {
-            if (currentPage !== null && currentPage > 1)
-              handlePageChange(currentPage - 1);
-          }}
-        >
-          Previous
-        </button>
-
-        {Array.from({ length: totalPage || 0 }).map((_, i) => (
-          <button
-            key={i}
-            className={clsx(
-              "px-4 py-2 rounded-lg font-medium text-sm",
-              currentPage === i + 1
-                ? "bg-orange-600 text-white"
-                : "bg-white text-gray-800 hover:bg-orange-100"
-            )}
-            onClick={() => handlePageChange(i + 1)}
-          >
-            {i + 1}
-          </button>
-        ))}
-
-        <button
-          disabled={currentPage === totalPage}
-          className="px-4 py-2 rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed bg-orange-600 text-white hover:bg-orange-700"
-          onClick={() => {
-            if (
-              currentPage !== null &&
-              totalPage !== null &&
-              currentPage < totalPage
-            )
-              handlePageChange(currentPage + 1);
-          }}
-        >
-          Next
-        </button>
-      </div>
     </motion.div>
   );
 }

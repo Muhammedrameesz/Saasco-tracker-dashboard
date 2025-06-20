@@ -65,7 +65,7 @@ export default function ForgotEmailView({
       initial={{ opacity: 0, x: -100 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
-      className=" w-full rounded-xl  bg-white font-Lexend"
+      className=" w-full rounded-xl  bg-white "
     >
       <div className="mb-12 text-center space-y-3">
         <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">

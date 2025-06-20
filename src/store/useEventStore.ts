@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 import { IEvent, PickUpPersonI } from "@/Types/EventTypes";
 import { localUrl } from "@/api/const";
 import { toast } from "sonner";
+import { UpdateEventStatusPayload } from "@/Types/EventStatusTypes";
 
 interface IEventStore {
   events: IEvent[];
@@ -16,7 +17,7 @@ interface IEventStore {
   selectedEvent: IEvent | null;
 
   fetchEvents: (page: number | null) => Promise<void>;
-  addEvent: (event: FormData) => Promise<void>;
+  addEvent: (event: FormData) => Promise<boolean>;
   deleteEvent: (eventId: string) => Promise<boolean>;
   updateEvent: (eventId: string, updatedEvent: FormData) => Promise<void>;
   addPickUpPerson: (eventId: string, pickupPersonId: string) => Promise<void>;
@@ -25,6 +26,11 @@ interface IEventStore {
     newPickupPersonId: string
   ) => Promise<void>;
   getEventsById: (eventId: string) => Promise<void>;
+  updateEventStatus: (
+    eventId: string,
+    payload: UpdateEventStatusPayload,
+    pickUpPersonId: string | null
+  ) => Promise<boolean>;
 }
 
 export const useEventStore = create<IEventStore>((set, get) => ({
@@ -59,7 +65,6 @@ export const useEventStore = create<IEventStore>((set, get) => ({
 
   addEvent: async (event) => {
     set({ loading: true, error: null });
-
     try {
       const res = await axios.post(`${localUrl}/event/add-events`, event, {
         headers: {
@@ -71,19 +76,22 @@ export const useEventStore = create<IEventStore>((set, get) => ({
       if (res.status === 200) {
         toast.success(res.data.message || "Event added successfully");
         await get().fetchEvents(get().currentPage);
+        return true;
       }
+      return false;
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;
       const errorMessage = err.response?.data?.message || "Failed to add event";
       set({ error: errorMessage });
       toast.error(errorMessage);
+      return false;
     } finally {
       set({ loading: false });
     }
   },
 
   deleteEvent: async (eventId) => {
-    set({loading:true})
+    set({ loading: true });
     try {
       const res = await axios.delete(
         `${localUrl}/event/delete-events/${eventId}`,
@@ -104,8 +112,8 @@ export const useEventStore = create<IEventStore>((set, get) => ({
       set({ error: errorMessage });
       toast.error(errorMessage || "Failed to delete event");
       return false;
-    }finally{
-      set({loading:false})
+    } finally {
+      set({ loading: false });
     }
   },
 
@@ -201,7 +209,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
         }
       );
       toast.success("Pickup person Assigned successfully");
-      await get().fetchEvents(get().currentPage);
+      await get().getEventsById(eventId);
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;
       const message =
@@ -226,13 +234,46 @@ export const useEventStore = create<IEventStore>((set, get) => ({
       );
 
       toast.success("Pickup person updated successfully");
-      await get().fetchEvents(get().currentPage);
+      await get().getEventsById(eventId);
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;
       const message =
         err.response?.data?.message || "Failed to update pickup person";
       toast.error(message);
       set({ error: message });
+    }
+  },
+
+  updateEventStatus: async (eventId, payload, pickUpPersonId) => {
+    set({ loading: true });
+    try {
+      const res = await axios.patch(
+        `${localUrl}/event/eventsStatusUpdate`,
+        {
+          ...payload,
+          events: [eventId],
+          pickUpPersonId,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (res.status === 200) {
+        toast.success(res.data?.message || "Event status updated successfully");
+        await get().getEventsById(eventId);
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error("Error updating status:", error);
+      toast.error("Failed to update event status");
+      return false;
+    } finally {
+      set({ loading: false });
     }
   },
 }));

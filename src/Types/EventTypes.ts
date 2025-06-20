@@ -1,3 +1,15 @@
+
+export interface LocationPoint {
+  type: "Point";
+  coordinates: [number, number]; 
+  address?: string;
+}
+
+export interface LiveLocation {
+  timestamp: string; 
+  coordinates: [number, number];
+}
+
 export interface IEvent {
   _id?: string | undefined;
   eventPlace: string;
@@ -5,7 +17,7 @@ export interface IEvent {
   location: string;
   time: string;
   adminId: string;
-  status: "active" | "cancelled" | "ongoing" | "delayed" | "delivered";
+  status:"active"| "cancelled"| "shipped"| "ongoing"| "delayed"|"delivered"|"completed";
   pincode: string;
   area: string;
   city: string;
@@ -18,7 +30,10 @@ export interface IEvent {
   delayedReason?: string;
   eventMode?: "eventDeparture" | "eventReturn";
   relatedDepartureEvent?: string;
-  dateStatus?:string | null
+  dateStatus?:string | null;
+  startLocation?: LocationPoint;
+  destinationLocation?: LocationPoint;
+  liveLocationHistory?: LiveLocation[];
 }
 
 
