@@ -73,8 +73,7 @@ export const useFlaggedEmployeeStore = create<EmployeeState>((set, get) => ({
       );
 
       if (deleted.status === 200) {
-        const updated = get().employees.filter((emp) => emp._id !== id);
-        set({ employees: updated, loading: false });
+        await get().fetchBannedAndRejected(get().currentPage);
         toast.success("Employee deleted successfully");
       }
     } catch (error) {
@@ -94,12 +93,7 @@ export const useFlaggedEmployeeStore = create<EmployeeState>((set, get) => ({
       );
 
       if (res.status === 200) {
-        const updatedEmployees = get().employees.map((emp) =>
-          emp._id === id
-            ? { ...emp, status: status as "approved" | "pending" | "rejected" }
-            : emp
-        );
-        set({ employees: updatedEmployees });
+        await get().fetchBannedAndRejected(get().currentPage);
         toast.success(`Employee status updated to ${status}`);
       } else {
         toast.error("Unexpected server response");
@@ -123,10 +117,7 @@ export const useFlaggedEmployeeStore = create<EmployeeState>((set, get) => ({
       );
 
       if (res.status === 200) {
-        const updatedEmployees = get().employees.map((emp) =>
-          emp._id === id ? { ...emp, isActive } : emp
-        );
-        set({ employees: updatedEmployees, loading: false });
+        await get().fetchBannedAndRejected(get().currentPage);
         toast.success(
           `Employee has been ${isActive ? "re-activated" : "banned"}`
         );

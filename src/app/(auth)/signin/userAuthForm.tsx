@@ -51,7 +51,7 @@ export function UserAuthForm({
   };
 
   return (
-    <main className="w-full max-w-lg mx-auto  px-6 py-10 bg-white rounded-2xl shadow-xl dark:bg-gray-900 transition-all font-Lexend">
+    <main className="w-full max-w-lg mx-auto  px-6 py-10 bg-white rounded-2xl shadow-newNormal dark:bg-gray-900 transition-all font-Lexend">
       {openEmailView ? (
         <ForgotEmailView setOpenEmailView={setOpenEmailView} />
       ) : (

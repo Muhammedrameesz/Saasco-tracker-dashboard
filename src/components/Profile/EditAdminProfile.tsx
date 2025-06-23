@@ -11,24 +11,52 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { adminAuthStore } from "@/store/adminAuthStore";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { FaEdit, FaEnvelope, FaPhone, FaUser, FaUserTag } from "react-icons/fa";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 // Zod schema
-const profileSchema = z.object({
-  name: z.string().min(2, "Name is too short"),
-  email: z.string().email("Invalid email"),
-  phone: z.string().min(8, "Phone is too short"),
-  role: z.string().min(2, "Role is required"),
+export const profileSchema = z.object({
+  name: z
+    .string()
+    .min(2, "Name is too short")
+    .regex(/^[A-Za-z\s]+$/, "Name must contain only letters")
+    .refine((val) => val.trim() !== "", {
+      message: "Name cannot be empty or just spaces",
+    }),
+  email: z
+    .string()
+    .email("Email is required")
+    .refine((val) => val.trim() !== "", {
+      message: "Email cannot be empty or just spaces",
+    }),
+  phone: z
+    .string()
+    .regex(
+      /^\d{10}$/,
+      "Phone must be exactly 10 digits and contain only numbers"
+    ),
+  role: z
+    .string()
+    .min(2, "Role is required")
+    .refine((val) => val.trim() !== "", {
+      message: "Role cannot be empty or just spaces",
+    }),
 });
 
 type ProfileForm = z.infer<typeof profileSchema>;
 
 export default function EditAdminProfileDialog() {
-  const { adminDatas,updateAdminProfile } = adminAuthStore();
+  const { adminDatas, updateAdminProfile } = adminAuthStore();
   const [open, setOpen] = useState(false);
 
   const form = useForm<ProfileForm>({
@@ -41,12 +69,12 @@ export default function EditAdminProfileDialog() {
     },
   });
 
-  const { register, handleSubmit, formState } = form;
+  const { register, handleSubmit, formState, control } = form;
   const { errors, isSubmitting } = formState;
 
   const onSubmit = async (data: ProfileForm) => {
-    await updateAdminProfile(data)  
-    setOpen(false)
+    await updateAdminProfile(data);
+    setOpen(false);
   };
 
   return (
@@ -73,7 +101,9 @@ export default function EditAdminProfileDialog() {
               <FaUser /> Name
             </label>
             <Input {...register("name")} />
-            {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+            {errors.name && (
+              <p className="text-red-500 text-sm">{errors.name.message}</p>
+            )}
           </div>
 
           <div>
@@ -81,7 +111,9 @@ export default function EditAdminProfileDialog() {
               <FaEnvelope /> Email
             </label>
             <Input {...register("email")} />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
           </div>
 
           <div>
@@ -89,15 +121,35 @@ export default function EditAdminProfileDialog() {
               <FaPhone /> Phone
             </label>
             <Input {...register("phone")} />
-            {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
+            {errors.phone && (
+              <p className="text-red-500 text-sm">{errors.phone.message}</p>
+            )}
           </div>
 
           <div>
-            <label className="text-sm font-medium flex items-center gap-2 text-gray-600">
+            <label className="text-sm font-medium flex items-center gap-2 text-gray-600 mb-1">
               <FaUserTag /> Role
             </label>
-            <Input {...register("role")} />
-            {errors.role && <p className="text-red-500 text-sm">{errors.role.message}</p>}
+
+            <Controller
+              name="role"
+              control={control}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select Role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Admin">Admin</SelectItem>
+                    <SelectItem value="Super Admin">Super Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+
+            {errors.role && (
+              <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>
+            )}
           </div>
 
           <DialogFooter>

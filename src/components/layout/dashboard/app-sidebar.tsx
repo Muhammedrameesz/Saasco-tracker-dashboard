@@ -102,7 +102,7 @@ export function AppSidebar() {
   );
 
   return (
-    <Sidebar className=" z-50 bg-white border-r border-gray-200 min-h-screen shadow-md transition-all duration-300 flex flex-col justify-between">
+    <Sidebar className=" overflow-y-auto z-50 bg-white border-r border-gray-200 min-h-screen shadow-md transition-all duration-300 flex flex-col justify-between ">
       <div className="bg-white">
         <SidebarHeader className="py-4 px-6 border-b border-gray-200">
           <span className="sr-only">Sidebar navigation</span>
@@ -172,7 +172,7 @@ export function AppSidebar() {
           Logout
         </button>
 
-        <div className="absolute inset-x-0 bottom-0 px-6 py-3 border-t border-gray-200 bg-transparent">
+        <div className=" px-6 py-3 border-t border-gray-200 bg-transparent">
           <div className="text-center text-xs text-gray-500">
             &copy; {new Date().getFullYear()}{" "}
             <span className="font-medium text-gray-700">ABC Events</span>. All

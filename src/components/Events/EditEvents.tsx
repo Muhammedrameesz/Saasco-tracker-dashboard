@@ -25,31 +25,43 @@ import * as z from "zod";
 import { useEffect, useState } from "react";
 import { useEventStore } from "@/store/useEventStore";
 import { toast } from "sonner";
+import { IEvent } from "@/Types/EventTypes";
 
 const eventSchema = z.object({
-  
   date: z.date(),
   time: z.string(),
-  eventName: z.string(),
-  clientName: z.string(),
+  eventName: z
+    .string()
+    .min(2, "Event name is too short")
+    .refine((val) => val.trim() !== "", {
+      message: "Name cannot be empty or just spaces",
+    }),
+  clientName: z
+    .string()
+    .min(2, "Name is too short")
+    .regex(/^[A-Za-z\s]+$/, "Name must contain only letters")
+    .refine((val) => val.trim() !== "", {
+      message: "Name cannot be empty or just spaces",
+    }),
   contactPersonNumber: z
     .string()
     .min(10, "Phone must be at least 10 digits")
     .regex(/^\d+$/, "Phone must contain only numbers"),
-  description: z.string(),
-  // pickUpPerson: z.string().optional(),
+  description: z
+    .string()
+    .min(10, "Description must be at least 10 characters long"),
+
   image: z.instanceof(File).optional(),
 });
 
 type EventFormData = z.infer<typeof eventSchema>;
 
 type EditEventsProps = {
-  eventId: string;
+  event: IEvent;
 };
 
-export default function EditEvents({ eventId }: EditEventsProps) {
-  const { events, updateEvent, loading, fetchPickUpPerson } = useEventStore();
-  const event = events.find((e) => e._id === eventId);
+export default function EditEvents({ event }: EditEventsProps) {
+  const { updateEvent, loading, fetchPickUpPerson } = useEventStore();
 
   useEffect(() => {
     const fetchOnce = async () => {
@@ -77,7 +89,6 @@ export default function EditEvents({ eventId }: EditEventsProps) {
   useEffect(() => {
     if (event) {
       reset({
-       
         date: new Date(event.date),
         time: event.time,
         eventName: event.eventName,
@@ -90,7 +101,7 @@ export default function EditEvents({ eventId }: EditEventsProps) {
 
   const onSubmit = async (data: EventFormData) => {
     try {
-      if (!eventId) return;
+      if (!event._id) return;
 
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
@@ -101,7 +112,7 @@ export default function EditEvents({ eventId }: EditEventsProps) {
         }
       });
 
-      await updateEvent(eventId, formData);
+      await updateEvent(event._id, formData);
       //   toast.success("Event updated successfully");
       setOpen(false);
     } catch {

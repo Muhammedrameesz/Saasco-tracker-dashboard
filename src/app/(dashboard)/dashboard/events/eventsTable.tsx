@@ -96,7 +96,7 @@ export default function EventTable() {
       ) : (
         <>
           <div className="overflow-x-auto border-b  border-gray-300 ">
-            <table className="min-w-full table-auto divide-y divide-gray-200">
+            <table className="min-w-full table-auto divide-y divide-gray-200 overflow-auto">
               <thead className="bg-gradient-to-r from-orange-50 to-red-50 text-gray-800 sticky top-0 rounded-t-md">
                 <tr>
                   {[
@@ -193,6 +193,7 @@ export default function EventTable() {
                               "bg-blue-500": event.status === "ongoing",
                               "bg-yellow-500": event.status === "delayed",
                               "bg-purple-500": event.status === "delivered",
+                              "bg-indigo-500":event.status==="shipped"
                             }
                           )}
                         >

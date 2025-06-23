@@ -48,12 +48,26 @@ const roles = ["Driver", "Manager", "Event-Organiser"];
 
 const formSchema = z
   .object({
-    name: z.string().min(2, "Name is required"),
-    email: z.string().email("Invalid email"),
+    name: z
+      .string()
+      .min(2, "Name is too short")
+      .regex(/^[A-Za-z\s]+$/, "Name must contain only letters")
+      .refine((val) => val.trim() !== "", {
+        message: "Name cannot be empty or just spaces",
+      }),
+    email: z
+      .string()
+      .email("Email is required")
+      .refine((val) => val.trim() !== "", {
+        message: "Email cannot be empty or just spaces",
+      }),
     phone: z
       .string()
-      .min(10, "Phone must be at least 10 digits")
-      .regex(/^\d+$/, "Phone must contain only numbers"),
+      .regex(
+        /^\d{10}$/,
+        "Phone must be exactly 10 digits and contain only numbers"
+      ),
+
     role: z.string(),
     LicenceImage: z.string().optional(),
     LicenceValidityDate: z.date().optional(),
@@ -84,13 +98,15 @@ export default function AddEmployeeForm() {
   const [imageUrl, setImageUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
+  const initialRole = "Driver";
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
       phone: "",
-      role: "Driver",
+      role: initialRole,
       LicenceImage: "",
       LicenceValidityDate: undefined,
     },
@@ -132,7 +148,14 @@ export default function AddEmployeeForm() {
 
       if (res.status === 200) {
         toast.success(res.data?.message || "Employee Registered successfully");
-        form.reset();
+        form.reset({
+          name: "",
+          email: "",
+          phone: "",
+          role: data.role,
+          LicenceImage: "",
+          LicenceValidityDate: undefined,
+        });
         setDate(undefined);
         setImageUrl("");
       }

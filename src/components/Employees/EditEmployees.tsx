@@ -31,14 +31,27 @@ import { FaEdit } from "react-icons/fa";
 import { useFlaggedEmployeeStore } from "@/store/flaggedUserStore";
 
 const formSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email"),
-   phone: z
-  .string()
-  .min(10, "Phone must be at least 10 digits")
-  .regex(/^\d+$/, "Phone must contain only numbers"),
+  name: z
+    .string()
+    .min(2, "Name is too short")
+    .regex(/^[A-Za-z\s]+$/, "Name must contain only letters")
+    .refine((val) => val.trim() !== "", {
+      message: "Name cannot be empty or just spaces",
+    }),
+  email: z
+    .string()
+    .email("Email is required")
+    .refine((val) => val.trim() !== "", {
+      message: "Email cannot be empty or just spaces",
+    }),
+  phone: z
+    .string()
+    .regex(
+      /^\d{10}$/,
+      "Phone must be exactly 10 digits and contain only numbers"
+    ),
   role: z.string(),
-  LicenceImage: z.any().optional(), 
+  LicenceImage: z.any().optional(),
   LicenceValidityDate: z.date().optional(),
 });
 
@@ -51,7 +64,7 @@ export default function EditEmployeeDialog({
 }) {
   const [open, setOpen] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const {fetchBannedAndRejected} = useFlaggedEmployeeStore()
+  const { fetchBannedAndRejected } = useFlaggedEmployeeStore();
   const updateEmployee = useEmployeeStore((state) => state.updateEmployee);
   const loading = useEmployeeStore((state) => state.loading);
 
@@ -116,7 +129,7 @@ export default function EditEmployeeDialog({
 
     try {
       await updateEmployee(employee._id, formData);
-      await fetchBannedAndRejected()
+      await fetchBannedAndRejected();
       setOpen(false);
     } catch (error) {
       console.error(error);

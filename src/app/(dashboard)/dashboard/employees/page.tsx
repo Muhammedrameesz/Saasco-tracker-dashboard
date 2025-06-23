@@ -29,7 +29,7 @@ export default function page() {
           Add Employees
         </Link>
       </PageTitle>
-      <div className=" container mx-auto ">
+      <div className=" container mx-auto overflow-hidden ">
        <EmployeesView/>
       </div>
     </main>

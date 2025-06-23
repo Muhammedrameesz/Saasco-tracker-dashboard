@@ -40,14 +40,29 @@ export type SelectedLocation = {
 const eventSchema = z.object({
   date: z.string().min(1, "Date is required"),
   time: z.string().min(1, "Time is required"),
-  // pincode: z.string().min(1, "Pincode is required"),
-  eventName: z.string().min(1, "Event name is required"),
-  clientName: z.string().min(1, "Client name is required"),
+  eventName: z
+    .string()
+    .min(2, "Event name is too short")
+    .refine((val) => val.trim() !== "", {
+      message: "Name cannot be empty or just spaces",
+    }),
+  clientName: z
+    .string()
+    .min(2, "Name is too short")
+    .regex(/^[A-Za-z\s]+$/, "Name must contain only letters")
+    .refine((val) => val.trim() !== "", {
+      message: "Name cannot be empty or just spaces",
+    }),
   contactPersonNumber: z
     .string()
-    .min(10, "Phone must be at least 10 digits")
-    .regex(/^\d+$/, "Phone must contain only numbers"),
-  description: z.string().min(1, "Description is required"),
+    .regex(
+      /^\d{10}$/,
+      "Phone must be exactly 10 digits and contain only numbers"
+    ),
+  description: z
+    .string()
+    .min(10, "Description must be at least 10 characters long"),
+
   image: z.custom<File[]>(
     (files) => files && files.length > 0,
     "Image is required"

@@ -56,6 +56,7 @@ const EditEventDialog: React.FC<EditeventDialogProps> = ({
           <div>
             <label className="block text-sm font-medium">Title</label>
             <input
+              title="Title"
               type="text"
               name="title"
               value={formData.title}
@@ -66,6 +67,7 @@ const EditEventDialog: React.FC<EditeventDialogProps> = ({
           <div>
             <label className="block text-sm font-medium">Type</label>
             <input
+              title="Types"
               type="text"
               name="type"
               value={formData.type}

@@ -192,7 +192,7 @@ export default function EventViewPage() {
         </div>
 
         <div className="flex gap-4 pt-4 border-t mt-6">
-          <EditEvents eventId={id as string} />
+          <EditEvents event={selectedEvent} />
           <DeleteConfirmationDialog eventId={id as string} />
 
           {selectedEvent.pickUpPerson && (

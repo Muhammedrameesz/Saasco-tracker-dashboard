@@ -128,7 +128,7 @@ export default function BannedRejectedEmployees() {
               "rounded-xl relative border-t-8 p-5 bg-white/90 backdrop-blur shadow-md space-y-4",
               employee.status === "rejected"
                 ? "border-t-red-400"
-                : "border-t-yellow-400"
+                : "border-t-green-400"
             )}
           >
             {employee.role === "Driver" && employee.LicenceImage ? (

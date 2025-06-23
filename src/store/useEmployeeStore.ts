@@ -74,9 +74,9 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
       );
 
       if (deleted.status === 200) {
-        const updated = get().employees.filter((emp) => emp._id !== id);
-        set({ employees: updated, loading: false });
+       
         toast.success("Employee deleted successfully");
+        await get().fetchEmployees(get().currentPage)
       }
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;
@@ -96,19 +96,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
 
       if (res.status === 200) {
         await get().getPendingEmployees();
-        set(
-          (state): Partial<EmployeeState> => ({
-            employees: state.employees.map((emp) =>
-              emp._id === id
-                ? {
-                    ...emp,
-                    status: status as "approved" | "rejected" | "pending",
-                  }
-                : emp
-            ),
-          })
-        );
-
+        await get().fetchEmployees(get().currentPage)
         toast.success(`Employee status ${status}`);
       } else {
         toast.error("Unexpected response from server");
@@ -132,11 +120,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
       );
 
       if (res.status === 200) {
-        const updatedEmployees = get().employees.map((emp) =>
-          emp._id === id ? { ...emp, isActive } : emp
-        );
-
-        set({ employees: updatedEmployees, loading: false });
+        await get().fetchEmployees(get().currentPage)
         toast.success(
           `Employee has been ${isActive ? "re-activated" : "banned"}`
         );

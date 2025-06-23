@@ -44,13 +44,13 @@ export default function AuthenticationPage() {
         </div>
       </div>
 
-      <div className="flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-black">
+      <div className="flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="w-full max-w-md space-y-6">
           <div>
             <UserAuthForm />
           </div>
 
-          <p className="text-xs text-center text-gray-500 dark:text-gray-400 mt-6 leading-relaxed">
+          {/* <p className="text-xs text-center text-gray-500 dark:text-gray-400 mt-6 leading-relaxed">
             By signing in, you agree to our{" "}
             <span className="underline text-blue-600 hover:text-blue-800 cursor-pointer transition-colors duration-200">
               Terms of Service
@@ -60,7 +60,7 @@ export default function AuthenticationPage() {
               Privacy Policy
             </span>
             .
-          </p>
+          </p> */}
         </div>
       </div>
     </div>

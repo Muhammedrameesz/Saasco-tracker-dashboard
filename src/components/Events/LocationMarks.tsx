@@ -2,7 +2,7 @@
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { IEvent } from "@/Types/EventTypes";
-import L, { Map as LeafletMap, LatLngTuple } from "leaflet";
+import L, { Map as LeafletMap, LatLngTuple} from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useRef } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
@@ -35,12 +35,17 @@ export const LocationMap = ({ event }: { event: IEvent }) => {
   const start = event?.startLocation?.coordinates;
   const destination = event?.destinationLocation?.coordinates;
 
-  const validStart: LatLngTuple | null = start?.length === 2 ? [start[1], start[0]] : null;
-  const validDestination: LatLngTuple | null = destination?.length === 2 ? [destination[1], destination[0]] : null;
+  const validStart: LatLngTuple | null =
+    start?.length === 2 ? [start[1], start[0]] : null;
+  const validDestination: LatLngTuple | null =
+    destination?.length === 2 ? [destination[1], destination[0]] : null;
 
   const center: LatLngTuple =
     validStart && validDestination
-      ? [(validStart[0] + validDestination[0]) / 2, (validStart[1] + validDestination[1]) / 2]
+      ? [
+          (validStart[0] + validDestination[0]) / 2,
+          (validStart[1] + validDestination[1]) / 2,
+        ]
       : validStart || validDestination || [0, 0];
 
   if (!validStart && !validDestination) return null;
@@ -55,8 +60,20 @@ export const LocationMap = ({ event }: { event: IEvent }) => {
         ref={(ref) => {
           if (ref) {
             mapRef.current = ref;
+
             setTimeout(() => {
               ref.invalidateSize();
+              if (validStart && validDestination) {
+                const bounds: [[number, number], [number, number]] = [
+                  [validStart[0], validStart[1]],
+                  [validDestination[0], validDestination[1]],
+                ];
+                ref.fitBounds(bounds, { padding: [50, 50] });
+              } else if (validStart) {
+                ref.setView([validStart[0], validStart[1]], 5);
+              } else if (validDestination) {
+                ref.setView([validDestination[0], validDestination[1]], 5);
+              }
             }, 300);
           }
         }}
@@ -70,12 +87,12 @@ export const LocationMap = ({ event }: { event: IEvent }) => {
           <Marker position={validStart} icon={greenIcon}>
             <Popup>
               <div className="text-sm">
-                <p className="font-semibold text-indigo-400 flex items-center gap-1">
-                  <FaMapMarkerAlt className="text-red-500" />
+                <p className="font-semibold text-green-600 flex items-center gap-1">
+                  <FaMapMarkerAlt className="text-green-500" />
                   Start Location
                 </p>
-                <p className="text-white">{event.startLocation?.address}</p>
-                <p className="text-gray-300">
+                <p className="text-gray-400">{event.startLocation?.address}</p>
+                <p className="text-gray-400">
                   🌍 {validStart[0]}, 🌐 {validStart[1]}
                 </p>
               </div>
@@ -87,12 +104,14 @@ export const LocationMap = ({ event }: { event: IEvent }) => {
           <Marker position={validDestination} icon={redIcon}>
             <Popup>
               <div className="text-sm">
-                <p className="font-semibold text-pink-400 flex items-center gap-1">
+                <p className="font-semibold text-red-600 flex items-center gap-1">
                   <FaMapMarkerAlt className="text-red-500" />
                   Destination
                 </p>
-                <p className="text-white">{event.destinationLocation?.address}</p>
-                <p className="text-gray-300">
+                <p className="text-gray-400">
+                  {event.destinationLocation?.address}
+                </p>
+                <p className="text-gray-400">
                   🌍 {validDestination[0]}, 🌐 {validDestination[1]}
                 </p>
               </div>
