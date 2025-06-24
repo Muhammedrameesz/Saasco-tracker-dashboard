@@ -30,9 +30,7 @@ import { EmployeeI } from "@/Types/EmployeeTypes";
 //   1. HELPER COMPONENTS & UTILITIES
 //================================================================//
 
-/**
- * Generates a data URL for a simple, colored avatar with initials.
- */
+
 const generateInitialsAvatar = (name: string): string => {
   const initials = name
     .split(" ")
@@ -45,8 +43,8 @@ const generateInitialsAvatar = (name: string): string => {
   canvas.height = 128;
   const context = canvas.getContext("2d");
   if (context) {
-    const bgColor = "#e0e7ff"; 
-    const textColor = "#4338ca"; 
+    const bgColor = "#e0e7ff";
+    const textColor = "#4338ca";
     context.fillStyle = bgColor;
     context.fillRect(0, 0, canvas.width, canvas.height);
     context.font = "bold 52px Arial";
@@ -58,9 +56,7 @@ const generateInitialsAvatar = (name: string): string => {
   return canvas.toDataURL();
 };
 
-/**
- * A visually appealing skeleton loader to show while data is fetching.
- */
+
 const SkeletonCard = () => (
   <div className="h-64 rounded-2xl p-5 bg-white/50 shadow-md space-y-4 animate-pulse">
     <div className="flex items-center gap-4">
@@ -85,9 +81,7 @@ const EnquirySkeletonLoader = () => (
   </div>
 );
 
-/**
- * A component to display when there are no pending enquiries.
- */
+
 const EmptyState = () => (
   <div className="text-center py-20 px-6 bg-white rounded-2xl shadow-sm">
     <FaCheckCircle className="mx-auto text-5xl text-green-500 mb-4" />
@@ -121,7 +115,7 @@ const EnquiryCard = ({ employee, onUpdateStatus }: EnquiryCardProps) => {
       exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.3 } }}
       className="rounded-2xl p-5 bg-white/60 backdrop-blur-lg shadow-xl border border-gray-200/50  gap-5"
     >
-      {/* Left Side: Employee Info */}
+     
       <div className="flex-1 space-y-3">
         <div className="flex items-center gap-4">
           {avatar && (
@@ -148,20 +142,12 @@ const EnquiryCard = ({ employee, onUpdateStatus }: EnquiryCardProps) => {
           <p className="flex items-center gap-2">
             <FaPhoneVolume className="text-gray-400" /> {employee.phone}
           </p>
-          {/* {employee.role === "Driver" && employee.LicenceValidityDate && (
-            <p className="flex items-center gap-2">
-              <FaCalendarAlt className="text-gray-400" />
-              Valid Till:{" "}
-              <span className="font-semibold text-indigo-600">
-                {format(new Date(employee.LicenceValidityDate), "PPP")}
-              </span>
-            </p>
-          )} */}
+          
         </div>
         {employee.role === "Driver" && employee.LicenceImage && (
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" className="w-full mt-2">
+              <Button variant="outline" className="w-full mt-2 cursor-pointer" >
                 View Licence
               </Button>
             </DialogTrigger>
@@ -229,6 +215,8 @@ export default function Enquiry() {
     loading,
     getPendingEmployees,
     updateEmployeeStatus,
+    pendingcurrentPage,
+    pendingtotalPages,
   } = useEmployeeStore();
 
   useEffect(() => {
@@ -242,10 +230,16 @@ export default function Enquiry() {
     }
   };
 
+  const handlePageClick = (page: number) => {
+    if (page >= 1 && page <= pendingtotalPages) {
+      getPendingEmployees(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="w-full min-h-screen p-4 sm:p-6 bg-gradient-to-br from-gray-50 via-white to-gray-100 font-sans">
       <section className="bg-white py-8 px-6 md:px-12 border-b border-gray-200 rounded-xl shadow-sm mb-10 overflow-hidden relative ">
-        
         {/* <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-orange-400 to-[#cb301b] rounded-full opacity-20"></div> */}
         <div className="absolute -bottom-12 -left-12 w-40 h-40 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full opacity-10"></div>
 
@@ -275,27 +269,66 @@ export default function Enquiry() {
       {loading ? (
         <EnquirySkeletonLoader />
       ) : (
-        <AnimatePresence>
-          {pendingEmployees.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <EmptyState />
-            </motion.div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {pendingEmployees.map((emp) => (
-                <EnquiryCard
-                  key={emp._id}
-                  employee={emp}
-                  onUpdateStatus={handleUpdateStatus}
-                />
-              ))}
-            </div>
-          )}
-        </AnimatePresence>
+        <>
+          <AnimatePresence>
+            {pendingEmployees.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <EmptyState />
+              </motion.div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {pendingEmployees.map((emp) => (
+                  <EnquiryCard
+                    key={emp._id}
+                    employee={emp}
+                    onUpdateStatus={handleUpdateStatus}
+                  />
+                ))}
+              </div>
+            )}
+          </AnimatePresence>
+        </>
       )}
+
+      <div className="flex justify-center mt-10 gap-2 flex-wrap">
+        {/* Previous Button */}
+        <Button
+          onClick={() => handlePageClick(pendingcurrentPage - 1)}
+          disabled={pendingcurrentPage === 1}
+          className="cursor-pointer"
+        >
+          Previous
+        </Button>
+
+        {/* Page Numbers */}
+        {Array.from({ length: pendingtotalPages }, (_, i) => {
+          const page = i + 1;
+          return (
+            <Button
+              key={page}
+              onClick={() => handlePageClick(page)}
+              variant={page === pendingcurrentPage ? "default" : "outline"}
+              className={`w-10 px-0 cursor-pointer ${
+                page === pendingcurrentPage ? "bg-primary text-white" : ""
+              }`}
+            >
+              {page}
+            </Button>
+          );
+        })}
+
+       
+        <Button
+          onClick={() => handlePageClick(pendingcurrentPage + 1)}
+          disabled={pendingcurrentPage === pendingtotalPages}
+          className="cursor-pointer"
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 }

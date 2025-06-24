@@ -114,7 +114,17 @@ export const EditPickUpPerson = ({ selectedEvent }: Props) => {
               <InfoLine
                 icon={<FaCalendarAlt className="text-green-500" />}
                 label="License Validity"
-                value={localPerson.LicenceValidityDate}
+                value={
+                  localPerson?.LicenceValidityDate
+                    ? new Date(
+                        localPerson.LicenceValidityDate
+                      ).toLocaleDateString("en-IN", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })
+                    : "N/A"
+                }
               />
             </div>
 
@@ -123,7 +133,7 @@ export const EditPickUpPerson = ({ selectedEvent }: Props) => {
                 <Image
                   src={localPerson.LicenceImage}
                   alt="License"
-                  width={300}
+                  width={200}
                   height={200}
                   className="rounded-md border shadow"
                 />

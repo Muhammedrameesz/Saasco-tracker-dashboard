@@ -12,6 +12,10 @@ interface EmployeeState {
   totalPages: number;
   totalEmployees: number;
 
+  pendingcurrentPage: number;
+  pendingtotalPages: number;
+  // pendingtotalEmployees: number;
+
   fetchEmployees: (page?: number) => Promise<void>;
   deleteEmployee: (id: string) => Promise<void>;
   updateEmployee: (id: string, updateData: FormData) => Promise<void>;
@@ -22,7 +26,7 @@ interface EmployeeState {
     status: "approved" | "rejected"
   ) => Promise<void>;
   updateEmployeeActiveStatus: (id: string, isActive: boolean) => Promise<void>;
-  getPendingEmployees: () => Promise<void>;
+  getPendingEmployees: (page?: number) => Promise<void>;
   pendingEmployees: EmployeeI[];
 }
 
@@ -36,6 +40,8 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
   totalPages: 1,
   totalEmployees: 0,
   pendingEmployees: [],
+  pendingcurrentPage: 1,
+  pendingtotalPages: 1,
 
   fetchEmployees: async (page = 1) => {
     set({ loading: true, error: null });
@@ -74,9 +80,8 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
       );
 
       if (deleted.status === 200) {
-       
         toast.success("Employee deleted successfully");
-        await get().fetchEmployees(get().currentPage)
+        await get().fetchEmployees(get().currentPage);
       }
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;
@@ -96,7 +101,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
 
       if (res.status === 200) {
         await get().getPendingEmployees();
-        await get().fetchEmployees(get().currentPage)
+        await get().fetchEmployees(get().currentPage);
         toast.success(`Employee status ${status}`);
       } else {
         toast.error("Unexpected response from server");
@@ -120,7 +125,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
       );
 
       if (res.status === 200) {
-        await get().fetchEmployees(get().currentPage)
+        await get().fetchEmployees(get().currentPage);
         toast.success(
           `Employee has been ${isActive ? "re-activated" : "banned"}`
         );
@@ -168,15 +173,22 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
 
   setEmployees: (employees: EmployeeI[]) => set({ employees }),
 
-  getPendingEmployees: async () => {
+  getPendingEmployees: async (page = 1) => {
     set({ loading: true, error: null });
     try {
-      const res = await axios.get(`${localUrl}/employees/pendingEmployees`, {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        `${localUrl}/employees/pendingEmployees?page=${page}`,
+        {
+          withCredentials: true,
+        }
+      );
 
       if (res.status === 200) {
-        set({ pendingEmployees: res.data.data });
+        set({
+          pendingEmployees: res.data.data,
+          pendingcurrentPage: res.data.currentPage,
+          pendingtotalPages: res.data.totalPages,
+        });
       }
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
