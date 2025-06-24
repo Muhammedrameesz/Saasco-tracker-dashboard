@@ -217,6 +217,7 @@ export default function Enquiry() {
     updateEmployeeStatus,
     pendingcurrentPage,
     pendingtotalPages,
+    totalPendigEmployees,
   } = useEmployeeStore();
 
   useEffect(() => {
@@ -261,7 +262,7 @@ export default function Enquiry() {
 
           {/* Badge */}
           <div className="bg-yellow-100 text-yellow-800 text-lg font-bold px-5 py-2 rounded-full shadow-inner">
-            {pendingEmployees.length} New
+            {totalPendigEmployees} 
           </div>
         </div>
       </section>

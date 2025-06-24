@@ -14,7 +14,7 @@ interface EmployeeState {
 
   pendingcurrentPage: number;
   pendingtotalPages: number;
-  // pendingtotalEmployees: number;
+  totalPendigEmployees:number;
 
   fetchEmployees: (page?: number) => Promise<void>;
   deleteEmployee: (id: string) => Promise<void>;
@@ -42,6 +42,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
   pendingEmployees: [],
   pendingcurrentPage: 1,
   pendingtotalPages: 1,
+  totalPendigEmployees:0,
 
   fetchEmployees: async (page = 1) => {
     set({ loading: true, error: null });
@@ -188,6 +189,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
           pendingEmployees: res.data.data,
           pendingcurrentPage: res.data.currentPage,
           pendingtotalPages: res.data.totalPages,
+          totalPendigEmployees:res.data.totalEmployees
         });
       }
     } catch (err) {
