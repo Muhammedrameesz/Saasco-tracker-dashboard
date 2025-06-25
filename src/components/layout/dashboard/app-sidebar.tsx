@@ -175,7 +175,7 @@ export function AppSidebar() {
         <div className=" px-6 py-3 border-t border-gray-200 bg-transparent">
           <div className="text-center text-xs text-gray-500">
             &copy; {new Date().getFullYear()}{" "}
-            <span className="font-medium text-gray-700">ABC Events</span>. All
+            <span className="font-medium text-gray-700">Magic Music Events</span>. All
             rights reserved.
           </div>
         </div>
