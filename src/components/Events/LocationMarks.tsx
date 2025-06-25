@@ -4,8 +4,11 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { IEvent } from "@/Types/EventTypes";
 import L, { Map as LeafletMap, LatLngTuple} from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useRef } from "react";
+// import { useEffect, useRef, useState } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import { useRef } from "react";
+
+// import { connectSocket,disconnectSocket } from "./Socket";
 
 // Red map icon
 export const redIcon = new L.Icon({
@@ -30,18 +33,34 @@ export const greenIcon = new L.Icon({
 });
 
 export const LocationMap = ({ event }: { event: IEvent }) => {
-  const mapRef = useRef<LeafletMap | null>(null);
 
+// const [location, setLocation] = useState<[number, number] | null>(null);
+
+//  useEffect(() => {
+//     const socket = connectSocket({
+//       eventId,
+//       onLocationUpdate: (data: LiveLocationUpdate) => {
+//         console.log("📍 Live location update:", data);
+//         setLocation(data.coordinates);
+//       },
+//     });
+
+//     return () => {
+//       disconnectSocket();
+//     };
+//   }, [eventId]);
+
+
+
+  const mapRef = useRef<LeafletMap | null>(null);
   const start = event?.startLocation?.coordinates;
   const destination = event?.destinationLocation?.coordinates;
-
   const validStart: LatLngTuple | null =
-    start?.length === 2 ? [start[1], start[0]] : null;
+        start?.length === 2 ? [start[1], start[0]] : null;
   const validDestination: LatLngTuple | null =
-    destination?.length === 2 ? [destination[1], destination[0]] : null;
-
+        destination?.length === 2 ? [destination[1], destination[0]] : null;
   const center: LatLngTuple =
-    validStart && validDestination
+        validStart && validDestination
       ? [
           (validStart[0] + validDestination[0]) / 2,
           (validStart[1] + validDestination[1]) / 2,
@@ -78,6 +97,8 @@ export const LocationMap = ({ event }: { event: IEvent }) => {
           }
         }}
       >
+
+        
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           attribution='© <a href="https://carto.com/">CARTO</a>'

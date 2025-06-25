@@ -25,11 +25,11 @@ import {
 } from "react-icons/fa";
 import { format } from "date-fns";
 import { EmployeeI } from "@/Types/EmployeeTypes";
+import clsx from "clsx";
 
 //================================================================//
 //   1. HELPER COMPONENTS & UTILITIES
 //================================================================//
-
 
 const generateInitialsAvatar = (name: string): string => {
   const initials = name
@@ -56,7 +56,6 @@ const generateInitialsAvatar = (name: string): string => {
   return canvas.toDataURL();
 };
 
-
 const SkeletonCard = () => (
   <div className="h-64 rounded-2xl p-5 bg-white/50 shadow-md space-y-4 animate-pulse">
     <div className="flex items-center gap-4">
@@ -80,7 +79,6 @@ const EnquirySkeletonLoader = () => (
     ))}
   </div>
 );
-
 
 const EmptyState = () => (
   <div className="text-center py-20 px-6 bg-white rounded-2xl shadow-sm">
@@ -115,7 +113,6 @@ const EnquiryCard = ({ employee, onUpdateStatus }: EnquiryCardProps) => {
       exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.3 } }}
       className="rounded-2xl p-5 bg-white/60 backdrop-blur-lg shadow-xl border border-gray-200/50  gap-5"
     >
-     
       <div className="flex-1 space-y-3">
         <div className="flex items-center gap-4">
           {avatar && (
@@ -142,12 +139,11 @@ const EnquiryCard = ({ employee, onUpdateStatus }: EnquiryCardProps) => {
           <p className="flex items-center gap-2">
             <FaPhoneVolume className="text-gray-400" /> {employee.phone}
           </p>
-          
         </div>
         {employee.role === "Driver" && employee.LicenceImage && (
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" className="w-full mt-2 cursor-pointer" >
+              <Button variant="outline" className="w-full mt-2 cursor-pointer">
                 View Licence
               </Button>
             </DialogTrigger>
@@ -262,7 +258,7 @@ export default function Enquiry() {
 
           {/* Badge */}
           <div className="bg-yellow-100 text-yellow-800 text-lg font-bold px-5 py-2 rounded-full shadow-inner">
-            {totalPendigEmployees} 
+            {totalPendigEmployees} New
           </div>
         </div>
       </section>
@@ -294,41 +290,63 @@ export default function Enquiry() {
         </>
       )}
 
-      <div className="flex justify-center mt-10 gap-2 flex-wrap">
-        {/* Previous Button */}
-        <Button
-          onClick={() => handlePageClick(pendingcurrentPage - 1)}
-          disabled={pendingcurrentPage === 1}
-          className="cursor-pointer"
-        >
-          Previous
-        </Button>
+      <div className="mt-10 flex flex-col items-center gap-4">
+        <div className="flex gap-2 flex-wrap items-center justify-center">
+          <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-md shadow-sm mr-5">
+            Showing
+            <span className="font-semibold text-gray-800 ml-1">
+              {pendingcurrentPage}
+            </span>{" "}
+            of{" "}
+            <span className="font-semibold text-gray-800">
+              {pendingtotalPages}
+            </span>
+          </span>
 
-        {/* Page Numbers */}
-        {Array.from({ length: pendingtotalPages }, (_, i) => {
-          const page = i + 1;
-          return (
-            <Button
-              key={page}
-              onClick={() => handlePageClick(page)}
-              variant={page === pendingcurrentPage ? "default" : "outline"}
-              className={`w-10 px-0 cursor-pointer ${
-                page === pendingcurrentPage ? "bg-primary text-white" : ""
-              }`}
-            >
-              {page}
-            </Button>
-          );
-        })}
+          <button
+            onClick={() => handlePageClick(pendingcurrentPage - 1)}
+            disabled={pendingcurrentPage === 1}
+            className={clsx(
+              "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
+              "bg-[#ff6600] text-white shadow-sm hover:bg-[#e65c00]",
+              "disabled:opacity-40 disabled:cursor-not-allowed"
+            )}
+          >
+           ← Previous
+          </button>
 
-       
-        <Button
-          onClick={() => handlePageClick(pendingcurrentPage + 1)}
-          disabled={pendingcurrentPage === pendingtotalPages}
-          className="cursor-pointer"
-        >
-          Next
-        </Button>
+          {/* Page Numbers */}
+          {Array.from({ length: pendingtotalPages }, (_, i) => {
+            const page = i + 1;
+            return (
+              <button
+                key={page}
+                onClick={() => handlePageClick(page)}
+                disabled={pendingcurrentPage === page}
+                className={clsx(
+                  "mx-1 px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 border cursor-pointer",
+                  pendingcurrentPage === page
+                    ? "bg-[#ff6600] text-white border-transparent shadow-sm"
+                    : "bg-white text-neutral-700 border-neutral-300 hover:border-[#ff6600] hover:text-[#ff6600]"
+                )}
+              >
+                {page}
+              </button>
+            );
+          })}
+
+          <button
+            onClick={() => handlePageClick(pendingcurrentPage + 1)}
+            disabled={pendingcurrentPage === pendingtotalPages}
+            className={clsx(
+              "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
+              "bg-[#ff6600] text-white shadow-sm hover:bg-[#e65c00]",
+              "disabled:opacity-40 disabled:cursor-not-allowed"
+            )}
+          >
+            Next →
+          </button>
+        </div>
       </div>
     </div>
   );

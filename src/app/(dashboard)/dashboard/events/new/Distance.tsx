@@ -37,7 +37,7 @@ const Distance: React.FC<DistanceProps> = ({ startLocation, destinationLocation 
     return r * c;
   };
 
-  const averageSpeed = 40; // km/h
+  const averageSpeed =30; 
   let distanceInKm = 0;
   let estimatedTimeInHours = 0;
   let timeText = "";

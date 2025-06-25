@@ -11,7 +11,6 @@ import {
   FaClock,
   FaFileAlt,
   FaUserPlus,
-  FaInfoCircle,
 } from "react-icons/fa";
 import EditEvents from "@/components/Events/EditEvents";
 import { EditPickUpPerson } from "@/components/PickUp/editPickUpPerson";
@@ -22,6 +21,7 @@ import { LocationMap } from "@/components/Events/LocationMarks";
 import { BsCalendar2EventFill } from "react-icons/bs";
 import { MdPhoneForwarded, MdSettingsPhone } from "react-icons/md";
 import UpdateEventStatusDialog from "@/components/Events/UpdateEventStatus";
+import Spinner from "@/components/loading/Spinner";
 
 export default function EventViewPage() {
   const { getEventsById, selectedEvent } = useEventStore();
@@ -33,18 +33,7 @@ export default function EventViewPage() {
 
   if (!selectedEvent) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="flex flex-col items-center justify-center min-h-[60vh] text-center bg-gradient-to-br from-orange-50 to-red-50 rounded-3xl shadow-inner p-10"
-      >
-        <FaInfoCircle className="text-5xl text-orange-500 mb-4" />
-        <h1 className="text-2xl font-semibold text-gray-700">No Event Found</h1>
-        <p className="text-gray-500 mt-2 text-sm">
-          Go back and select an event to view its details.
-        </p>
-      </motion.div>
+     <Spinner/>
     );
   }
 
@@ -129,7 +118,17 @@ export default function EventViewPage() {
                       <InfoLine
                         icon={<FaCalendarAlt className="text-green-500" />}
                         label="License Validity"
-                        value={selectedEvent.pickUpPerson.LicenceValidityDate}
+                        value={
+                          selectedEvent.pickUpPerson.LicenceValidityDate
+                            ? new Date(
+                                selectedEvent.pickUpPerson.LicenceValidityDate
+                              ).toLocaleDateString("en-IN", {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              })
+                            : "N/A"
+                        }
                       />
                     </div>
                   </div>
@@ -206,7 +205,6 @@ export default function EventViewPage() {
           {!selectedEvent.pickUpPerson && (
             <AddPickupPerson eventId={selectedEvent?._id} />
           )}
-          
         </div>
       </motion.div>
 

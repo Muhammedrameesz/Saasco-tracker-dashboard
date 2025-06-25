@@ -13,9 +13,18 @@ import { localUrl } from "@/api/const";
 import { toast } from "sonner";
 import { LogIn } from "lucide-react";
 
-// Zod schema
+
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const forgotPasswordSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
+  email: z
+    .string()
+    .trim()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Invalid email address" })
+    .refine((val) => emailRegex.test(val), {
+      message: "Email format is incorrect",
+    }),
 });
 
 type ForgotPasswordSchema = z.infer<typeof forgotPasswordSchema>;
@@ -117,8 +126,6 @@ export default function ForgotEmailView({
           <LogIn className="w-4 h-4 text-blue-500 group-hover:-translate-x-1 transition-transform duration-300" />
           <span>Back to Sign-in</span>
         </button>
-
-        
       </form>
     </motion.div>
   );

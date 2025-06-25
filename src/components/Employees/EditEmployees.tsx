@@ -33,7 +33,7 @@ import { useFlaggedEmployeeStore } from "@/store/flaggedUserStore";
 const formSchema = z.object({
   name: z
     .string()
-    .min(2, "Name is too short")
+    .min(2, "Name is required")
     .regex(/^[A-Za-z\s]+$/, "Name must contain only letters")
     .refine((val) => val.trim() !== "", {
       message: "Name cannot be empty or just spaces",
@@ -46,10 +46,13 @@ const formSchema = z.object({
     }),
   phone: z
     .string()
-    .regex(
-      /^\d{10}$/,
-      "Phone must be exactly 10 digits and contain only numbers"
-    ),
+    .min(10, "Phone number is required")
+    .regex(/^\d+$/, {
+      message: "Phone number must contain only digits",
+    })
+    .refine((val) => val.length === 10, {
+      message: "Phone number must be exactly 10 digits",
+    }),
   role: z.string(),
   LicenceImage: z.any().optional(),
   LicenceValidityDate: z.date().optional(),

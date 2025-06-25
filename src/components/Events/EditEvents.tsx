@@ -32,21 +32,26 @@ const eventSchema = z.object({
   time: z.string(),
   eventName: z
     .string()
-    .min(2, "Event name is too short")
+    .min(2, "Event name is required")
     .refine((val) => val.trim() !== "", {
       message: "Name cannot be empty or just spaces",
     }),
   clientName: z
     .string()
-    .min(2, "Name is too short")
+    .min(2, "Client name is required")
     .regex(/^[A-Za-z\s]+$/, "Name must contain only letters")
     .refine((val) => val.trim() !== "", {
       message: "Name cannot be empty or just spaces",
     }),
   contactPersonNumber: z
     .string()
-    .min(10, "Phone must be at least 10 digits")
-    .regex(/^\d+$/, "Phone must contain only numbers"),
+    .min(10, "Contact person number is required")
+    .regex(/^\d+$/, {
+      message: "Phone number must contain only digits",
+    })
+    .refine((val) => val.length === 10, {
+      message: "Phone number must be exactly 10 digits",
+    }),
   description: z
     .string()
     .min(10, "Description must be at least 10 characters long"),

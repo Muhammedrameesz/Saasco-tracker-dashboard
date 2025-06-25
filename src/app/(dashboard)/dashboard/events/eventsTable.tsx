@@ -11,6 +11,7 @@ import { BsCalendar2EventFill } from "react-icons/bs";
 import Link from "next/link";
 import SearchBar from "@/components/Events/SearchBar";
 import NoSearchMatch from "@/components/ui/NoSearchMatchUI";
+import Pagination from "./pagination";
 
 export default function EventTable() {
   const router = useRouter();
@@ -193,7 +194,7 @@ export default function EventTable() {
                               "bg-blue-500": event.status === "ongoing",
                               "bg-yellow-500": event.status === "delayed",
                               "bg-purple-500": event.status === "delivered",
-                              "bg-indigo-500":event.status==="shipped"
+                              "bg-indigo-500": event.status === "shipped",
                             }
                           )}
                         >
@@ -217,51 +218,11 @@ export default function EventTable() {
           </div>
 
           {/* Pagination */}
-          <div className="flex justify-center items-center p-4 space-x-2 bg-white mt-5">
-            <button
-              type="button"
-              disabled={currentPage === 1}
-              className="px-4 py-2 rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed bg-orange-600 text-white hover:bg-orange-700"
-              onClick={() => {
-                if (currentPage !== null && currentPage > 1)
-                  handlePageChange(currentPage - 1);
-              }}
-            >
-              Previous
-            </button>
-
-            {Array.from({ length: totalPage || 0 }).map((_, i) => (
-              <button
-                type="button"
-                key={i}
-                className={clsx(
-                  "px-4 py-2 rounded-lg font-medium text-sm",
-                  currentPage === i + 1
-                    ? "bg-orange-600 text-white"
-                    : "bg-white text-gray-800 hover:bg-orange-100"
-                )}
-                onClick={() => handlePageChange(i + 1)}
-              >
-                {i + 1}
-              </button>
-            ))}
-
-            <button
-              type="button"
-              disabled={currentPage === totalPage}
-              className="px-4 py-2 rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed bg-orange-600 text-white hover:bg-orange-700"
-              onClick={() => {
-                if (
-                  currentPage !== null &&
-                  totalPage !== null &&
-                  currentPage < totalPage
-                )
-                  handlePageChange(currentPage + 1);
-              }}
-            >
-              Next
-            </button>
-          </div>
+          <Pagination
+            currentPage={currentPage ?? 1} 
+            totalPages={totalPage ?? 1}
+            onPageChange={handlePageChange}
+          />
         </>
       )}
 

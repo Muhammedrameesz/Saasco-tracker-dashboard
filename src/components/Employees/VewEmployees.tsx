@@ -358,21 +358,75 @@ export default function EmployeesView() {
         </div>
       )}
 
-      <div className="mt-10 flex justify-center gap-3 flex-wrap">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-          <Button
-            key={pageNum}
-            disabled={currentPage === pageNum}
-            onClick={() => fetchEmployees(pageNum)}
-            variant={currentPage === pageNum ? "default" : "outline"}
+      <div className="mt-10 flex flex-col items-center gap-4">
+        <div className="flex gap-2 flex-wrap items-center justify-center">
+        <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-md shadow-sm mr-5">
+        Showing
+        <span className="font-semibold text-gray-800 ml-1">
+          {currentPage}
+        </span>{" "}
+        of <span className="font-semibold text-gray-800">{totalPages}</span>
+      </span>
+          <button
+            onClick={() => {
+              if (currentPage > 1) {
+                fetchEmployees(currentPage - 1);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }}
+            disabled={currentPage === 1}
             className={clsx(
-              "rounded-full px-5 cursor-pointer",
-              currentPage === pageNum ? "bg-indigo-600 text-white" : ""
+              "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
+              "bg-[#ff6600] text-white shadow-sm hover:bg-[#e65c00]",
+              "disabled:opacity-40 disabled:cursor-not-allowed"
             )}
           >
-            {pageNum}
-          </Button>
-        ))}
+           ← Previous
+          </button>
+
+          {/* Page Buttons */}
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+            (pageNum) => (
+              <button
+                key={pageNum}
+                onClick={() => {
+                  fetchEmployees(pageNum);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                disabled={currentPage === pageNum}
+                className={clsx(
+                  "mx-1 px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 border cursor-pointer",
+                  currentPage === pageNum
+                    ? "bg-[#ff6600] text-white border-transparent shadow-sm"
+                    : "bg-white text-neutral-700 border-neutral-300 hover:border-[#ff6600] hover:text-[#ff6600]"
+                )}
+              >
+                {pageNum}
+              </button>
+            )
+          )}
+
+          {/* Next Button */}
+          <button
+            onClick={() => {
+              if (currentPage < totalPages) {
+                fetchEmployees(currentPage + 1);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }}
+            disabled={currentPage === totalPages}
+            className={clsx(
+              "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
+              "bg-[#ff6600] text-white shadow-sm hover:bg-[#e65c00]",
+              "disabled:opacity-40 disabled:cursor-not-allowed"
+            )}
+          >
+            Next →
+          </button>
+        </div>
+
+        {/* Page Info */}
+        
       </div>
     </div>
   );

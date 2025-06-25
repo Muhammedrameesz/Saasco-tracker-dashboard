@@ -12,13 +12,7 @@ import {
   FileUploaderContent,
   FileUploaderItem,
 } from "@/components/ui/file-upload";
-import {
-  CalendarDays,
-  ClipboardList,
-  CloudUpload,
-  MapPin,
-  Users,
-} from "lucide-react";
+import { ClipboardList, CloudUpload } from "lucide-react";
 import Image from "next/image";
 import { useEventStore } from "@/store/useEventStore";
 import { toast } from "sonner";
@@ -42,23 +36,27 @@ const eventSchema = z.object({
   time: z.string().min(1, "Time is required"),
   eventName: z
     .string()
-    .min(2, "Event name is too short")
+    .min(2, "Event name is required")
     .refine((val) => val.trim() !== "", {
       message: "Name cannot be empty or just spaces",
     }),
   clientName: z
     .string()
-    .min(2, "Name is too short")
+    .min(2, "Client name is required")
     .regex(/^[A-Za-z\s]+$/, "Name must contain only letters")
     .refine((val) => val.trim() !== "", {
       message: "Name cannot be empty or just spaces",
     }),
   contactPersonNumber: z
     .string()
-    .regex(
-      /^\d{10}$/,
-      "Phone must be exactly 10 digits and contain only numbers"
-    ),
+    .min(10, "Phone number is required")
+    .regex(/^\d+$/, {
+      message: "Phone number must contain only digits",
+    })
+    .refine((val) => val.length === 10, {
+      message: "Phone number must be exactly 10 digits",
+    }),
+
   description: z
     .string()
     .min(10, "Description must be at least 10 characters long"),
@@ -164,21 +162,6 @@ export default function NewEventPage() {
               <p className="text-sm text-gray-500">
                 Plan, organize, and assign resources with ease
               </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 text-gray-600">
-            <div className="flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-red-500" />
-              <span className="text-sm font-medium">Location</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CalendarDays className="w-5 h-5 text-orange-500" />
-              <span className="text-sm font-medium">Date</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-red-500" />
-              <span className="text-sm font-medium">Client</span>
             </div>
           </div>
         </div>
