@@ -32,9 +32,7 @@ export default function EventViewPage() {
   }, [getEventsById, id]);
 
   if (!selectedEvent) {
-    return (
-     <Spinner/>
-    );
+    return <Spinner />;
   }
 
   return (
@@ -190,7 +188,7 @@ export default function EventViewPage() {
           </div>
         </div>
 
-        <div className="flex gap-4 pt-4 border-t mt-6">
+        <div className="flex flex-col md:flex-row gap-4 pt-4 border-t mt-6">
           <EditEvents event={selectedEvent} />
           <DeleteConfirmationDialog eventId={id as string} />
 

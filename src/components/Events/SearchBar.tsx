@@ -1,6 +1,6 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import React from "react";
 import { cn } from "@/lib/utils";
 
@@ -34,6 +34,16 @@ export default function SearchBar({
           "flex-1 text-sm bg-transparent border-none ring-0 focus:ring-0 active:border-0 focus:outline-none text-gray-700 placeholder:text-orange-400",
         )}
       />
+       {searchValue && (
+        <button
+          type="button"
+          onClick={() => onChange("")}
+          className="text-orange-400 hover:text-orange-600 transition-colors"
+          aria-label="Clear search"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      )}
     </div>
   );
 }

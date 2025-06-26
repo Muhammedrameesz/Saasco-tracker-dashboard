@@ -89,7 +89,7 @@ export function UserAuthForm({
               </p>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
+            <form onSubmit={handleSubmit(onSubmit)} autoComplete="off" className="grid gap-4">
               <div className="grid gap-1">
                 <Label
                   className="text-sm font-medium text-gray-700"
@@ -102,7 +102,7 @@ export function UserAuthForm({
                   placeholder="name@example.com"
                   type="email"
                   autoCapitalize="none"
-                  autoComplete="email"
+                  autoComplete="off"
                   autoCorrect="off"
                   disabled={loading}
                   {...register("email")}
@@ -128,6 +128,7 @@ export function UserAuthForm({
                   className="pr-10"
                   disabled={loading}
                   {...register("password")}
+                  autoComplete="new-password"
                 />
                 <button
                   type="button"

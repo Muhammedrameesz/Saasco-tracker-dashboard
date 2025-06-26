@@ -74,27 +74,27 @@ export default function BannedRejectedEmployees() {
 
   if (loading) return <Spinner />;
 
-
   if (employees.length === 0) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="flex flex-col items-center justify-center py-20 text-center bg-gray-50 rounded-xl max-w-7xl mx-auto"
-    >
-      <div className="bg-red-500/10 p-6 rounded-full mb-6">
-        <UserX className="h-12 w-12 text-red-500" />
-      </div>
-      <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-        No Banned or Rejected Employees
-      </h2>
-      <p className="text-muted-foreground text-sm max-w-md">
-        You currently have no employees marked as banned or rejected. Great job keeping your team clean!
-      </p>
-    </motion.div>
-  );
-}
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col items-center justify-center py-20 text-center bg-gray-50 rounded-xl max-w-7xl mx-auto"
+      >
+        <div className="bg-red-500/10 p-6 rounded-full mb-6">
+          <UserX className="h-12 w-12 text-red-500" />
+        </div>
+        <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+          No Banned or Rejected Employees
+        </h2>
+        <p className="text-muted-foreground text-sm max-w-md">
+          You currently have no employees marked as banned or rejected. Great
+          job keeping your team clean!
+        </p>
+      </motion.div>
+    );
+  }
 
   return (
     <div className="p-6 min-h-screen bg-gray-50">
@@ -243,8 +243,7 @@ export default function BannedRejectedEmployees() {
                 </DialogContent>
               </Dialog>
 
-
-               {/* Status update */}
+              {/* Status update */}
               <Dialog
                 open={openDialog && selectedEmp?._id === employee._id}
                 onOpenChange={setOpenDialog}
@@ -330,21 +329,74 @@ export default function BannedRejectedEmployees() {
         ))}
       </div>
 
-      <div className="mt-10 flex justify-center gap-3 flex-wrap">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-          <Button
-            key={pageNum}
-            disabled={currentPage === pageNum}
-            onClick={() => fetchBannedAndRejected(pageNum)}
-            variant={currentPage === pageNum ? "default" : "outline"}
+      <div className="mt-10 flex flex-col items-center gap-4">
+        <div className="flex gap-2 flex-wrap items-center justify-center">
+          <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-md shadow-sm mr-5">
+            Showing
+            <span className="font-semibold text-gray-800 ml-1">
+              {currentPage}
+            </span>{" "}
+            of <span className="font-semibold text-gray-800">{totalPages}</span>
+          </span>
+          <button
+            onClick={() => {
+              if (currentPage > 1) {
+                fetchBannedAndRejected(currentPage - 1);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }}
+            disabled={currentPage === 1}
             className={clsx(
-              "rounded-full px-5 cursor-pointer",
-              currentPage === pageNum ? "bg-indigo-600 text-white" : ""
+              "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
+              "bg-[#ff6600] text-white shadow-sm hover:bg-[#e65c00]",
+              "disabled:opacity-40 disabled:cursor-not-allowed"
             )}
           >
-            {pageNum}
-          </Button>
-        ))}
+            ← Previous
+          </button>
+
+          {/* Page Buttons */}
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+            (pageNum) => (
+              <button
+                key={pageNum}
+                onClick={() => {
+                  fetchBannedAndRejected(pageNum);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                disabled={currentPage === pageNum}
+                className={clsx(
+                  "mx-1 px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 border cursor-pointer",
+                  currentPage === pageNum
+                    ? "bg-[#ff6600] text-white border-transparent shadow-sm"
+                    : "bg-white text-neutral-700 border-neutral-300 hover:border-[#ff6600] hover:text-[#ff6600]"
+                )}
+              >
+                {pageNum}
+              </button>
+            )
+          )}
+
+          {/* Next Button */}
+          <button
+            onClick={() => {
+              if (currentPage < totalPages) {
+                fetchBannedAndRejected(currentPage + 1);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }}
+            disabled={currentPage === totalPages}
+            className={clsx(
+              "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
+              "bg-[#ff6600] text-white shadow-sm hover:bg-[#e65c00]",
+              "disabled:opacity-40 disabled:cursor-not-allowed"
+            )}
+          >
+            Next →
+          </button>
+        </div>
+
+        {/* Page Info */}
       </div>
     </div>
   );

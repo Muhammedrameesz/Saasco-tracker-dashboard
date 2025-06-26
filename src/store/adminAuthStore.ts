@@ -231,9 +231,11 @@ export const adminAuthStore = create<Store>((set, get) => ({
           role: "",
           create: "",
         },
-        isAuth:false,
-        initialized:false
+        isAuth: false,
+        initialized: false,
       });
+      localStorage.clear();
+      sessionStorage.clear();
       return true;
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;

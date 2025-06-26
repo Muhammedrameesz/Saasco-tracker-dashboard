@@ -254,7 +254,7 @@ export default function EditEmployeeDialog({
             <Button
               disabled={loading}
               type="submit"
-              className="bg-[#cb301b] hover:bg-orange-600 text-white"
+              className="bg-[#cb301b] hover:bg-orange-600 text-white cursor-pointer"
             >
               {loading ? "Please waite.." : "Update"}
             </Button>

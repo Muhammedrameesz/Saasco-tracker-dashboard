@@ -63,12 +63,12 @@ const formSchema = z
       }),
     phone: z
       .string()
-      .min(10, "Phone number is required")
+      .min(10, "Phone is required")
       .regex(/^\d+$/, {
-        message: " Phone number must contain only digits",
+        message: "Phone must be numbers only",
       })
       .refine((val) => val.length === 10, {
-        message: "Phone number must be exactly 10 digits",
+        message: "Phone must be 10 digits",
       }),
 
     role: z.string(),
@@ -204,8 +204,8 @@ export default function AddEmployeeForm() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    <FaUser className="inline mr-2 text-green-600" /> Name
+                  <FormLabel> 
+                    <FaUser className="inline mr-2 text-green-600 mb-1" /> Name
                   </FormLabel>
                   <FormControl>
                     <Input placeholder="John Doe" {...field} />
@@ -221,7 +221,7 @@ export default function AddEmployeeForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    <FaEnvelope className="inline mr-2 text-green-600" /> Email
+                    <FaEnvelope className="inline mr-2 text-green-600 mb-1" /> Email
                   </FormLabel>
                   <FormControl>
                     <Input placeholder="john@example.com" {...field} />
@@ -237,7 +237,7 @@ export default function AddEmployeeForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    <FaPhone className="inline mr-2 text-green-600" /> Phone
+                    <FaPhone className="inline mr-2 mb-1 text-green-600 rotate-90" /> Phone
                   </FormLabel>
                   <FormControl>
                     <Input placeholder="9876543210" {...field} />
@@ -253,7 +253,7 @@ export default function AddEmployeeForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    <FaUserTie className="inline mr-2 text-green-600" /> Role
+                    <FaUserTie className="inline mr-2 text-green-600 mb-1" /> Role
                   </FormLabel>
                   <Select
                     onValueChange={field.onChange}

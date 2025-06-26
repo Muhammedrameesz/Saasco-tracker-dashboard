@@ -30,11 +30,12 @@ export default function EventTable() {
   }, [searchInput]);
 
   useEffect(() => {
-    fetchEvents(currentPage);
-  }, [fetchEvents, currentPage]);
+    fetchEvents(1);
+  }, [fetchEvents]);
 
   const handlePageChange = (page: number) => {
     if (page && page !== currentPage) fetchEvents(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   if (loading) return <Spinner />;

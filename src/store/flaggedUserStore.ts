@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { EmployeeI } from "@/Types/EmployeeTypes";
 import { localUrl } from "@/api/const";
 
-const LIMIT = 10;
+const LIMIT = 6;
 
 interface EmployeeState {
   employees: EmployeeI[];

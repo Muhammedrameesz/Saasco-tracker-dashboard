@@ -39,7 +39,7 @@ export default function DeleteConfirmationDialog({
       <DialogTrigger asChild>
         <button
           type="button"
-          className="flex cursor-pointer items-center gap-2 bg-red-100 text-red-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-200 transition"
+          className="flex justify-center cursor-pointer items-center gap-2 bg-red-100 text-red-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-200 transition"
         >
           <FaTrash /> Delete
         </button>

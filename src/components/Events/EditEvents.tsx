@@ -136,122 +136,133 @@ export default function EditEvents({ event }: EditEventsProps) {
   ];
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="flex cursor-pointer items-center gap-2 bg-blue-100 text-blue-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-200 transition">
-          <FaEdit />
-          Edit
-        </Button>
-      </DialogTrigger>
+    <div>
+      <section className="w-full h-full flex justify-center">
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button className="w-full flex cursor-pointer items-center gap-2 bg-blue-100 text-blue-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-200 transition">
+              <FaEdit />
+              Edit
+            </Button>
+          </DialogTrigger>
 
-      <DialogContent className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Edit Event</DialogTitle>
-          <DialogDescription>Update event details here.</DialogDescription>
-        </DialogHeader>
+          <DialogContent className="w-full !max-w-[700px] max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Edit Event</DialogTitle>
+              <DialogDescription>Update event details here.</DialogDescription>
+            </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className=" pt-4 ">
-          {/* Simple Text Fields */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {fields.map(([field, label]) => (
-              <div key={field}>
-                <Label htmlFor={field}>{label}</Label>
-                <Input id={field} {...register(field)} />
-                {errors[field as keyof EventFormData] && (
+            <form onSubmit={handleSubmit(onSubmit)} className=" pt-4 ">
+              {/* Simple Text Fields */}
+              <section className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {fields.map(([field, label]) => (
+                  <div key={field}>
+                    <Label htmlFor={field}>{label}</Label>
+                    <Input id={field} {...register(field)} />
+                    {errors[field as keyof EventFormData] && (
+                      <p className="text-sm text-red-600">
+                        {
+                          errors[field as keyof EventFormData]
+                            ?.message as string
+                        }
+                      </p>
+                    )}
+                  </div>
+                ))}
+
+                <div>
+                  <Label>Date</Label>
+                  <Controller
+                    control={control}
+                    name="date"
+                    render={({ field }) => (
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className="w-full justify-start text-left"
+                          >
+                            {field.value
+                              ? format(field.value, "PPP")
+                              : "Pick a date"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            captionLayout="dropdown"
+                            fromYear={new Date().getFullYear()}
+                            toYear={new Date().getFullYear() + 50}
+                            disabled={(date) =>
+                              date < new Date(new Date().setHours(0, 0, 0, 0))
+                            }
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    )}
+                  />
+                  {errors.date && (
+                    <p className="text-sm text-red-600">
+                      {errors.date.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <Label htmlFor="time">Time</Label>
+                  <Input type="time" id="time" {...register("time")} />
+                  {errors.time && (
+                    <p className="text-sm text-red-600">
+                      {errors.time.message}
+                    </p>
+                  )}
+                </div>
+              </section>
+
+              <div className="mt-2">
+                <Label>Image</Label>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    if (e.target.files?.[0]) {
+                      setValue("image", e.target.files[0]);
+                    }
+                  }}
+                />
+                {imageFile && (
+                  <p className="text-sm mt-1 text-gray-600">{imageFile.name}</p>
+                )}
+              </div>
+
+              <div className="mt-2">
+                <Label htmlFor="description">Description</Label>
+                <textarea
+                  {...register("description")}
+                  id="description"
+                  rows={3}
+                  className="w-full border rounded-md px-3 py-2"
+                />
+                {errors.description && (
                   <p className="text-sm text-red-600">
-                    {errors[field as keyof EventFormData]?.message as string}
+                    {errors.description.message}
                   </p>
                 )}
               </div>
-            ))}
 
-            <div>
-              <Label>Date</Label>
-              <Controller
-                control={control}
-                name="date"
-                render={({ field }) => (
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-start text-left"
-                      >
-                        {field.value
-                          ? format(field.value, "PPP")
-                          : "Pick a date"}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        captionLayout="dropdown"
-                        fromYear={new Date().getFullYear()}
-                        toYear={new Date().getFullYear() + 50}
-                        disabled={(date) =>
-                          date < new Date(new Date().setHours(0, 0, 0, 0))
-                        }
-                      />
-                    </PopoverContent>
-                  </Popover>
-                )}
-              />
-              {errors.date && (
-                <p className="text-sm text-red-600">{errors.date.message}</p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="time">Time</Label>
-              <Input type="time" id="time" {...register("time")} />
-              {errors.time && (
-                <p className="text-sm text-red-600">{errors.time.message}</p>
-              )}
-            </div>
-          </section>
-
-          <div>
-            <Label>Image</Label>
-            <Input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                if (e.target.files?.[0]) {
-                  setValue("image", e.target.files[0]);
-                }
-              }}
-            />
-            {imageFile && (
-              <p className="text-sm mt-1 text-gray-600">{imageFile.name}</p>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="description">Description</Label>
-            <textarea
-              {...register("description")}
-              id="description"
-              rows={3}
-              className="w-full border rounded-md px-3 py-2"
-            />
-            {errors.description && (
-              <p className="text-sm text-red-600">
-                {errors.description.message}
-              </p>
-            )}
-          </div>
-
-          <Button
-            disabled={loading}
-            type="submit"
-            className="w-full bg-orange-600 text-white hover:bg-orange-700 cursor-pointer"
-          >
-            {loading ? "Updating" : "Update Event"}
-          </Button>
-        </form>
-      </DialogContent>
-    </Dialog>
+              <Button
+                disabled={loading}
+                type="submit"
+                className="w-full bg-orange-600 text-white hover:bg-orange-700 cursor-pointer mt-3"
+              >
+                {loading ? "Updating" : "Update Event"}
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </section>
+    </div>
   );
 }

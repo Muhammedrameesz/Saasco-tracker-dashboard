@@ -79,6 +79,7 @@ export default function AddressAutocomplete({
         onSelect(location);
         setSelectedAddress(description);
         setPredictions([]);
+        setInput("");
       }
     });
   };
@@ -92,15 +93,47 @@ export default function AddressAutocomplete({
         </div>
       ) : (
         <>
-          <CommandInput
-            placeholder={placeholder}
-            value={selectedAddress ?? input}
-            onValueChange={(val) => {
-              if (!allowManualInput && selectedAddress) return;
-              setInput(val);
-              if (selectedAddress) setSelectedAddress(null);
-            }}
-          />
+          <div className="relative w-full">
+            <CommandInput
+              placeholder={placeholder}
+              value={selectedAddress ?? input}
+              onValueChange={(val) => {
+                if (!allowManualInput && selectedAddress) return;
+                setInput(val);
+                if (selectedAddress) setSelectedAddress(null);
+              }}
+              className="pr-10" 
+            />
+
+            {(input || selectedAddress) && (
+              <button
+                type="button"
+                onClick={() => {
+                  setInput("");
+                  setSelectedAddress(null);
+                  setPredictions([]);
+                  onSelect({ lat: 0, lng: 0, address: "" });
+                }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 transition"
+                aria-label="Clear address input"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
 
           <CommandList>
             {input.length <= 2 && !selectedAddress && (
@@ -113,8 +146,8 @@ export default function AddressAutocomplete({
             )}
 
             {selectedAddress && (
-              <div className="relative mt-6 flex items-center justify-center">
-                <div className="bg-gradient-to-r from-transparent via-green-500 to-lime-400 p-[2px] rounded-xl shadow-lg min-h-[100px]">
+              <div className="relative mt-10 flex items-center justify-center">
+                <div className="bg-gradient-to-tr from-lime-100 via-green-100 to-red-100 p-[2px] rounded-xl shadow-lg min-h-[100px]">
                   <div className=" min-h-[100px] backdrop-blur-md bg-white/80 dark:bg-gray-900/60 rounded-xl px-6 py-4 flex items-center space-x-4">
                     <div className="p-2 bg-green-100 dark:bg-green-800/40 rounded-full animate-bounce shadow-md">
                       <ImLocation2 className="text-green-600 text-3xl" />

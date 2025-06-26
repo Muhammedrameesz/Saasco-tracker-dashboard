@@ -87,7 +87,7 @@ const Pagination = ({
         type="button"
         disabled={currentPage === totalPages}
         className={clsx(
-          "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
+          "px-4 ml-1.5 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
           "bg-[#ff6600] text-white shadow-sm hover:bg-[#e65c00]",
           "disabled:opacity-40 disabled:cursor-not-allowed"
         )}

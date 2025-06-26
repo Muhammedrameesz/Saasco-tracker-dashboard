@@ -15,7 +15,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { FaEdit, FaEnvelope, FaPhone, FaUser, FaUserTag } from "react-icons/fa";
+import { FaEdit, FaPhone, FaUser, FaUserTag } from "react-icons/fa";
 import {
   Select,
   SelectContent,
@@ -32,12 +32,6 @@ export const profileSchema = z.object({
     .regex(/^[A-Za-z\s]+$/, "Name must contain only letters")
     .refine((val) => val.trim() !== "", {
       message: "Name cannot be empty or just spaces",
-    }),
-  email: z
-    .string()
-    .email("Email is required")
-    .refine((val) => val.trim() !== "", {
-      message: "Email cannot be empty or just spaces",
     }),
   phone: z
     .string()
@@ -63,7 +57,6 @@ export default function EditAdminProfileDialog() {
     resolver: zodResolver(profileSchema),
     defaultValues: {
       name: adminDatas.name,
-      email: adminDatas.email,
       phone: adminDatas.phone,
       role: adminDatas.role,
     },
@@ -103,16 +96,6 @@ export default function EditAdminProfileDialog() {
             <Input {...register("name")} />
             {errors.name && (
               <p className="text-red-500 text-sm">{errors.name.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="text-sm font-medium flex items-center gap-2 text-gray-600">
-              <FaEnvelope /> Email
-            </label>
-            <Input {...register("email")} />
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
             )}
           </div>
 

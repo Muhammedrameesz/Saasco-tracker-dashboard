@@ -49,32 +49,36 @@ const eventSchema = z.object({
     }),
   contactPersonNumber: z
     .string()
-    .min(10, "Phone number is required")
+    .min(10, "Phone is required")
     .regex(/^\d+$/, {
-      message: "Phone number must contain only digits",
+      message: "Phone must be numbers only",
     })
     .refine((val) => val.length === 10, {
-      message: "Phone number must be exactly 10 digits",
+      message: "Phone must be 10 digits",
     }),
 
   description: z
     .string()
-    .min(10, "Description must be at least 10 characters long"),
+    .min(10, "Description must be at least 10 characters."),
 
   image: z.custom<File[]>(
     (files) => files && files.length > 0,
     "Image is required"
   ),
-  startLocation: z.object({
-    lat: z.number(),
-    lng: z.number(),
-    address: z.string(),
-  }),
-  destinationLocation: z.object({
-    lat: z.number(),
-    lng: z.number(),
-    address: z.string(),
-  }),
+  startLocation: z
+    .object({
+      lat: z.number(),
+      lng: z.number(),
+      address: z.string(),
+    })
+    .nullable(),
+    destinationLocation: z
+    .object({
+      lat: z.number(),
+      lng: z.number(),
+      address: z.string(),
+    })
+    .nullable(),
 });
 
 type EventFormData = z.infer<typeof eventSchema>;
@@ -290,11 +294,18 @@ export default function NewEventPage() {
                 <div key={formKey}>
                   <AddressAutocomplete
                     value={startLocation?.address ?? ""}
-                    onSelect={(location: SelectedLocation) => {
-                      setStartLocation(location);
-                      setValue("startLocation", location, {
-                        shouldValidate: true,
-                      });
+                    onSelect={(location) => {
+                      if (!location.address) {
+                        setStartLocation(null); // <-- Clear location state
+                        setValue("startLocation", null, {
+                          shouldValidate: true,
+                        });
+                      } else {
+                        setStartLocation(location);
+                        setValue("startLocation", location, {
+                          shouldValidate: true,
+                        });
+                      }
                     }}
                   />
                 </div>
@@ -324,10 +335,17 @@ export default function NewEventPage() {
                   <AddressAutocomplete
                     value={destinationLocation?.address ?? ""}
                     onSelect={(location: SelectedLocation) => {
-                      setDestinationLocation(location);
-                      setValue("destinationLocation", location, {
-                        shouldValidate: true,
-                      });
+                      if (!location.address) {
+                        setDestinationLocation(null);
+                        setValue("destinationLocation", null, {
+                          shouldValidate: true,
+                        });
+                      } else {
+                        setDestinationLocation(location);
+                        setValue("destinationLocation", location, {
+                          shouldValidate: true,
+                        });
+                      }
                     }}
                   />
                 </div>
