@@ -179,22 +179,29 @@ const EnquiryCard = ({ employee, onUpdateStatus }: EnquiryCardProps) => {
       </div>
 
       {/* Right Side: Action Buttons */}
-      <div className="flex mt-5 justify-center items-center gap-3 pt-4 md:pt-0 pl-2 border-t md:border-t-0 md:border-l border-gray-200/80">
+      <div className="flex mt-5 justify-center items-center gap-6 pt-4 md:pt-0 pl-2 border-t md:border-t-0 md:border-l border-gray-200/80">
         <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.94 }}
           onClick={() => onUpdateStatus(employee._id, "approved")}
-          className="flex cursor-pointer items-center text-[11px] justify-center w-20 h-9 gap-1.5 text-white font-semibold bg-gradient-to-br from-green-500 to-emerald-600 rounded-md shadow-md"
+          className="group cursor-pointer relative flex items-center justify-center w-11 h-11 rounded-full bg-white/10 backdrop-blur-md shadow-lg ring-1 ring-inset ring-emerald-400/50 transition-all duration-300 hover:ring-emerald-500/70 hover:shadow-emerald-400/30"
         >
-          <FaCheck className="text-sm" /> Approve
+          <FaCheck className="text-emerald-600 group-hover:scale-110 transition-transform duration-200 text-[14px]" />
+          <span className="absolute top-full mt-2 text-[11px] text-emerald-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Approve
+          </span>
         </motion.button>
+
         <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.94 }}
           onClick={() => onUpdateStatus(employee._id, "rejected")}
-          className="flex cursor-pointer items-center text-[11px] justify-center w-20 h-9 gap-1.5 text-white font-semibold bg-gradient-to-br from-red-500 to-rose-600 rounded-md shadow-md"
+          className="group cursor-pointer relative flex items-center justify-center w-11 h-11 rounded-full bg-white/10 backdrop-blur-md shadow-lg ring-1 ring-inset ring-rose-400/50 transition-all duration-300 hover:ring-rose-500/70 hover:shadow-rose-400/30"
         >
-          <FaTimes className="text-sm" /> Reject
+          <FaTimes className="text-rose-600 group-hover:scale-110 transition-transform duration-200 text-[14px]" />
+          <span className="absolute top-full mt-2 text-[11px] text-rose-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Reject
+          </span>
         </motion.button>
       </div>
     </motion.div>
@@ -312,7 +319,7 @@ export default function Enquiry() {
               "disabled:opacity-40 disabled:cursor-not-allowed"
             )}
           >
-           ← Previous
+            ← Previous
           </button>
 
           {/* Page Numbers */}

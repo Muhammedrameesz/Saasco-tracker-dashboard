@@ -287,13 +287,13 @@ export default function EmployeesView() {
                       <GrUpdate className="text-green-500" />
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="w-xs">
+                  <DialogContent className="w-sm">
                     <DialogHeader>
                       <DialogTitle className="text-lg">
                         Update Employee Status
                       </DialogTitle>
                     </DialogHeader>
-                    <div className="flex flex-col gap-3">
+                    <div className="flex flex-col md:flex-row justify-center gap-3">
                       <Button
                         disabled={employee.status === "approved"}
                         onClick={() =>

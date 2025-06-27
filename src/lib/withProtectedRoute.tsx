@@ -3,7 +3,7 @@
 import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { adminAuthStore } from "@/store/adminAuthStore";
-import { Loader } from "lucide-react";
+import Spinner from "@/components/loading/Spinner";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -19,7 +19,7 @@ const ProtectedRoute = ({
 
   useEffect(() => {
     if (!initialized) {
-      validateToken(true); 
+      validateToken(true);
     }
   }, [initialized, validateToken]);
 
@@ -30,14 +30,7 @@ const ProtectedRoute = ({
   }, [initialized, loading, isAuth, router, redirectPath]);
 
   if (!initialized || loading) {
-    return (
-      <div className=" absolute top-0 right-0 w-full h-full z-50 ">
-          <div className="bg-black/20 backdrop-blur z-50  w-full h-full  flex flex-col justify-center items-center">
-            <Loader size="25" className=" animate-spin" />
-            <h1 className="">Loading...</h1>
-          </div>
-        </div>
-    );
+    return <Spinner />;
   }
 
   return <>{children}</>;

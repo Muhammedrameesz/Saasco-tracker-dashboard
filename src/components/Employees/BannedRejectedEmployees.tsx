@@ -13,6 +13,8 @@ import {
   FaRedo,
   FaIdCard,
   FaCalendarAlt,
+  FaCheck,
+  FaTimes,
 } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import {
@@ -257,13 +259,13 @@ export default function BannedRejectedEmployees() {
                     <GrUpdate className="text-green-500" />
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="w-xs">
+                <DialogContent className="w-sm ">
                   <DialogHeader>
                     <DialogTitle className="text-lg">
                       Update Employee Status
                     </DialogTitle>
                   </DialogHeader>
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col md:flex-row justify-center gap-3">
                     <Button
                       disabled={employee.status === "approved"}
                       onClick={() =>
@@ -271,6 +273,7 @@ export default function BannedRejectedEmployees() {
                       }
                       className="bg-green-500 hover:bg-green-600 text-white cursor-pointer"
                     >
+                      <FaCheck/>
                       Approve
                     </Button>
                     <Button
@@ -280,6 +283,7 @@ export default function BannedRejectedEmployees() {
                       }
                       className="bg-red-500 hover:bg-red-600 text-white cursor-pointer"
                     >
+                      <FaTimes/>
                       Reject
                     </Button>
                   </div>

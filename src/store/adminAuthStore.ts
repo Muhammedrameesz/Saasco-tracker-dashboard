@@ -215,6 +215,7 @@ export const adminAuthStore = create<Store>((set, get) => ({
   },
 
   logout: async () => {
+     set({loading:true})
     try {
       const response = await axios.post(
         `${localUrl}/admin/logout`,
@@ -243,6 +244,8 @@ export const adminAuthStore = create<Store>((set, get) => ({
         err.response?.data?.message || err.message || "Logout failed";
       toast.error(`Error: ${message}`);
       return false;
+    }finally{
+      set({loading:false})
     }
   },
 }));

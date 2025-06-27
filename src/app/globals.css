@@ -25,8 +25,14 @@
   --shadow-base: rgba(0, 0, 0, 0.09) 0px 3px 12px;
   --shadow-newNormal: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
   --color-customBlack: #353434;
+  --color-customGreen:#f7f7f7
 }
 
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: light;
+  }
+}
 
 
 ::-webkit-scrollbar {
