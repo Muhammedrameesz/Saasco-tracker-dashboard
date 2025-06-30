@@ -58,7 +58,7 @@ export const LocationMap = ({ event }: { event: IEvent }) => {
   useEffect(() => {
     if (!DriverId) return;
 
-    const socket = io("http://localhost:7000", {
+    const socket = io("https://trackingapp-backend-fksa.onrender.com", {
       transports: ["websocket"],
     });
 
