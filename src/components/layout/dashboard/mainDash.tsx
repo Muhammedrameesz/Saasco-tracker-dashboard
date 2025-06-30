@@ -30,7 +30,7 @@ function MainDashboard() {
       title: "Current Events",
       value: currentEvents || 0,
       icon: FaRegCalendar,
-      gradient: "from-green-300 to-green-50",
+      gradient: "from-green-100 to-green-50",
       image:
         "https://img.freepik.com/premium-photo/market-chart-business-glowing-stock-graph-investment-financial-data-profit-growth-money-diagram-background-with-diagram-exchange-information-3d-rendering_79161-1797.jpg?uid=R151441698&ga=GA1.1.186429887.1744795877&semt=ais_items_boosted&w=740",
     },
@@ -39,7 +39,7 @@ function MainDashboard() {
       title: "Future Events",
       value: futureEvents || 0,
       icon: FaRegCalendarAlt,
-      gradient: "from-purple-300 to-purple-50",
+      gradient: "from-purple-100 to-purple-50",
       image:
         "https://img.freepik.com/free-vector/abstract-red-light-lines-pipe-speed-zoom-black-background-technology_1142-8971.jpg?uid=R151441698&ga=GA1.1.186429887.1744795877&semt=ais_items_boosted&w=740",
     },
@@ -48,7 +48,7 @@ function MainDashboard() {
       title: "Past Events",
       value: pastEvents || 0,
       icon: FaRegCalendarCheck,
-      gradient: "from-blue-300 to-blue-50",
+      gradient: "from-blue-100 to-blue-50",
       image:
         "https://img.freepik.com/free-vector/infographic_53876-25855.jpg?uid=R151441698&ga=GA1.1.186429887.1744795877&semt=ais_hybrid&w=740",
     },
@@ -58,7 +58,7 @@ function MainDashboard() {
       title: "Total Delivered",
       value: deliverdEvents || 0,
       icon: FaEnvelopeOpenText,
-      gradient: "from-yellow-300 to-yellow-50",
+      gradient: "from-yellow-100 to-yellow-50",
       image:
         "https://img.freepik.com/premium-psd/digital-tablet-screen-mockup-psd-smart-tech_53876-676311.jpg?uid=R151441698&ga=GA1.1.186429887.1744795877&semt=ais_items_boosted&w=740",
     },
@@ -67,7 +67,7 @@ function MainDashboard() {
       title: "Total Employees",
       value: totalCount || 0,
       icon: FaUserFriends,
-      gradient: "from-red-300 to-red-50",
+      gradient: "from-lime-100 to-lime-50",
       image:
         "https://img.freepik.com/free-vector/hand-drawn-flat-design-stock-market-concept_23-2149167960.jpg?uid=R151441698&ga=GA1.1.186429887.1744795877&semt=ais_hybrid&w=740",
     },
@@ -76,7 +76,7 @@ function MainDashboard() {
       title: "Pending Enquiries",
       value: pendingCount || 0,
       icon: FaEnvelopeOpenText,
-      gradient: "from-indigo-300 to-indigo-50",
+      gradient: "from-indigo-100 to-indigo-50",
       image:
         "https://img.freepik.com/premium-photo/chart-with-uptrend-line-graph-bar-chart-diagram-bull-market-dark-blue-background_97770-3.jpg?uid=R151441698&ga=GA1.1.186429887.1744795877&semt=ais_items_boosted&w=740",
     },
@@ -96,7 +96,7 @@ function MainDashboard() {
             <motion.div
               key={s.id}
               className={`
-                bg-gradient-to-br ${s.gradient} text-gray-950 rounded-2xl shadow-lg
+                bg-gradient-to-br  text-gray-950 rounded-2xl shadow-md
                 flex flex-col overflow-hidden
               `}
               initial={initialAnimation}

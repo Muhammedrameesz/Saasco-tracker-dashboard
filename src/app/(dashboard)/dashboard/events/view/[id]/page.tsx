@@ -206,11 +206,11 @@ export default function EventViewPage() {
         </div>
       </motion.div>
 
-      <section>
+      <section className="my-20">
         <LocationDisplay selectedEvent={selectedEvent} />
       </section>
 
-      <section>
+      <section className="">
         {selectedEvent?.startLocation || selectedEvent?.destinationLocation ? (
           <LocationMap event={selectedEvent} />
         ) : (

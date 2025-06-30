@@ -48,4 +48,5 @@ export interface PickUpPersonI {
   status: "approved" | "pending" | "rejected"; 
   createdAt: string;
   updatedAt: string;
+   liveLocationHistory?: LiveLocation[];
 }

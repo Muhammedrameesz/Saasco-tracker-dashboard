@@ -49,7 +49,7 @@ const eventSchema = z.object({
     }),
   contactPersonNumber: z
     .string()
-    .min(10, "Phone is required")
+    .min(10, "Phone number is required")
     .regex(/^\d+$/, {
       message: "Phone must be numbers only",
     })
