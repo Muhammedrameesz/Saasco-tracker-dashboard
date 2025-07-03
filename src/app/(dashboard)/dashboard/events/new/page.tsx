@@ -296,7 +296,7 @@ export default function NewEventPage() {
                     value={startLocation?.address ?? ""}
                     onSelect={(location) => {
                       if (!location.address) {
-                        setStartLocation(null); // <-- Clear location state
+                        setStartLocation(null); 
                         setValue("startLocation", null, {
                           shouldValidate: true,
                         });

@@ -44,7 +44,7 @@ export default function AddressAutocomplete({
     google.maps.places.AutocompletePrediction[]
   >([]);
 
-  // Fetch predictions when input changes
+  
   useEffect(() => {
     if (!isLoaded || !window.google) return;
     console.log(value);
