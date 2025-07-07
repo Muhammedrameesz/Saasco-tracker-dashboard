@@ -7,21 +7,25 @@ import { useCookiebot } from "@/hooks/useCookieBot";
 
 export default function Home() {
   const router = useRouter();
-  const [cookiebotReady, setCookiebotReady] = useState(false);
+  const [consentGiven, setConsentGiven] = useState(false);
 
   useCookiebot(() => {
-    setCookiebotReady(true);
+    if (window.Cookiebot?.consents?.marketing) {
+      console.log("✅ Cookie consent granted");
+      setConsentGiven(true);
+    } else {
+      console.log("❌ Cookie consent not granted");
+    }
   });
 
   useEffect(() => {
-    if (cookiebotReady) {
+    if (consentGiven) {
       const timer = setTimeout(() => {
         router.push("/dashboard");
-      }, 5000);
-
+      }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [cookiebotReady]);
+  }, [consentGiven]);
 
   return (
     <main className="min-h-screen flex items-center justify-center">
