@@ -16,6 +16,10 @@ import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+// import ReactCookieBot from "react-cookiebot"
+
+
+// const domainGroupId = "cff002cf-1823-4975-af51-2b6d7a538f3e"
 
 const loginSchema = z.object({
   email: z
@@ -41,6 +45,7 @@ export function UserAuthForm({
   const [openEmailView, setOpenEmailView] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
   const router = useRouter();
+
 
   const {
     register,
@@ -71,6 +76,7 @@ export function UserAuthForm({
 
   return (
     <main className="w-full max-w-lg mx-auto px-6 py-10 bg-white rounded-2xl shadow-newNormal dark:bg-gray-900 transition-all font-Lexend">
+     
       {openEmailView ? (
         <ForgotEmailView setOpenEmailView={setOpenEmailView} />
       ) : (
@@ -81,6 +87,8 @@ export function UserAuthForm({
         >
           <div className={cn("grid gap-6", className)} {...props}>
             <div className="flex flex-col space-y-2 text-center mb-5">
+       {/* <ReactCookieBot domainGroupId={domainGroupId}/> */}
+
               <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
                 Sign-in to Your Account
               </h1>
