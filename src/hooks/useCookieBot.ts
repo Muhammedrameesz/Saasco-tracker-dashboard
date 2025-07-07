@@ -1,15 +1,7 @@
 // hooks/useCookiebot.ts
 import { useEffect } from "react";
 
-declare global {
-  interface Window {
-    Cookiebot?: {
-      consents: Record<string, unknown>;
-      onconsent: () => void;
-      renew: () => void;
-    };
-  }
-}
+
 
 export const useCookiebot = (onConsentReady: () => void) => {
   useEffect(() => {

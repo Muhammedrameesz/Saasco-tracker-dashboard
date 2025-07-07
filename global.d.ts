@@ -4,8 +4,9 @@ declare global {
   interface Window {
     Cookiebot?: {
       renew: () => void;
-      withdrawConsent: () => void;
-      consents: Record<string, unknown>; 
+      withdrawConsent?: () => void; 
+      consents: Record<string, unknown>;
+      onconsent?: () => void; 
     };
   }
 }
