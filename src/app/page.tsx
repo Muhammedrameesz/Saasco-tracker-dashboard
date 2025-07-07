@@ -1,35 +1,26 @@
 "use client";
-
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Spinner from "@/components/loading/Spinner";
-import { useCookiebot } from "@/hooks/useCookieBot";
+import ReactCookieBot from "react-cookiebot"
+
+
+const domainGroupId = "cff002cf-1823-4975-af51-2b6d7a538f3e"
 
 export default function Home() {
   const router = useRouter();
-  const [consentGiven, setConsentGiven] = useState(false);
 
-  useCookiebot(() => {
-    if (window.Cookiebot?.consents?.marketing) {
-      console.log("✅ Cookie consent granted");
-      setConsentGiven(true);
-    } else {
-      console.log("❌ Cookie consent not granted");
-    }
-  });
 
   useEffect(() => {
-    if (consentGiven) {
-      const timer = setTimeout(() => {
-        router.push("/dashboard");
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [consentGiven]);
+    router.push("/dashboard");
+  },);
 
   return (
-    <main className="min-h-screen flex items-center justify-center">
-      <Spinner />
+    <main className="">
+      <h1>
+      <ReactCookieBot domainGroupId={domainGroupId} />
+        <Spinner/>
+      </h1>
     </main>
   );
 }

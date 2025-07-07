@@ -1,12 +1,13 @@
+// global.d.ts
 export {};
 
 declare global {
   interface Window {
     Cookiebot?: {
-      renew: () => void;
-      withdrawConsent?: () => void; 
       consents: Record<string, unknown>;
-      onconsent?: () => void; 
+      onconsent?: () => void;
+      renew: () => void;
+      withdrawConsent?: () => void;
     };
   }
 }

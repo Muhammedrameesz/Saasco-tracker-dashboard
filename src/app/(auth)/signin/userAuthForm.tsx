@@ -16,10 +16,7 @@ import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-// import ReactCookieBot from "react-cookiebot"
 
-
-// const domainGroupId = "cff002cf-1823-4975-af51-2b6d7a538f3e"
 
 const loginSchema = z.object({
   email: z
@@ -76,7 +73,7 @@ export function UserAuthForm({
 
   return (
     <main className="w-full max-w-lg mx-auto px-6 py-10 bg-white rounded-2xl shadow-newNormal dark:bg-gray-900 transition-all font-Lexend">
-     
+      
       {openEmailView ? (
         <ForgotEmailView setOpenEmailView={setOpenEmailView} />
       ) : (
