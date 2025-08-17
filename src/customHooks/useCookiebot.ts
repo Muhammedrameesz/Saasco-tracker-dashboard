@@ -1,4 +1,5 @@
 // hooks/useCookiebot.ts
+"use client"
 import { useEffect } from "react";
 
 export const useCookiebot = (onConsentReady: () => void) => {
