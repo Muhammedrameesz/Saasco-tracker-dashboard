@@ -19,10 +19,10 @@ export const useCookiebot = (onConsentReady: () => void) => {
     script.async = true;
     script.type = "text/javascript";
 
-    // Listen when Cookiebot is fully loaded
+    
     script.onload = () => {
       if (window.Cookiebot) {
-        // If already accepted
+      
         handleConsent();
 
         // Or wait for event
