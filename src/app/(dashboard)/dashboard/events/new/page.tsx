@@ -33,7 +33,7 @@ export type SelectedLocation = {
 
 const eventSchema = z.object({
   date: z.string().min(1, "Date is required"),
-  time: z.string().min(1, "Time is required"),
+  // time: z.string().min(1, "Time is required"),
   eventName: z
     .string()
     .min(2, "Event name is required")
@@ -181,8 +181,7 @@ export default function NewEventPage() {
               ["eventName", "Event Name"],
               ["clientName", "Client Name"],
               ["date", "Event Date", "date"],
-              ["time", "Event Time", "time"],
-              // ["pincode", "Pincode"],
+             
               ["contactPersonNumber", "Contact Person Number"],
             ] as const
           ).map(([name, label, type = "text", isReadOnly = false]) => {

@@ -99,7 +99,9 @@ export const useEventStore = create<IEventStore>((set, get) => ({
       );
       if (res.status === 200) {
         set((state) => ({
-          events: state.events.filter((event) => event._id !== eventId),
+          events: Array.isArray(state.events)
+            ? state.events.filter((event) => event._id !== eventId)
+            : [],
           selectedEvent:
             state.selectedEvent?._id === eventId ? null : state.selectedEvent,
         }));

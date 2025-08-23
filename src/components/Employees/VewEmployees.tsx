@@ -81,7 +81,7 @@ export default function EmployeesView() {
     return () => clearTimeout(delayDebounce);
   }, [searchInput]);
 
-  const filteredEmployees = employees.filter((employee) => {
+  const filteredEmployees = (employees || []).filter((employee) => {
     const lowerSearch = search.toLowerCase();
 
     return (

@@ -55,7 +55,6 @@ type FileUploaderProps = {
   orientation?: "horizontal" | "vertical";
 };
 
-
 export const FileUploader = forwardRef<
   HTMLDivElement,
   FileUploaderProps & React.HTMLAttributes<HTMLDivElement>
@@ -91,14 +90,12 @@ export const FileUploader = forwardRef<
 
     const removeFileFromSet = useCallback(
       (i: number) => {
-        if (!value) return;
+        if (!Array.isArray(value)) return;
         const newFiles = value.filter((_, index) => index !== i);
         onValueChange(newFiles);
       },
       [value, onValueChange]
     );
-
-    
 
     const handleKeyDown = useCallback(
       (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -335,12 +332,12 @@ export const FilePreview = () => {
             className="relative w-32 h-32 border rounded-md overflow-hidden shadow-sm"
           >
             <Image
-             width={32}
+              width={32}
               height={32}
               src={preview}
               alt={`preview-${i}`}
               className="object-cover w-full h-full"
-              onLoad={() => URL.revokeObjectURL(preview)} 
+              onLoad={() => URL.revokeObjectURL(preview)}
             />
             <span className="absolute bottom-0 left-0 bg-black/60 text-white text-xs px-1 w-full text-center truncate">
               {file.name}

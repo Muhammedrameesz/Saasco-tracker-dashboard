@@ -40,7 +40,7 @@ export default function EventTable() {
 
   if (loading) return <Spinner />;
 
-  const filteredEvents = events.filter((event) => {
+  const filteredEvents = (events || []).filter((event) => {
     const lowerSearch = search.toLowerCase();
 
     return (

@@ -54,7 +54,7 @@ export default function BannedRejectedEmployees() {
   }, [fetchBannedAndRejected]);
 
   // Show only banned or rejected employees
-  const filteredEmployees = employees.filter(
+  const filteredEmployees = (employees || []).filter(
     (emp) => !emp.isActive || emp.status === "rejected"
   );
 

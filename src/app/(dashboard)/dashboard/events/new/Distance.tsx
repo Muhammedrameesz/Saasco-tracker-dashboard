@@ -25,7 +25,7 @@ const Distance: React.FC<DistanceProps> = ({
     lat2: number,
     lon2: number
   ): number => {
-    const r = 6371; // Earth radius in km
+    const r = 6371.0088;
     const toRad = (deg: number) => (deg * Math.PI) / 180;
 
     const dLat = toRad(lat2 - lat1);
@@ -35,7 +35,7 @@ const Distance: React.FC<DistanceProps> = ({
       Math.sin(dLat / 2) ** 2 +
       Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
 
-    const c = 2 * Math.asin(Math.sqrt(a));
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     return r * c;
   };
@@ -46,12 +46,13 @@ const Distance: React.FC<DistanceProps> = ({
   let timeText = "";
 
   if (startLocation && destinationLocation) {
-    distanceInKm = distance(
-      startLocation.lat,
-      startLocation.lng,
-      destinationLocation.lat,
-      destinationLocation.lng
-    );
+    distanceInKm =
+      distance(
+        startLocation.lat,
+        startLocation.lng,
+        destinationLocation.lat,
+        destinationLocation.lng
+      ) * 1.3;
 
     estimatedTimeInHours = distanceInKm / averageSpeed;
     timeText =
