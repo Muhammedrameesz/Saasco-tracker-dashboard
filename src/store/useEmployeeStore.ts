@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios, { AxiosError } from "axios";
-import { localUrl } from "@/api/const";
+import { LocalUrl } from "@/api/const";
 import { EmployeeI } from "@/Types/EmployeeTypes";
 import { toast } from "sonner";
 
@@ -48,7 +48,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     set({ loading: true, error: null });
 
     try {
-      const res = await axios.get(`${localUrl}/employees/get-employees`, {
+      const res = await axios.get(`${LocalUrl}/employees/get-employees`, {
         params: { page, limit: LIMIT },
         withCredentials: true,
       });
@@ -74,7 +74,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const deleted = await axios.delete(
-        `${localUrl}/employees/delete-employees/${id}`,
+        `${LocalUrl}/employees/delete-employees/${id}`,
         {
           withCredentials: true,
         }
@@ -95,7 +95,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const res = await axios.patch(
-        `${localUrl}/employees/update-status/${id}`,
+        `${LocalUrl}/employees/update-status/${id}`,
         { status },
         { withCredentials: true }
       );
@@ -120,7 +120,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const res = await axios.patch(
-        `${localUrl}/employees/updateActiveStatus/${id}`,
+        `${LocalUrl}/employees/updateActiveStatus/${id}`,
         { isActive },
         { withCredentials: true }
       );
@@ -145,7 +145,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
 
     try {
       const res = await axios.put(
-        `${localUrl}/employees/edit-employees/${id}`,
+        `${LocalUrl}/employees/edit-employees/${id}`,
         updatedData,
         {
           withCredentials: true,
@@ -178,7 +178,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const res = await axios.get(
-        `${localUrl}/employees/pendingEmployees?page=${page}`,
+        `${LocalUrl}/employees/pendingEmployees?page=${page}`,
         {
           withCredentials: true,
         }

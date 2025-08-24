@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { IoIosEyeOff, IoIosEye } from "react-icons/io";
-import { localUrl } from "@/api/const";
+import { LocalUrl } from "@/api/const";
 import { Input } from "@/components/ui/input";
 
 const ResetPasswordSchema = z
@@ -59,7 +59,7 @@ export default function ResetPasswordView({
     setLoading(true);
     try {
       const res = await axios.post(
-        `${localUrl}/admin/reset-password/${resetToken}`,
+        `${LocalUrl}/admin/reset-password/${resetToken}`,
         {
           password: data.password,
         }

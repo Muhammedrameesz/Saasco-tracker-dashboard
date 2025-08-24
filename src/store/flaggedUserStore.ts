@@ -2,7 +2,7 @@ import { create } from "zustand";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { EmployeeI } from "@/Types/EmployeeTypes";
-import { localUrl } from "@/api/const";
+import { LocalUrl } from "@/api/const";
 
 const LIMIT = 6;
 
@@ -37,7 +37,7 @@ export const useFlaggedEmployeeStore = create<EmployeeState>((set, get) => ({
 
     try {
       const res = await axios.get(
-        `${localUrl}/employees/banned-rejected-employees`,
+        `${LocalUrl}/employees/banned-rejected-employees`,
         {
           params: { page, limit: LIMIT },
           withCredentials: true,
@@ -66,7 +66,7 @@ export const useFlaggedEmployeeStore = create<EmployeeState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const deleted = await axios.delete(
-        `${localUrl}/employees/delete-employees/${id}`,
+        `${LocalUrl}/employees/delete-employees/${id}`,
         {
           withCredentials: true,
         }
@@ -87,7 +87,7 @@ export const useFlaggedEmployeeStore = create<EmployeeState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const res = await axios.patch(
-        `${localUrl}/employees/update-status/${id}`,
+        `${LocalUrl}/employees/update-status/${id}`,
         { status },
         { withCredentials: true }
       );
@@ -111,7 +111,7 @@ export const useFlaggedEmployeeStore = create<EmployeeState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const res = await axios.patch(
-        `${localUrl}/employees/updateActiveStatus/${id}`,
+        `${LocalUrl}/employees/updateActiveStatus/${id}`,
         { isActive },
         { withCredentials: true }
       );
@@ -136,7 +136,7 @@ export const useFlaggedEmployeeStore = create<EmployeeState>((set, get) => ({
 
     try {
       const res = await axios.put(
-        `${localUrl}/employees/edit-employees/${id}`,
+        `${LocalUrl}/employees/edit-employees/${id}`,
         updatedData,
         { withCredentials: true }
       );

@@ -40,7 +40,7 @@ import { motion } from "framer-motion";
 import { format } from "date-fns";
 import Image from "next/image";
 import axios, { AxiosError } from "axios";
-import { localUrl } from "@/api/const";
+import { LocalUrl } from "@/api/const";
 import { toast } from "sonner";
 import clsx from "clsx";
 
@@ -139,7 +139,7 @@ export default function AddEmployeeForm() {
       }
 
       const res = await axios.post(
-        `${localUrl}/employees/add-employees`,
+        `${LocalUrl}/employees/add-employees`,
         formData,
         {
           headers: {

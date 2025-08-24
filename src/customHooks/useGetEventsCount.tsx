@@ -1,5 +1,5 @@
 "use client";
-import { localUrl } from "@/api/const";
+import { LocalUrl } from "@/api/const";
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 
@@ -27,10 +27,10 @@ export const useGetEventCounts = () => {
       try {
         const [pastRes, currentRes, upcomingRes, deliveredRes] =
           await Promise.all([
-            axios.get(`${localUrl}/event/getPastEvents?page=1&limit=1`),
-            axios.get(`${localUrl}/event/getCurrentEvents?page=1&limit=1`),
-            axios.get(`${localUrl}/event/getUpcomingEvents?page=1&limit=1`),
-            axios.get(`${localUrl}/event/getDeliveredEvents?page=1&limit=1`),
+            axios.get(`${LocalUrl}/event/getPastEvents?page=1&limit=1`),
+            axios.get(`${LocalUrl}/event/getCurrentEvents?page=1&limit=1`),
+            axios.get(`${LocalUrl}/event/getUpcomingEvents?page=1&limit=1`),
+            axios.get(`${LocalUrl}/event/getDeliveredEvents?page=1&limit=1`),
           ]);
 
         setCounts({

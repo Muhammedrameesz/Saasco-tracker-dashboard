@@ -1,7 +1,7 @@
 "use client";
 import { create } from "zustand";
 import axios, { AxiosError } from "axios";
-import { localUrl } from "@/api/const";
+import { LocalUrl } from "@/api/const";
 import { toast } from "sonner";
 
 export type FormData = {
@@ -78,7 +78,7 @@ export const adminAuthStore = create<Store>((set, get) => ({
     set({ loading: true, error: null, message: "" });
 
     try {
-      const res = await axios.post(`${localUrl}/admin/admin-login`, data, {
+      const res = await axios.post(`${LocalUrl}/admin/admin-login`, data, {
         withCredentials: true,
       });
 
@@ -108,7 +108,7 @@ export const adminAuthStore = create<Store>((set, get) => ({
 
     try {
       const res = await axios.post(
-        `${localUrl}/admin/verify-admin`,
+        `${LocalUrl}/admin/verify-admin`,
         {},
         {
           withCredentials: true,
@@ -159,7 +159,7 @@ export const adminAuthStore = create<Store>((set, get) => ({
   updateAdminProfile: async (data: adminData) => {
     try {
       const res = await axios.put(
-        `${localUrl}/admin/edit-admin/${get().adminDatas.id}`,
+        `${LocalUrl}/admin/edit-admin/${get().adminDatas.id}`,
         data,
         { withCredentials: true }
       );
@@ -193,7 +193,7 @@ export const adminAuthStore = create<Store>((set, get) => ({
   }: adminPasswordData) => {
     try {
       const res = await axios.put(
-        `${localUrl}/admin/change-password/${get().adminDatas.id}`,
+        `${LocalUrl}/admin/change-password/${get().adminDatas.id}`,
         { currentPassword, newPassword },
         { withCredentials: true }
       );
@@ -218,7 +218,7 @@ export const adminAuthStore = create<Store>((set, get) => ({
      set({loading:true})
     try {
       const response = await axios.post(
-        `${localUrl}/admin/logout`,
+        `${LocalUrl}/admin/logout`,
         {},
         { withCredentials: true }
       );

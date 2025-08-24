@@ -1,5 +1,5 @@
 "use client";
-import { localUrl } from "@/api/const";
+import { LocalUrl } from "@/api/const";
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 
@@ -12,7 +12,7 @@ export const useGetPendingEnquiries = () => {
     const fetchPending = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`${localUrl}/employees/pendingEmployeesCount`);
+        const res = await axios.get(`${LocalUrl}/employees/pendingEmployeesCount`);
         if (res.status === 200) {
           setPendingCount(res.data?.totalPendingEmployees || 0);
         }

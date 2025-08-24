@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { FaEnvelope } from "react-icons/fa";
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
-import { localUrl } from "@/api/const";
+import { LocalUrl } from "@/api/const";
 import { toast } from "sonner";
 import { LogIn } from "lucide-react";
 
@@ -47,7 +47,7 @@ export default function ForgotEmailView({
   const onSubmit = async (data: ForgotPasswordSchema) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${localUrl}/admin/forgot-password`, {
+      const res = await axios.post(`${LocalUrl}/admin/forgot-password`, {
         email: data.email,
       });
 

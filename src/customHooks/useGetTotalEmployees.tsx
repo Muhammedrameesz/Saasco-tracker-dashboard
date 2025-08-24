@@ -1,5 +1,5 @@
 "use client";
-import { localUrl } from "@/api/const";
+import { LocalUrl } from "@/api/const";
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 
@@ -12,7 +12,7 @@ export const useGetTotalEmployees = () => {
     const fetchTotalEmployees = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`${localUrl}/employees/totalEmployeesCount`);
+        const res = await axios.get(`${LocalUrl}/employees/totalEmployeesCount`);
         if (res.status === 200) {
           setTotalCount(res.data?.totalEmployees || 0);
         }

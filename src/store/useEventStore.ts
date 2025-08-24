@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios, { AxiosError } from "axios";
 import { IEvent, PickUpPersonI } from "@/Types/EventTypes";
-import { localUrl } from "@/api/const";
+import { LocalUrl } from "@/api/const";
 import { toast } from "sonner";
 import { UpdateEventStatusPayload } from "@/Types/EventStatusTypes";
 
@@ -48,7 +48,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
     try {
       const limit = 5;
       const { data } = await axios.get(
-        `${localUrl}/event/get-events?page=${page}&limit=${limit}`
+        `${LocalUrl}/event/get-events?page=${page}&limit=${limit}`
       );
       set({
         events: data.events,
@@ -66,7 +66,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
   addEvent: async (event) => {
     set({ loading: true, error: null });
     try {
-      const res = await axios.post(`${localUrl}/event/add-events`, event, {
+      const res = await axios.post(`${LocalUrl}/event/add-events`, event, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -94,7 +94,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
     set({ loading: true });
     try {
       const res = await axios.delete(
-        `${localUrl}/event/delete-events/${eventId}`,
+        `${LocalUrl}/event/delete-events/${eventId}`,
         { withCredentials: true }
       );
       if (res.status === 200) {
@@ -124,7 +124,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
 
     try {
       const res = await axios.put(
-        `${localUrl}/event/edit-events/${eventId}`,
+        `${LocalUrl}/event/edit-events/${eventId}`,
         updatedEvent,
         {
           headers: {
@@ -162,7 +162,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const res = await axios.get<{ event: IEvent }>(
-        `${localUrl}/event/get-events-by/${eventId}`,
+        `${LocalUrl}/event/get-events-by/${eventId}`,
         { withCredentials: true }
       );
 
@@ -181,7 +181,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
   fetchPickUpPerson: async () => {
     try {
       const res = await axios.get<{ data: PickUpPersonI[] }>(
-        `${localUrl}/employees/get-drivers`,
+        `${LocalUrl}/employees/get-drivers`,
         { withCredentials: true }
       );
 
@@ -201,7 +201,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
   addPickUpPerson: async (eventId, pickupPersonId) => {
     try {
       await axios.patch(
-        `${localUrl}/event/add-pickupPerson`,
+        `${LocalUrl}/event/add-pickupPerson`,
         {},
         {
           params: {
@@ -224,7 +224,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
   editPickUpPerson: async (eventId: string, newPickupPersonId: string) => {
     try {
       await axios.patch(
-        `${localUrl}/event/edit-pickupPerson`,
+        `${LocalUrl}/event/edit-pickupPerson`,
         {},
         {
           params: {
@@ -250,7 +250,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
     set({ loading: true });
     try {
       const res = await axios.patch(
-        `${localUrl}/event/eventsStatusUpdate`,
+        `${LocalUrl}/event/eventsStatusUpdate`,
         {
           ...payload,
           events: [eventId],
