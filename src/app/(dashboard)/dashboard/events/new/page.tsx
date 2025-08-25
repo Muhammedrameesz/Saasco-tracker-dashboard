@@ -12,7 +12,7 @@ import {
   FileUploaderContent,
   FileUploaderItem,
 } from "@/components/ui/file-upload";
-import { ClipboardList, CloudUpload } from "lucide-react";
+import { CalendarIcon, ClipboardList, CloudUpload } from "lucide-react";
 import Image from "next/image";
 import { useEventStore } from "@/store/useEventStore";
 import { toast } from "sonner";
@@ -23,6 +23,13 @@ import AddressAutocomplete from "@/components/Map/AddressAutoComplete";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Distance from "./Distance";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
 
 export type SelectedLocation = {
   lat: number;
@@ -31,55 +38,61 @@ export type SelectedLocation = {
   components?: google.maps.GeocoderAddressComponent[];
 };
 
-const eventSchema = z.object({
-  date: z.string().min(1, "Date is required"),
-  // time: z.string().min(1, "Time is required"),
-  eventName: z
-    .string()
-    .min(2, "Event name is required")
-    .refine((val) => val.trim() !== "", {
-      message: "Name cannot be empty or just spaces",
-    }),
-  clientName: z
-    .string()
-    .min(2, "Client name is required")
-    .regex(/^[A-Za-z\s]+$/, "Name must contain only letters")
-    .refine((val) => val.trim() !== "", {
-      message: "Name cannot be empty or just spaces",
-    }),
-  contactPersonNumber: z
-    .string()
-    .min(10, "Phone number is required")
-    .regex(/^\d+$/, {
-      message: "Phone must be numbers only",
-    })
-    .refine((val) => val.length === 10, {
-      message: "Phone must be 10 digits",
-    }),
+const eventSchema = z
+  .object({
+    date: z.string().min(1, "Start Date is required"),
+    endDate: z.string().min(1, "End Date is required"),
+    // time: z.string().min(1, "Time is required"),
+    eventName: z
+      .string()
+      .min(2, "Event name is required")
+      .refine((val) => val.trim() !== "", {
+        message: "Name cannot be empty or just spaces",
+      }),
+    clientName: z
+      .string()
+      .min(2, "Client name is required")
+      .regex(/^[A-Za-z\s]+$/, "Name must contain only letters")
+      .refine((val) => val.trim() !== "", {
+        message: "Name cannot be empty or just spaces",
+      }),
+    contactPersonNumber: z
+      .string()
+      .min(10, "Phone number is required")
+      .regex(/^\d+$/, {
+        message: "Phone must be numbers only",
+      })
+      .refine((val) => val.length === 10, {
+        message: "Phone must be 10 digits",
+      }),
 
-  description: z
-    .string()
-    .min(10, "Description must be at least 10 characters."),
+    description: z
+      .string()
+      .min(10, "Description must be at least 10 characters."),
 
-  image: z.custom<File[]>(
-    (files) => files && files.length > 0,
-    "Image is required"
-  ),
-  startLocation: z
-    .object({
-      lat: z.number(),
-      lng: z.number(),
-      address: z.string(),
-    })
-    .nullable(),
+    image: z.custom<File[]>(
+      (files) => files && files.length > 0,
+      "Image is required"
+    ),
+    startLocation: z
+      .object({
+        lat: z.number(),
+        lng: z.number(),
+        address: z.string(),
+      })
+      .nullable(),
     destinationLocation: z
-    .object({
-      lat: z.number(),
-      lng: z.number(),
-      address: z.string(),
-    })
-    .nullable(),
-});
+      .object({
+        lat: z.number(),
+        lng: z.number(),
+        address: z.string(),
+      })
+      .nullable(),
+  })
+  .refine((data) => data.endDate >= data.date, {
+    message: "End date must be after start date",
+    path: ["endDate"],
+  });
 
 type EventFormData = z.infer<typeof eventSchema>;
 
@@ -180,26 +193,63 @@ export default function NewEventPage() {
             [
               ["eventName", "Event Name"],
               ["clientName", "Client Name"],
-              ["date", "Event Date", "date"],
-             
+              ["date", "Start Date", "date"],
+              ["endDate", "End Date", "date"],
               ["contactPersonNumber", "Contact Person Number"],
             ] as const
           ).map(([name, label, type = "text", isReadOnly = false]) => {
-            // Get today's date in yyyy-mm-dd format
-            const today = new Date().toISOString().split("T")[0];
-
             return (
-              <div key={name}>
+              <div key={name} className="space-y-1">
                 <Label htmlFor={name}>{label}</Label>
-                <Input
-                  id={name}
-                  type={type}
-                  readOnly={isReadOnly}
-                  placeholder={`Enter ${label.toLowerCase()}`}
-                  {...register(name)}
-                  className="mt-1"
-                  {...(type === "date" ? { min: today } : {})}
-                />
+
+                {type === "date" ? (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={`w-full justify-start text-left font-normal ${
+                          !watch(name) && "text-muted-foreground"
+                        }`}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {watch(name)
+                          ? format(new Date(watch(name)), "PPP")
+                          : `Pick ${label.toLowerCase()}`}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="p-0">
+                      <Calendar
+                        mode="single"
+                        selected={
+                          watch(name) ? new Date(watch(name)) : undefined
+                        }
+                        onSelect={(date) => {
+                          if (date) {
+                            const localDate = date.toLocaleDateString("en-CA");
+                            setValue(name, localDate);
+                          }
+                        }}
+                        captionLayout="dropdown"
+                        fromYear={new Date().getFullYear()}
+                        toYear={new Date().getFullYear() + 50}
+                        disabled={(date) =>
+                          date < new Date(new Date().setHours(0, 0, 0, 0))
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                ) : (
+                  <Input
+                    id={name}
+                    type={type}
+                    readOnly={isReadOnly}
+                    placeholder={`Enter ${label.toLowerCase()}`}
+                    {...register(name)}
+                    className="mt-1"
+                  />
+                )}
+
                 {errors[name] && (
                   <p className="text-sm text-red-600 mt-1">
                     {errors[name]?.message as string}
@@ -295,7 +345,7 @@ export default function NewEventPage() {
                     value={startLocation?.address ?? ""}
                     onSelect={(location) => {
                       if (!location.address) {
-                        setStartLocation(null); 
+                        setStartLocation(null);
                         setValue("startLocation", null, {
                           shouldValidate: true,
                         });

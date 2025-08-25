@@ -27,37 +27,48 @@ import { useEventStore } from "@/store/useEventStore";
 import { toast } from "sonner";
 import { IEvent } from "@/Types/EventTypes";
 
-const eventSchema = z.object({
-  date: z.date(),
-  time: z.string(),
-  eventName: z
-    .string()
-    .min(2, "Event name is required")
-    .refine((val) => val.trim() !== "", {
-      message: "Name cannot be empty or just spaces",
+const eventSchema = z
+  .object({
+    date: z.date({
+      required_error: "Start date is required",
+      invalid_type_error: "Invalid date",
     }),
-  clientName: z
-    .string()
-    .min(2, "Client name is required")
-    .regex(/^[A-Za-z\s]+$/, "Name must contain only letters")
-    .refine((val) => val.trim() !== "", {
-      message: "Name cannot be empty or just spaces",
+    endDate: z.date({
+      required_error: "End date is required",
+      invalid_type_error: "Invalid date",
     }),
-  contactPersonNumber: z
-    .string()
-    .min(10, "Contact person number is required")
-    .regex(/^\d+$/, {
-      message: "Phone number must contain only digits",
-    })
-    .refine((val) => val.length === 10, {
-      message: "Phone number must be exactly 10 digits",
-    }),
-  description: z
-    .string()
-    .min(10, "Description must be at least 10 characters long"),
+    eventName: z
+      .string()
+      .min(2, "Event name is required")
+      .refine((val) => val.trim() !== "", {
+        message: "Name cannot be empty or just spaces",
+      }),
+    clientName: z
+      .string()
+      .min(2, "Client name is required")
+      .regex(/^[A-Za-z\s]+$/, "Name must contain only letters")
+      .refine((val) => val.trim() !== "", {
+        message: "Name cannot be empty or just spaces",
+      }),
+    contactPersonNumber: z
+      .string()
+      .min(10, "Contact person number is required")
+      .regex(/^\d+$/, {
+        message: "Phone number must contain only digits",
+      })
+      .refine((val) => val.length === 10, {
+        message: "Phone number must be exactly 10 digits",
+      }),
+    description: z
+      .string()
+      .min(10, "Description must be at least 10 characters long"),
 
-  image: z.instanceof(File).optional(),
-});
+    image: z.instanceof(File).optional(),
+  })
+  .refine((data) => data.endDate >= data.date, {
+    message: "End date must be after start date",
+    path: ["endDate"],
+  });
 
 type EventFormData = z.infer<typeof eventSchema>;
 
@@ -94,8 +105,8 @@ export default function EditEvents({ event }: EditEventsProps) {
   useEffect(() => {
     if (event) {
       reset({
-        date: new Date(event.date),
-        time: event.time,
+        date: event.date ? new Date(event.date) : undefined,
+        endDate: event.endDate ? new Date(event.endDate) : undefined,
         eventName: event.eventName,
         clientName: event.clientName,
         contactPersonNumber: event.contactPersonNumber,
@@ -169,9 +180,11 @@ export default function EditEvents({ event }: EditEventsProps) {
                     )}
                   </div>
                 ))}
+              </section>
 
+              <section className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
                 <div>
-                  <Label>Date</Label>
+                  <Label>Start Date</Label>
                   <Controller
                     control={control}
                     name="date"
@@ -211,11 +224,41 @@ export default function EditEvents({ event }: EditEventsProps) {
                 </div>
 
                 <div>
-                  <Label htmlFor="time">Time</Label>
-                  <Input type="time" id="time" {...register("time")} />
-                  {errors.time && (
+                  <Label>End Date</Label>
+                  <Controller
+                    control={control}
+                    name="endDate"
+                    render={({ field }) => (
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className="w-full justify-start text-left"
+                          >
+                            {field.value
+                              ? format(field.value, "PPP")
+                              : "Pick a date"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            captionLayout="dropdown"
+                            fromYear={new Date().getFullYear()}
+                            toYear={new Date().getFullYear() + 50}
+                            disabled={(date) =>
+                              date < new Date(new Date().setHours(0, 0, 0, 0))
+                            }
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    )}
+                  />
+                  {errors.endDate && (
                     <p className="text-sm text-red-600">
-                      {errors.time.message}
+                      {errors.endDate.message}
                     </p>
                   )}
                 </div>

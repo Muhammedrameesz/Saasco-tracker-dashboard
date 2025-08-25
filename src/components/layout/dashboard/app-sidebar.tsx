@@ -130,7 +130,10 @@ export function AppSidebar() {
               <SidebarGroupContent>
                 <SidebarMenu className="flex flex-col gap-2 px-2">
                   {sectionItems.map((item) => {
-                    const isActive = pathname === item.url;
+                     const isActive =
+                      item.url === "/dashboard"
+                        ? pathname === "/dashboard"
+                        : pathname.startsWith(item.url); 
                     return (
                       <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton asChild>

@@ -51,6 +51,12 @@ export default function EventTable() {
     );
   });
 
+  const getStatusLabel = (status?: string | null) => {
+  if (!status) return "Unknown";
+  if (status === "current") return "Running";
+  return status.charAt(0).toUpperCase() + status.slice(1);
+};
+
   return (
     <motion.div
       className="rounded-2xl bg-white  overflow-hidden mt-10"
@@ -160,17 +166,14 @@ export default function EventTable() {
                             {
                               "bg-red-100 text-red-600":
                                 event.dateStatus === "past",
-                              "bg-yellow-100 text-yellow-700":
+                              "bg-purple-100 text-purple-600":
                                 event.dateStatus === "current",
                               "bg-green-100 text-green-600":
                                 event.dateStatus === "upcoming",
                             }
                           )}
                         >
-                          {event.dateStatus
-                            ? event.dateStatus.charAt(0).toUpperCase() +
-                              event.dateStatus.slice(1)
-                            : "Unknown"}
+                          {getStatusLabel(event.dateStatus)}
                         </span>
                       </td>
 

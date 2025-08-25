@@ -8,7 +8,6 @@ import Image from "next/image";
 import {
   FaUser,
   FaCalendarAlt,
-  FaClock,
   FaFileAlt,
   FaUserPlus,
 } from "react-icons/fa";
@@ -142,39 +141,39 @@ export default function EventViewPage() {
               label="Client Name"
               icon={<FaUser />}
               value={selectedEvent.clientName}
-              color="bg-blue-100"
+              color="bg-blue-200"
             />
             <Info
-              label="Date"
+              label="Start Date"
               icon={<FaCalendarAlt />}
               value={formatDate(selectedEvent.date)}
-              color="bg-yellow-100"
+              color="bg-yellow-200"
             />
             <Info
-              label="Time"
-              icon={<FaClock />}
-              value={selectedEvent.time}
-              color="bg-purple-100"
+              label="End Date"
+              icon={<FaCalendarAlt />}
+              value={formatDate(selectedEvent.endDate)}
+              color="bg-red-200"
             />
 
             <Info
               label="Contact"
               icon={<MdSettingsPhone />}
               value={selectedEvent.contactPersonNumber}
-              color="bg-blue-50"
+              color="bg-purple-100"
             />
             <Info
               label="Status"
               icon={<FaFileAlt />}
               value={capitalize(selectedEvent.status)}
-              color="bg-orange-100 "
+              color="bg-orange-200 "
             />
             {selectedEvent.dateStatus && (
               <Info
                 label="Date Status"
                 icon={<FaCalendarAlt />}
                 value={capitalize(selectedEvent.dateStatus)}
-                color="bg-lime-100"
+                color="bg-lime-200"
               />
             )}
           </div>

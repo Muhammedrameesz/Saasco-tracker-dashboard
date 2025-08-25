@@ -13,9 +13,10 @@ export interface LiveLocation {
 export interface IEvent {
   _id?: string | undefined;
   eventPlace: string;
-  date: string;             
+  date: string; 
+  endDate: string;             
   location: string;
-  time: string;
+  // time?: string;
   adminId: string;
   status:"active"| "cancelled"| "shipped"| "ongoing"| "delayed"|"delivered"|"completed";
   pincode: string;
