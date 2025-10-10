@@ -16,7 +16,11 @@ interface IEventStore {
   fetchPickUpPerson: () => Promise<void>;
   selectedEvent: IEvent | null;
 
-  fetchEvents: (page: number | null) => Promise<void>;
+  fetchEvents: (
+    page?: number | null,
+    search?: string,
+    status?: string,
+  ) => Promise<void>;
   addEvent: (event: FormData) => Promise<boolean>;
   deleteEvent: (eventId: string) => Promise<boolean>;
   updateEvent: (eventId: string, updatedEvent: FormData) => Promise<void>;
@@ -43,13 +47,24 @@ export const useEventStore = create<IEventStore>((set, get) => ({
   pickUpPersonList: [],
   selectedEvent: null,
 
-  fetchEvents: async (page) => {
+  fetchEvents: async (page, search = "", status = "") => {
     set({ loading: true, error: null });
+
     try {
-      const limit = 5;
+      const limit = 10;
+
+      const currentPage = Number(page) || 1;
+
+      const params = new URLSearchParams();
+      params.append("page", currentPage.toString());
+      params.append("limit", limit.toString());
+      if (search.trim()) params.append("search", search.trim());
+      if (status.trim()) params.append("status", status.trim());
+
       const { data } = await axios.get(
-        `${LocalUrl}/event/get-events?page=${page}&limit=${limit}`
+        `${LocalUrl}/event/get-events?${params.toString()}`
       );
+
       set({
         events: data.events,
         loading: false,

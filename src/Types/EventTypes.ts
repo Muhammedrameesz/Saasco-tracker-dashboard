@@ -13,8 +13,8 @@ export interface LiveLocation {
 export interface IEvent {
   _id?: string | undefined;
   eventPlace: string;
-  date: string; 
-  endDate: string;             
+  date: string | Date; 
+  endDate: string | Date;             
   location: string;
   // time?: string;
   adminId: string;

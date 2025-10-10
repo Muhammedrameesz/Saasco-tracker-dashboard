@@ -59,9 +59,7 @@ const eventSchema = z
       .refine((val) => val.length === 10, {
         message: "Phone number must be exactly 10 digits",
       }),
-    description: z
-      .string()
-      .min(10, "Description must be at least 10 characters long"),
+    description: z.string().optional(),
 
     image: z.instanceof(File).optional(),
   })

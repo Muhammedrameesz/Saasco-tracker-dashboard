@@ -1,16 +1,11 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useEventStore } from "@/store/useEventStore";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import {
-  FaUser,
-  FaCalendarAlt,
-  FaFileAlt,
-  FaUserPlus,
-} from "react-icons/fa";
+import { FaUser, FaCalendarAlt, FaFileAlt, FaUserPlus } from "react-icons/fa";
 import EditEvents from "@/components/Events/EditEvents";
 import { EditPickUpPerson } from "@/components/PickUp/editPickUpPerson";
 import AddPickupPerson from "@/components/PickUp/AddPickupPerson";
@@ -26,9 +21,19 @@ export default function EventViewPage() {
   const { getEventsById, selectedEvent } = useEventStore();
   const { id } = useParams();
 
+  const [mapVisible, setMapVisible] = useState<boolean>(false);
+
   useEffect(() => {
     getEventsById(id as string);
   }, [getEventsById, id]);
+
+  useEffect(() => {
+    if (selectedEvent?.startLocation || selectedEvent?.destinationLocation) {
+      setMapVisible(true);
+    } else {
+      setMapVisible(false);
+    }
+  }, [selectedEvent]);
 
   if (!selectedEvent) {
     return <Spinner />;
@@ -44,7 +49,7 @@ export default function EventViewPage() {
           <h2>{capitalize(selectedEvent.eventName)}</h2>
         </div>
 
-        {selectedEvent.delayedReason && (
+        {selectedEvent.status === "delayed" && selectedEvent.delayedReason && (
           <div className="bg-red-50 text-red-700 border border-red-200 px-4 py-2 rounded-xl shadow-sm text-sm font-medium flex items-center gap-2">
             <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-semibold">
               Delayed
@@ -146,13 +151,23 @@ export default function EventViewPage() {
             <Info
               label="Start Date"
               icon={<FaCalendarAlt />}
-              value={formatDate(selectedEvent.date)}
+              value={formatDate(
+                typeof selectedEvent.date === "string"
+                  ? selectedEvent.date
+                  : selectedEvent.date.toISOString()
+              )}
               color="bg-yellow-200"
             />
             <Info
               label="End Date"
               icon={<FaCalendarAlt />}
-              value={formatDate(selectedEvent.endDate)}
+              value={formatDate(
+                selectedEvent.endDate
+                  ? typeof selectedEvent.endDate === "string"
+                    ? selectedEvent.endDate
+                    : selectedEvent.endDate.toISOString()
+                  : ""
+              )}
               color="bg-red-200"
             />
 
@@ -205,19 +220,17 @@ export default function EventViewPage() {
         </div>
       </motion.div>
 
-      <section className="my-20">
-        <LocationDisplay selectedEvent={selectedEvent} />
-      </section>
+      {selectedEvent && mapVisible && (
+        <section className="my-20">
+          <LocationDisplay selectedEvent={selectedEvent} />
+        </section>
+      )}
 
-      <section className="">
-        {selectedEvent?.startLocation || selectedEvent?.destinationLocation ? (
-          <LocationMap event={selectedEvent} />
-        ) : (
-          <p className="text-center text-gray-400">
-            No location data available.
-          </p>
-        )}
-      </section>
+      {selectedEvent && mapVisible ? (
+        <LocationMap event={selectedEvent} />
+      ) : (
+        <p className="text-center text-gray-400">No location data available.</p>
+      )}
     </div>
   );
 }

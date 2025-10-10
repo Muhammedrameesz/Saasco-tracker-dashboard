@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useEventStore } from "@/store/useEventStore";
 import { useRouter } from "next/navigation";
-import { Eye, Plus } from "lucide-react";
+import { Eye, ImageOff, Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import clsx from "clsx";
@@ -20,6 +20,7 @@ export default function EventTable() {
 
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
+  
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -30,32 +31,22 @@ export default function EventTable() {
   }, [searchInput]);
 
   useEffect(() => {
-    fetchEvents(1);
-  }, [fetchEvents]);
+    fetchEvents(1, search);
+  }, [fetchEvents, search]);
 
   const handlePageChange = (page: number) => {
-    if (page && page !== currentPage) fetchEvents(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  if (page && page !== currentPage) fetchEvents(page, search);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
 
   if (loading) return <Spinner />;
 
-  const filteredEvents = (events || []).filter((event) => {
-    const lowerSearch = search.toLowerCase();
-
-    return (
-      event.eventName.toLowerCase().includes(lowerSearch) ||
-      event.status.toLowerCase().includes(lowerSearch) ||
-      event.clientName.toLowerCase().includes(lowerSearch) ||
-      event.dateStatus?.toLowerCase().includes(lowerSearch)
-    );
-  });
-
   const getStatusLabel = (status?: string | null) => {
-  if (!status) return "Unknown";
-  if (status === "current") return "Running";
-  return status.charAt(0).toUpperCase() + status.slice(1);
-};
+    if (!status) return "Unknown";
+    if (status === "current") return "Running";
+    return status.charAt(0).toUpperCase() + status.slice(1);
+  };
 
   return (
     <motion.div
@@ -97,7 +88,7 @@ export default function EventTable() {
         </Link>
       </section>
 
-      {filteredEvents.length === 0 ? (
+      {events.length === 0 ? (
         <div>
           <NoSearchMatch />
         </div>
@@ -128,7 +119,7 @@ export default function EventTable() {
               </thead>
               <tbody className="divide-y divide-gray-300">
                 <AnimatePresence>
-                  {filteredEvents.map((event, idx) => (
+                  {events.map((event, idx) => (
                     <motion.tr
                       key={event._id}
                       initial={{ opacity: 0 }}
@@ -142,14 +133,18 @@ export default function EventTable() {
                     >
                       <td className="px-4 py-3 text-gray-600">{idx + 1}</td>
                       <td className="flex  items-center px-4 py-3 space-x-3">
-                        <div className="w-10 h-10 rounded-full overflow-hidden border border-orange-500">
-                          <Image
-                            src={event.image || "/placeholder.png"}
-                            alt={event.eventName}
-                            width={40}
-                            height={40}
-                            className="w-full h-full object-cover"
-                          />
+                        <div className="w-10 h-10 rounded-full overflow-hidden border border-orange-500 flex items-center justify-center bg-orange-50">
+                          {event.image ? (
+                            <Image
+                              src={event.image}
+                              alt={event.eventName}
+                              width={40}
+                              height={40}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <ImageOff className="text-orange-500 w-5 h-5" />
+                          )}
                         </div>
 
                         <span className="font-medium text-gray-800">
@@ -223,7 +218,7 @@ export default function EventTable() {
 
           {/* Pagination */}
           <Pagination
-            currentPage={currentPage ?? 1} 
+            currentPage={currentPage ?? 1}
             totalPages={totalPage ?? 1}
             onPageChange={handlePageChange}
           />

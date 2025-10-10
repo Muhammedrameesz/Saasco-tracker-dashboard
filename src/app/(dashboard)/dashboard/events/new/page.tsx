@@ -42,7 +42,6 @@ const eventSchema = z
   .object({
     date: z.string().min(1, "Start Date is required"),
     endDate: z.string().min(1, "End Date is required"),
-    // time: z.string().min(1, "Time is required"),
     eventName: z
       .string()
       .min(2, "Event name is required")
@@ -66,14 +65,8 @@ const eventSchema = z
         message: "Phone must be 10 digits",
       }),
 
-    description: z
-      .string()
-      .min(10, "Description must be at least 10 characters."),
-
-    image: z.custom<File[]>(
-      (files) => files && files.length > 0,
-      "Image is required"
-    ),
+    description: z.string(),
+    image: z.custom<File[]>().optional(),
     startLocation: z
       .object({
         lat: z.number(),
@@ -268,11 +261,7 @@ export default function NewEventPage() {
               rows={4}
               placeholder="Write a short description..."
             />
-            {errors.description && (
-              <p className="text-sm text-red-600 mt-1">
-                {errors.description.message}
-              </p>
-            )}
+           
           </div>
 
           <div className="md:col-span-2">
@@ -295,7 +284,7 @@ export default function NewEventPage() {
                     </span>{" "}
                     or drag and drop
                   </p>
-                  <p className="text-xs text-gray-400">PNG or JPG up to 10MB</p>
+                  <p className="text-xs text-gray-400">PNG or JPG up to 4MB</p>
                 </div>
               </FileInput>
 
@@ -313,12 +302,7 @@ export default function NewEventPage() {
                 ))}
               </FileUploaderContent>
             </FileUploader>
-            {errors.image && (
-              <p className="text-sm text-red-600 mt-1">
-                {errors.image.message}
-              </p>
-            )}
-
+          
             {/* Location */}
             <div className="grid md:grid-cols-2 gap-10 mt-10">
               {/* Start Location */}

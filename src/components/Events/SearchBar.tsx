@@ -14,7 +14,7 @@ type SearchBarProps = {
 export default function SearchBar({
   searchValue,
   onChange,
-  placeholder = "Search by event, client, status...",
+  placeholder = "Search by event name, client name...",
   className,
 }: SearchBarProps) {
   return (
