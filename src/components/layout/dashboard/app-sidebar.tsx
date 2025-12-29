@@ -48,6 +48,12 @@ const adminItems: adminItemsI[] = [
     section: "Management",
   },
   {
+    title: "Products",
+    url: "/dashboard/products",
+    icon: LuPackage,
+    section: "Management",
+  },
+  {
     title: "Employees",
     url: "/dashboard/employees",
     icon: FaUsers,

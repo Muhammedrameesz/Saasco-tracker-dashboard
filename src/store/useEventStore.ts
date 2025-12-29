@@ -182,6 +182,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
       );
 
       if (res.status === 200) {
+        console.log("single event [][][][][]",res.data.event)
         set({ selectedEvent: res.data.event });
       }
     } catch (error) {

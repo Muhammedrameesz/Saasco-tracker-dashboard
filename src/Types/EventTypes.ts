@@ -10,6 +10,32 @@ export interface LiveLocation {
   coordinates: [number, number];
 }
 
+export interface HiringAgreementItem {
+  qty: number;
+  item: string;
+}
+
+export interface HiringAgreementRemarks {
+  deliveryDate?: string | Date;
+  receiveDate?: string | Date;
+  transport?: string;
+  operator?: string;
+  totalPerDay: number;
+  advance: number;
+}
+
+export interface HiringAgreement {
+  carNumber: string;
+
+  items: HiringAgreementItem[];
+
+  remarks: HiringAgreementRemarks;
+
+  totalDays: number;
+  totalAmount: number;
+  balance: number;
+}
+
 export interface IEvent {
   _id?: string | undefined;
   eventPlace: string;
@@ -35,6 +61,7 @@ export interface IEvent {
   startLocation?: LocationPoint;
   destinationLocation?: LocationPoint;
   liveLocationHistory?: LiveLocation[];
+  hiringAgreement?: HiringAgreement[];
 }
 
 

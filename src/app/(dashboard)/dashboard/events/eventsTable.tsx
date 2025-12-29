@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useEventStore } from "@/store/useEventStore";
 import { useRouter } from "next/navigation";
-import { Eye, ImageOff, Plus } from "lucide-react";
+import { CheckCircle2, Eye, ImageOff, Plus, XCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import clsx from "clsx";
@@ -20,7 +20,6 @@ export default function EventTable() {
 
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
-  
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -35,10 +34,9 @@ export default function EventTable() {
   }, [fetchEvents, search]);
 
   const handlePageChange = (page: number) => {
-  if (page && page !== currentPage) fetchEvents(page, search);
-  window.scrollTo({ top: 0, behavior: "smooth" });
-};
-
+    if (page && page !== currentPage) fetchEvents(page, search);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   if (loading) return <Spinner />;
 
@@ -106,7 +104,7 @@ export default function EventTable() {
                     "Date",
                     "Contact",
                     "Status",
-                    "View",
+                    "Agrements & Actions",
                   ].map((head) => (
                     <th
                       key={head}
@@ -201,9 +199,38 @@ export default function EventTable() {
                         </span>
                       </td>
                       <td className="px-4 py-3 text-red-600 flex space-x-4 justify-center">
+                        <Link
+                          href={`/dashboard/events/agreements/${event._id}`}
+                          className="inline-flex items-center gap-3"
+                        >
+                          <button
+                            type="button"
+                            className="
+      inline-flex items-center cursor-pointer
+      px-3 py-1.5
+      text-xs font-semibold text-white
+      rounded-xl
+      bg-gradient-to-r from-slate-800 to-slate-700
+      hover:from-slate-700 hover:to-slate-600
+      shadow-sm hover:shadow-lg hover:shadow-slate-900/30
+      transition-all duration-300
+      active:scale-[0.97]
+      focus:outline-none focus:ring-2 focus:ring-slate-400/40
+    "
+                          >
+                            {event.hiringAgreement &&
+                            Array.isArray(event.hiringAgreement) &&
+                            event.hiringAgreement.length > 0 ? (
+                              <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                            ) : (
+                              <XCircle className="h-5 w-5 text-rose-500" />
+                            )}
+                            Hiring Agreement
+                          </button>
+                        </Link>
                         <Eye
                           size={18}
-                          className="hover:text-blue-600 cursor-pointer"
+                          className="hover:text-blue-600 cursor-pointer text-blue-500  mt-3"
                           onClick={() =>
                             router.push(`/dashboard/events/view/${event._id}`)
                           }
