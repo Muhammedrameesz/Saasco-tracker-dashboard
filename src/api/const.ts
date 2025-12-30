@@ -1,4 +1,4 @@
-const isProduction = true;
+const isProduction = false;
 
 const PROD_URL = "https://backend.magicmusicuae.com/api/v1";
 const DEV_URL = "http://localhost:7001/api/v1";

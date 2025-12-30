@@ -65,7 +65,7 @@ const eventSchema = z
         message: "Phone must be 10 digits",
       }),
 
-    description: z.string(),
+    description: z.string().optional(),
     image: z.custom<File[]>().optional(),
     startLocation: z
       .object({
