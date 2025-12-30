@@ -15,22 +15,27 @@ interface Props {
   agreement: any;
 }
 
-export default function HiringAgreementNoPricingPDF({ event, agreement }: Props) {
+export default function HiringAgreementNoPricingPDF({
+  event,
+  agreement,
+}: Props) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
+        <Image src="/magic-music-Icon.png" style={styles.backgroundLogo} />
         {/* ================= HEADER ================= */}
-         <View style={styles.header}>
-                  {/* Company Branding */}
-                  <View style={styles.brandRow}>
-                    <Image  src="/logo/color.png" style={styles.logo} />
-                    <Text style={styles.companyName}>MAGIC MUSIC</Text>
-                  </View>
-        
-                  {/* Document Title */}
-                  <Text style={styles.title}>HIRING AGREEMENT</Text>
-                  <Text style={styles.sub}>Event ID: {event._id}</Text>
-                </View>
+        <View style={styles.header}>
+          {/* Company Branding */}
+          <View style={styles.brandRow}>
+            <Image src="/logo/color.png" style={styles.logo} />
+          </View>
+
+          <View style={styles.headerDivider} />
+
+          {/* Document Title */}
+          <Text style={styles.title}>HIRING AGREEMENT</Text>
+          <Text style={styles.sub}>Event ID: {event._id}</Text>
+        </View>
 
         {/* ================= BASIC DETAILS ================= */}
         <View style={styles.box}>
@@ -61,53 +66,89 @@ export default function HiringAgreementNoPricingPDF({ event, agreement }: Props)
 
               {agreement.items.map((item: any, index: number) => (
                 <View key={index} style={styles.tableRow}>
-                  <Text style={[styles.td, styles.colSno]}>
-                    {index + 1}
-                  </Text>
-                  <Text style={[styles.td, styles.colQty]}>
-                    {item.qty}
-                  </Text>
-                  <Text style={[styles.td, styles.colItem]}>
-                    {item.item}
-                  </Text>
+                  <Text style={[styles.td, styles.colSno]}>{index + 1}</Text>
+                  <Text style={[styles.td, styles.colQty]}>{item.qty}</Text>
+                  <Text style={[styles.td, styles.colItem]}>{item.item}</Text>
                 </View>
               ))}
             </View>
 
-            {/* -------- RIGHT: REMARKS (NO PRICING) -------- */}
-            <View style={styles.remarksWrapper}>
-              <Text style={styles.remarksTitle}>Remarks</Text>
+            {/* -------- RIGHT COLUMN -------- */}
+            <View style={styles.rightColumn}>
+              {/* NOTE BOX (TOP) */}
+              {agreement?.remarks?.note && (
+                <View style={styles.noteBox}>
+                  <Text style={styles.noteTitle}>Note</Text>
+                  <Text style={styles.noteText}>{agreement.remarks.note}</Text>
+                </View>
+              )}
 
-              <RemarkRow
-                label="Delivery Date"
-                value={format(
-                  new Date(agreement.remarks.deliveryDate),
-                  "dd MMM yyyy"
-                )}
-              />
-              <RemarkRow
-                label="Receive Date"
-                value={format(
-                  new Date(agreement.remarks.receiveDate),
-                  "dd MMM yyyy"
-                )}
-              />
-              <RemarkRow
-                label="Transport"
-                value={agreement.remarks.transport}
-              />
-              <RemarkRow
-                label="Operator"
-                value={agreement.remarks.operator}
-              />
+              {/* REMARKS BOX (BOTTOM) */}
+              <View style={styles.remarksWrapper}>
+                <Text style={styles.remarksTitle}>Remarks</Text>
+
+                <RemarkRow
+                  label="Delivery Date"
+                  value={format(
+                    new Date(agreement.remarks.deliveryDate),
+                    "dd MMM yyyy"
+                  )}
+                />
+                <RemarkRow
+                  label="Receive Date"
+                  value={format(
+                    new Date(agreement.remarks.receiveDate),
+                    "dd MMM yyyy"
+                  )}
+                />
+                <RemarkRow
+                  label="Transport"
+                  value={agreement.remarks.transport}
+                />
+                <RemarkRow
+                  label="Operator"
+                  value={agreement.remarks.operator}
+                />
+              </View>
             </View>
           </View>
         </Section>
 
         {/* ================= FOOTER ================= */}
-        <Text style={styles.footer}>
-          Generated on {format(new Date(), "dd MMM yyyy")}
-        </Text>
+        <View style={styles.footerWrapper}>
+          {/* Red title bar */}
+          <View style={styles.footerTitleBar}>
+            <Text style={styles.footerTitleText}>
+              Authorized dealers in all kinds of musical instruments, sales,
+              services and audio & visual rentals
+            </Text>
+          </View>
+
+          {/* Footer content */}
+          <View style={styles.footerContent}>
+            {/* LEFT COLUMN */}
+            <View style={styles.footerColumn}>
+              <Text style={styles.footerText}>
+                Telephone : +971-6-538 4340, +971 55 769 1134{" "}
+              </Text>
+              <Text style={styles.footerText}>Web : www.magicmusicuae.com</Text>
+              <Text style={styles.footerText}>
+                AI Wasit Street, Sharjah - UAE, Ajman
+              </Text>
+            </View>
+
+            {/* RIGHT COLUMN */}
+            <View style={[styles.footerColumn, styles.footerRight]}>
+              <Text style={styles.footerText}>
+                Email : hello@magicmusicuae.com
+              </Text>
+              <Text style={styles.footerText}>magicdubai@yahoo.com</Text>
+              <Text style={styles.footerText}>
+                Instagram : @officialmagicmusic
+              </Text>
+            </View>
+          </View>
+        </View>
       </Page>
     </Document>
   );
@@ -251,7 +292,7 @@ const styles = StyleSheet.create({
   },
 
   remarksWrapper: {
-    width: "36%",
+    width: "100%",
     borderWidth: 1,
     borderColor: "#e5e7eb",
     padding: 10,
@@ -298,20 +339,104 @@ const styles = StyleSheet.create({
   brandRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 6,
-   
   },
 
   logo: {
-    width: 85,
-    height: 55,
-    marginRight: 10,
+    width: 180,
+    height: 82,
+  },
+  headerDivider: {
+    width: "90%",
+    height: 1.5,
+    backgroundColor: "#000",
+    marginBottom: 20,
   },
 
   companyName: {
     fontSize: 16,
     fontWeight: "bold",
     letterSpacing: 0.5,
-    color:'#dc331a'
+    color: "#dc331a",
+  },
+  backgroundLogo: {
+    position: "absolute",
+    top: "55%",
+    left: "50%",
+    width: 320,
+    height: 320,
+    opacity: 0.06,
+
+    marginLeft: -160,
+    marginTop: -160,
+  },
+  footerWrapper: {
+    position: "absolute",
+    bottom: 20,
+    left: 36,
+    right: 36,
+    alignItems: "center",
+  },
+
+  /* RED TITLE BAR */
+  footerTitleBar: {
+    width: "95%",
+    backgroundColor: "#c82716",
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 4,
+    marginBottom: 8,
+  },
+
+  footerTitleText: {
+    color: "#ffffff",
+    fontSize: 9,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+
+  /* FOOTER CONTENT */
+  footerContent: {
+    width: "95%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
+  footerColumn: {
+    width: "48%",
+  },
+
+  footerRight: {
+    alignItems: "flex-end",
+  },
+
+  footerText: {
+    fontSize: 9,
+    color: "#0f172a",
+    marginBottom: 3,
+  },
+  noteBox: {
+    borderWidth: 1,
+    borderColor: "#94a3b8",
+    padding: 8,
+    marginBottom: 12,
+    backgroundColor: "#ffffff",
+  },
+
+  noteTitle: {
+    fontSize: 10,
+    fontWeight: "bold",
+    marginBottom: 4,
+    color: "#0f172a",
+  },
+
+  noteText: {
+    fontSize: 9,
+    color: "#334155",
+    lineHeight: 1.4,
+  },
+  rightColumn: {
+    width: "36%",
+    flexDirection: "column",
+    justifyContent: "flex-end", // keeps remarks bottom-aligned with table
   },
 });

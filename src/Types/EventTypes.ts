@@ -22,6 +22,7 @@ export interface HiringAgreementRemarks {
   operator?: string;
   totalPerDay: number;
   advance: number;
+  note?:string;
 }
 
 export interface HiringAgreement {
@@ -34,6 +35,7 @@ export interface HiringAgreement {
   totalDays: number;
   totalAmount: number;
   balance: number;
+  
 }
 
 export interface IEvent {

@@ -37,7 +37,6 @@ import axios from "axios";
 import { baseUrl } from "@/api/const";
 import Link from "next/link";
 import { toast } from "sonner";
-import DownloadAgreementBtn from "@/components/pdf/DownloadAgreementBtn";
 import {
   Command,
   CommandEmpty,
@@ -45,7 +44,19 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import DownloadAgreementBtn2 from "@/components/pdf/DownloadAgreementBtn2";
+import { Textarea } from "@/components/ui/textarea";
+
+import dynamic from "next/dynamic";
+
+const DownloadAgreementBtn = dynamic(
+  () => import("@/components/pdf/DownloadAgreementBtn"),
+  { ssr: false, loading: () => null }
+);
+
+const DownloadAgreementBtn2 = dynamic(
+  () => import("@/components/pdf/DownloadAgreementBtn2"),
+  { ssr: false, loading: () => null }
+);
 
 /* ================= TYPES ================= */
 
@@ -62,6 +73,7 @@ type AgreementFormValues = {
     operator: string;
     totalPerDay: number;
     advance: number;
+    note?: string;
   };
 };
 
@@ -125,38 +137,40 @@ export default function HiringAgreementPage() {
         operator: "",
         totalPerDay: 0,
         advance: 0,
+        note: "",
       },
     },
   });
 
+  const [initialized, setInitialized] = useState(false);
+
   useEffect(() => {
-    if (!selectedEvent) return;
+    if (!selectedEvent || initialized) return;
 
     const agreement = selectedEvent.hiringAgreement?.[0];
 
     reset({
       carNumber: agreement?.carNumber ?? "",
-
       items: agreement?.items?.length
         ? agreement.items
         : [{ qty: 1, item: "" }],
-
       remarks: {
         deliveryDate:
           toDate(agreement?.remarks?.deliveryDate) ??
           toDate(selectedEvent.date),
-
         receiveDate:
           toDate(agreement?.remarks?.receiveDate) ??
           toDate(selectedEvent.endDate),
-
         transport: agreement?.remarks?.transport ?? "",
         operator: agreement?.remarks?.operator ?? "",
         totalPerDay: agreement?.remarks?.totalPerDay ?? 0,
         advance: agreement?.remarks?.advance ?? 0,
+        note: agreement?.remarks?.note ?? "",
       },
     });
-  }, [selectedEvent, reset]);
+
+    setInitialized(true);
+  }, [selectedEvent, initialized, reset]);
 
   const calculateDays = (start?: Date, end?: Date): number => {
     if (!start || !end) return 0;
@@ -178,10 +192,11 @@ export default function HiringAgreementPage() {
     name: "items",
   });
 
-  const deliveryDate = watch("remarks.deliveryDate");
-  const receiveDate = watch("remarks.receiveDate");
-  const perDayAmount = watch("remarks.totalPerDay");
-  const advance = watch("remarks.advance");
+  const deliveryDate = watch("remarks.deliveryDate", undefined);
+  const receiveDate = watch("remarks.receiveDate", undefined);
+
+  const perDayAmount = Number(watch("remarks.totalPerDay")) || 0;
+  const advance = Number(watch("remarks.advance")) || 0;
 
   const totalDays = calculateDays(deliveryDate, receiveDate);
 
@@ -301,10 +316,14 @@ export default function HiringAgreementPage() {
 
               {/* Right Side: Action Buttons */}
               <div className="inline-flex items-center gap-5">
-              <DownloadAgreementBtn event={selectedEvent} />
-              <DownloadAgreementBtn2 event={selectedEvent}/>
+                {selectedEvent?.hiringAgreement &&
+                  selectedEvent?.hiringAgreement?.length > 0 && (
+                    <>
+                      <DownloadAgreementBtn event={selectedEvent} />
+                      <DownloadAgreementBtn2 event={selectedEvent} />
+                    </>
+                  )}
               </div>
-              
             </div>
 
             {/* Subtle Decorative Accent */}
@@ -503,6 +522,18 @@ export default function HiringAgreementPage() {
                   Add Item
                 </button>
               </section>
+
+              {/* Extra Note */}
+
+              <div className="grid w-full gap-3">
+                <Label htmlFor="note">Note (Optional)</Label>
+                <Textarea
+                  id="note"
+                  placeholder="Enter any additional notes here..."
+                  className="min-h-[140px] resize-y"
+                  {...register("remarks.note")}
+                />
+              </div>
 
               {/* ================= REMARKS ================= */}
               <section className="space-y-6">

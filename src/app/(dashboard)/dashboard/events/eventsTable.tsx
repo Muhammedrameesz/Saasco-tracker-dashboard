@@ -210,7 +210,7 @@ export default function EventTable() {
       px-3 py-1.5
       text-xs font-semibold text-white
       rounded-xl
-      bg-gradient-to-r from-slate-800 to-slate-700
+      bg-gradient-to-r from-slate-800 to-slate-600
       hover:from-slate-700 hover:to-slate-600
       shadow-sm hover:shadow-lg hover:shadow-slate-900/30
       transition-all duration-300
@@ -225,7 +225,7 @@ export default function EventTable() {
                             ) : (
                               <XCircle className="h-5 w-5 text-rose-500" />
                             )}
-                            Hiring Agreement
+                            <span className="ml-2">Hiring Agreement</span>
                           </button>
                         </Link>
                         <Eye

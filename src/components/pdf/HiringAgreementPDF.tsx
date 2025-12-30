@@ -19,13 +19,17 @@ export default function HiringAgreementPDF({ event, agreement }: Props) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
+        {/* ===== Background Watermark Logo ===== */}
+        <Image src="/magic-music-Icon.png" style={styles.backgroundLogo} />
+
         {/* ================= HEADER ================= */}
         <View style={styles.header}>
           {/* Company Branding */}
           <View style={styles.brandRow}>
-            <Image  src="/logo/color.png" style={styles.logo} />
-            <Text style={styles.companyName}>MAGIC MUSIC</Text>
+            <Image src="/logo/color.png" style={styles.logo} />
           </View>
+
+          <View style={styles.headerDivider} />
 
           {/* Document Title */}
           <Text style={styles.title}>HIRING AGREEMENT</Text>
@@ -69,57 +73,103 @@ export default function HiringAgreementPDF({ event, agreement }: Props) {
             </View>
 
             {/* -------- RIGHT: REMARKS BOX -------- */}
-            <View style={styles.remarksWrapper}>
-              <Text style={styles.remarksTitle}>Remarks</Text>
+            {/* -------- RIGHT COLUMN -------- */}
+            <View style={styles.rightColumn}>
+              {agreement?.remarks?.note && (
+                <View style={styles.noteBox}>
+                  <Text style={styles.noteTitle}>Note</Text>
+                  <Text style={styles.noteText}>{agreement.remarks.note}</Text>
+                </View>
+              )}
 
-              <RemarkRow
-                label="Delivery Date"
-                value={format(
-                  new Date(agreement.remarks.deliveryDate),
-                  "dd MMM yyyy"
-                )}
-              />
-              <RemarkRow
-                label="Receive Date"
-                value={format(
-                  new Date(agreement.remarks.receiveDate),
-                  "dd MMM yyyy"
-                )}
-              />
-              <RemarkRow
-                label="Transport"
-                value={agreement.remarks.transport}
-              />
-              <RemarkRow label="Operator" value={agreement.remarks.operator} />
+              <View style={styles.remarksBox}>
+                <Text style={styles.remarksTitle}>Remarks</Text>
 
-              <View style={styles.remarkDivider} />
+                <RemarkRow
+                  label="Delivery Date"
+                  value={format(
+                    new Date(agreement.remarks.deliveryDate),
+                    "dd MMM yyyy"
+                  )}
+                />
+                <RemarkRow
+                  label="Receive Date"
+                  value={format(
+                    new Date(agreement.remarks.receiveDate),
+                    "dd MMM yyyy"
+                  )}
+                />
+                <RemarkRow
+                  label="Transport"
+                  value={agreement.remarks.transport}
+                />
+                <RemarkRow
+                  label="Operator"
+                  value={agreement.remarks.operator}
+                />
 
-              <RemarkRow label="Total Days" value={agreement.totalDays} />
-              <RemarkRow
-                label="Per Day"
-                value={`AED ${agreement.remarks.totalPerDay}`}
-              />
-              <RemarkRow
-                label="Advance"
-                value={`AED ${agreement.remarks.advance}`}
-              />
-              <RemarkRow
-                label="Total Amount"
-                value={`AED ${agreement.totalAmount}`}
-              />
+                <View style={styles.remarkDivider} />
 
-              <View style={styles.balanceBox}>
-                <Text style={styles.balanceLabel}>Balance</Text>
-                <Text style={styles.balanceValue}>AED {agreement.balance}</Text>
+                <RemarkRow label="Total Days" value={agreement.totalDays} />
+                <RemarkRow
+                  label="Per Day"
+                  value={`AED ${agreement.remarks.totalPerDay}`}
+                />
+                <RemarkRow
+                  label="Advance"
+                  value={`AED ${agreement.remarks.advance}`}
+                />
+                <RemarkRow
+                  label="Total Amount"
+                  value={`AED ${agreement.totalAmount}`}
+                />
+
+                <View style={styles.balanceBox}>
+                  <Text style={styles.balanceLabel}>Balance</Text>
+                  <Text style={styles.balanceValue}>
+                    AED {agreement.balance}
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
         </Section>
 
         {/* ================= FOOTER ================= */}
-        <Text style={styles.footer}>
-          Generated on {format(new Date(), "dd MMM yyyy")}
-        </Text>
+        <View style={styles.footerWrapper}>
+          {/* Red title bar */}
+          <View style={styles.footerTitleBar}>
+            <Text style={styles.footerTitleText}>
+              Authorized dealers in all kinds of musical instruments, sales,
+              services and audio & visual rentals
+            </Text>
+          </View>
+
+          {/* Footer content */}
+          <View style={styles.footerContent}>
+            {/* LEFT COLUMN */}
+            <View style={styles.footerColumn}>
+              <Text style={styles.footerText}>
+                Telephone : +971-6-538 4340, +971 55 769 1134{" "}
+              </Text>
+              <Text style={styles.footerText}>Web : www.magicmusicuae.com</Text>
+              <Text style={styles.footerText}>
+                AI Wasit Street, Sharjah - UAE, Ajman
+              </Text>
+            </View>
+
+            {/* RIGHT COLUMN */}
+            <View style={[styles.footerColumn, styles.footerRight]}>
+              <Text style={styles.footerText}>
+                Email : hello@magicmusicuae.com
+              </Text>
+              <Text style={styles.footerText}>magicdubai@yahoo.com</Text>
+              <Text style={styles.footerText}>
+                Instagram : @officialmagicmusic
+              </Text>
+            </View>
+          </View>
+        </View>
       </Page>
     </Document>
   );
@@ -266,7 +316,6 @@ const styles = StyleSheet.create({
 
   /* REMARKS */
   remarksWrapper: {
-    width: "36%",
     borderWidth: 1,
     borderColor: "#e5e7eb",
     padding: 10,
@@ -334,23 +383,109 @@ const styles = StyleSheet.create({
     color: "#94a3b8",
   },
 
-   brandRow: {
+  brandRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 6,
-   
   },
 
   logo: {
-    width: 85,
-    height: 55,
-    marginRight: 10,
+    width: 180,
+    height: 82,
+  },
+  headerDivider: {
+    width: "90%",
+    height: 1.5,
+    backgroundColor: "#000",
+    marginBottom: 20,
+  },
+  backgroundLogo: {
+    position: "absolute",
+    top: "55%",
+    left: "50%",
+    width: 320,
+    height: 320,
+    opacity: 0.06,
+
+    marginLeft: -160,
+    marginTop: -160,
+  },
+  footerWrapper: {
+    position: "absolute",
+    bottom: 20,
+    left: 36,
+    right: 36,
+    alignItems: "center",
   },
 
-  companyName: {
-    fontSize: 16,
+  /* RED TITLE BAR */
+  footerTitleBar: {
+    width: "95%",
+    backgroundColor: "#c82716",
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 4,
+    marginBottom: 8,
+  },
+
+  footerTitleText: {
+    color: "#ffffff",
+    fontSize: 9,
+    textAlign: "center",
     fontWeight: "bold",
-    letterSpacing: 0.5,
-    color:'#dc331a'
+  },
+
+  /* FOOTER CONTENT */
+  footerContent: {
+    width: "95%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
+  footerColumn: {
+    width: "48%",
+  },
+
+  footerRight: {
+    alignItems: "flex-end",
+  },
+
+  footerText: {
+    fontSize: 9,
+    color: "#0f172a",
+    marginBottom: 3,
+  },
+  noteBox: {
+    borderWidth: 1,
+    borderColor: "#94a3b8",
+    padding: 8,
+    marginBottom: 10,
+    backgroundColor: "#ffffff",
+  },
+
+  noteTitle: {
+    fontSize: 10,
+    fontWeight: "bold",
+    marginBottom: 4,
+    color: "#0f172a",
+  },
+
+  noteText: {
+    fontSize: 9,
+    color: "#334155",
+    lineHeight: 1.4,
+  },
+
+  rightColumn: {
+    width: "36%",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+  },
+
+  remarksBox: {
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+    padding: 10,
+    backgroundColor: "#ffffff",
   },
 });
