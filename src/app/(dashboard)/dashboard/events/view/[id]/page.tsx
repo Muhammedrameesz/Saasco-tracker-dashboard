@@ -42,8 +42,8 @@ export default function EventViewPage() {
   return (
     <div className="p-6 max-w-6xl mx-auto ">
       <section className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-5">
-        <div className="text-3xl font-bold text-orange-600 flex items-center gap-2">
-          <span className="bg-orange-100  p-3 rounded-full">
+        <div className="text-3xl font-bold text-red-600 flex items-center gap-2">
+          <span className="bg-red-100  p-3 rounded-full">
             <BsCalendar2EventFill className="text-orange-400  text-2xl" />
           </span>
           <h2>{capitalize(selectedEvent.eventName)}</h2>
@@ -63,7 +63,7 @@ export default function EventViewPage() {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="bg-white shadow-xl rounded-3xl p-6 space-y-6 border border-orange-100"
+        className="bg-white shadow-xl rounded-3xl p-6 space-y-6 border border-red-100"
       >
         <div className="flex flex-col md:flex-row justify-evenly  mb-10">
           {/* Image */}

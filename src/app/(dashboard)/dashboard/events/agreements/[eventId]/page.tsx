@@ -142,10 +142,8 @@ export default function HiringAgreementPage() {
     },
   });
 
-  const [initialized, setInitialized] = useState(false);
-
   useEffect(() => {
-    if (!selectedEvent || initialized) return;
+    if (!selectedEvent) return;
 
     const agreement = selectedEvent.hiringAgreement?.[0];
 
@@ -155,12 +153,18 @@ export default function HiringAgreementPage() {
         ? agreement.items
         : [{ qty: 1, item: "" }],
       remarks: {
-        deliveryDate:
-          toDate(agreement?.remarks?.deliveryDate) ??
-          toDate(selectedEvent.date),
-        receiveDate:
-          toDate(agreement?.remarks?.receiveDate) ??
-          toDate(selectedEvent.endDate),
+        deliveryDate: agreement?.remarks?.deliveryDate
+          ? new Date(agreement.remarks.deliveryDate)
+          : selectedEvent.date
+          ? new Date(selectedEvent.date)
+          : undefined,
+
+        receiveDate: agreement?.remarks?.receiveDate
+          ? new Date(agreement.remarks.receiveDate)
+          : selectedEvent.endDate
+          ? new Date(selectedEvent.endDate)
+          : undefined,
+
         transport: agreement?.remarks?.transport ?? "",
         operator: agreement?.remarks?.operator ?? "",
         totalPerDay: agreement?.remarks?.totalPerDay ?? 0,
@@ -168,9 +172,7 @@ export default function HiringAgreementPage() {
         note: agreement?.remarks?.note ?? "",
       },
     });
-
-    setInitialized(true);
-  }, [selectedEvent, initialized, reset]);
+  }, [eventId, selectedEvent, reset]);
 
   const calculateDays = (start?: Date, end?: Date): number => {
     if (!start || !end) return 0;
@@ -388,7 +390,11 @@ export default function HiringAgreementPage() {
               </div>
             </section>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+            <form
+              key={eventId}
+              onSubmit={handleSubmit(onSubmit)}
+              className="space-y-10"
+            >
               {/* ================= ITEMS ================= */}
               <section className="space-y-6 max-w-6xl mx-auto">
                 <div className="flex items-center gap-3">

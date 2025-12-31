@@ -146,7 +146,7 @@ export default function UpdateEventStatusDialog({
             disabled={loading}
             variant="default"
             onClick={handleStatusUpdate}
-            className="bg-orange-500 hover:bg-orange-600 text-white cursor-pointer"
+            className="bg-orange-500 hover:bg-red-600 text-white cursor-pointer"
           >
             {loading ? "Updating..." : "Update Status"}
           </Button>

@@ -14,6 +14,7 @@ export default function page() {
 
       </PageTitle>
       <div className="container mx-auto">
+        
         <AdminProfile />
       </div>
     </main>

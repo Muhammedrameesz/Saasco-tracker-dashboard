@@ -64,8 +64,8 @@ export default function ChangePasswordDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <div className="flex items-center bg-white gap-2 p-1 rounded-lg border border-gray-100 hover:shadow-md transition cursor-pointer">
-          <div className="bg-orange-100 text-orange-600 p-3 rounded-full text-lg">
+        <div className="flex items-center bg-white gap-2 p-1 rounded-lg border border-red-200  hover:shadow-md transition cursor-pointer">
+          <div className="bg-red-100 text-red-600 p-3 rounded-full text-lg">
             <FaKey />
           </div>
           <h1 className="text-gray-800 font-medium text-sm">Change Password</h1>
@@ -74,7 +74,7 @@ export default function ChangePasswordDialog() {
 
       <DialogContent className="max-w-md w-full">
         <DialogHeader>
-          <DialogTitle className="text-orange-600 text-lg font-bold">
+          <DialogTitle className="text-red-600 text-lg font-bold">
             Change Password
           </DialogTitle>
         </DialogHeader>
@@ -162,7 +162,7 @@ export default function ChangePasswordDialog() {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-orange-600 hover:bg-orange-700 text-white cursor-pointer"
+              className="bg-red-600 hover:bg-orange-700 text-white cursor-pointer"
             >
               {isSubmitting ? "Saving..." : "Update Password"}
             </Button>

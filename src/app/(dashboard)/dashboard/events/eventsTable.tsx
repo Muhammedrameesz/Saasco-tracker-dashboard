@@ -74,13 +74,13 @@ export default function EventTable() {
         <Link
           href="/dashboard/events/new"
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-tr from-white via-orange-50 to-red-50 
-             shadow-md hover:shadow-lg border border-orange-100 transition-all duration-300 group active:scale-95"
+             shadow-md hover:shadow-lg border border-red-100 transition-all duration-300 group active:scale-95"
         >
           <Plus
             size={18}
             className="text-orange-500 group-hover:rotate-90 group-hover:scale-110 transition-transform duration-300"
           />
-          <span className="text-sm font-semibold text-gray-800 group-hover:text-orange-600 tracking-wide">
+          <span className="text-sm font-semibold text-gray-800 group-hover:text-red-600 tracking-wide">
             Add Event
           </span>
         </Link>

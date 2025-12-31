@@ -114,7 +114,7 @@ const InfoLine = ({ icon, label, value }: InfoLineProps) => (
     animate={{ opacity: 1, x: 0 }}
     transition={{ duration: 0.3 }}
   >
-    <div className="text-orange-600 mt-1">{icon}</div>
+    <div className="text-red-600 mt-1">{icon}</div>
     <div>
       <p className="text-xs font-semibold text-gray-500 uppercase">{label}</p>
       <p className="text-sm font-medium text-gray-800">{value || "N/A"}</p>

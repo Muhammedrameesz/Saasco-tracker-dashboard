@@ -118,7 +118,7 @@ export default function ProductTable() {
     <div className="space-y-6 max-w-6xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Products</h2>
+        <h2 className="text-xl font-semibold opacity-0">Products</h2>
         <Button onClick={openAddDialog} className="gap-2">
           <Plus size={16} />
           Add Product

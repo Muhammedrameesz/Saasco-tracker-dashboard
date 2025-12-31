@@ -1,3 +1,4 @@
+"use client"
 import { motion } from "framer-motion";
 import {
   FaCalendarAlt,
@@ -7,8 +8,11 @@ import {
 import Link from "next/link";
 import EditAdminProfileDialog from "./EditAdminProfile";
 import ChangePasswordDialog from "./ChangePassword";
+import CreateAdminModal from "../admin/CreateAdmin";
+import { adminAuthStore } from "@/store/adminAuthStore";
 
 export default function AdminActionsPanel() {
+  const {adminDatas} = adminAuthStore()
   const items = [
    
     {
@@ -35,12 +39,13 @@ export default function AdminActionsPanel() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
+        {adminDatas?.role !=="Manage Admin" && <CreateAdminModal/> } 
         <EditAdminProfileDialog/>
         <ChangePasswordDialog/>
       {items.map((item, index) => {
         const content = (
-          <div className="flex items-center bg-white gap-2 p-1 rounded-lg border border-gray-100  hover:shadow-md transition">
-            <div className="bg-orange-100 text-orange-600 p-3 rounded-full text-lg">
+          <div className="flex items-center bg-white gap-2 p-1 rounded-lg border border-red-200   hover:shadow-md transition">
+            <div className="bg-red-100 text-red-600 p-3 rounded-full text-lg">
               {item.icon}
             </div>
             <h1 className="text-gray-800 font-medium text-sm">{item.label}</h1>

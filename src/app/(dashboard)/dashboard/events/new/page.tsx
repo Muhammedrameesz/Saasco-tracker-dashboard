@@ -159,10 +159,10 @@ export default function NewEventPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
-      <header className="bg-white rounded-xl shadow-md border border-orange-100 px-6 py-5 mb-6">
+      <header className="bg-white rounded-xl shadow-md border border-red-100 px-6 py-5 mb-6">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded-full bg-orange-100 text-orange-600">
+            <div className="p-3 rounded-full bg-red-100 text-red-600">
               <ClipboardList className="w-6 h-6" />
             </div>
             <div>

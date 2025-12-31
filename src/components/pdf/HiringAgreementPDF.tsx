@@ -26,7 +26,7 @@ export default function HiringAgreementPDF({ event, agreement }: Props) {
         <View style={styles.header}>
           {/* Company Branding */}
           <View style={styles.brandRow}>
-            <Image src="/logo/color.png" style={styles.logo} />
+            <Image src="/logo/magic-logo.jpg" style={styles.logo} />
           </View>
 
           <View style={styles.headerDivider} />
@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: 180,
+    width: "80%",
     height: 82,
   },
   headerDivider: {

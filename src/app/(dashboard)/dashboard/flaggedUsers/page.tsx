@@ -1,9 +1,17 @@
-import BannedRejectedEmployees from "@/components/Employees/BannedRejectedEmployees"
+"use client";
+import AccessDenied from "@/components/AccessDenied";
+import BannedRejectedEmployees from "@/components/Employees/BannedRejectedEmployees";
+import { adminAuthStore } from "@/store/adminAuthStore";
 
 export default function page() {
+  const { adminDatas } = adminAuthStore();
   return (
     <div>
-        <BannedRejectedEmployees/>
+      {adminDatas?.role === "Manage Admin" ? (
+        <AccessDenied />
+      ) : (
+        <BannedRejectedEmployees />
+      )}
     </div>
-  )
+  );
 }

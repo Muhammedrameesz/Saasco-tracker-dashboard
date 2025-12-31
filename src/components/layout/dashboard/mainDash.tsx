@@ -118,7 +118,7 @@ function MainDashboard() {
               <div className="p-6 flex flex-col items-center">
                 <Icon className="w-10 h-10 mb-2 opacity-90" />
                 <h3 className="text-lg font-semibold mb-1 ">{s.title}</h3>
-                <h4 className="text-4xl font-bold drop-shadow  text-orange-600">
+                <h4 className="text-4xl font-bold drop-shadow  text-red-600">
                   {s.value}
                 </h4>
               </div>

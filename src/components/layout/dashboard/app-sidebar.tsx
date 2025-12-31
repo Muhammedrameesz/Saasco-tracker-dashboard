@@ -148,14 +148,14 @@ export function AppSidebar() {
                             className={clsx(
                               "flex items-center gap-3 px-4 py-2 rounded-lg text-base font-semibold transition-all duration-200 ",
                               isActive
-                                ? "bg-orange-100 text-orange-600 font-semibold"
+                                ? "bg-red-100 text-red-600 font-semibold"
                                 : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                             )}
                           >
                             <item.icon
                               className={clsx(
                                 "w-5 h-5 font-semibold",
-                                isActive ? "text-orange-600" : "text-gray-700"
+                                isActive ? "text-red-600" : "text-gray-700"
                               )}
                             />
                             <span>{item.title}</span>
@@ -181,13 +181,14 @@ export function AppSidebar() {
           Logout
         </button>
 
-        <div className=" px-6 py-3 border-t border-gray-200 bg-transparent">
-          <div className="text-center text-xs text-gray-500">
-            &copy; {new Date().getFullYear()}{" "}
-            <span className="font-medium text-gray-700">Magic Music Events</span>. All
-            rights reserved.
-          </div>
-        </div>
+       <div className="absolute bottom-0 left-0 w-full px-6 py-3 border-t border-gray-200 bg-transparent">
+  <div className="text-center text-xs text-gray-500">
+    &copy; {new Date().getFullYear()}{" "}
+    <span className="font-medium text-gray-700">Magic Music Events</span>. All
+    rights reserved.
+  </div>
+</div>
+
       </SidebarFooter>
     </Sidebar>
   );
