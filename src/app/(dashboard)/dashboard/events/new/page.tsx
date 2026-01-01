@@ -412,7 +412,7 @@ export default function NewEventPage() {
           ) : (
             <Button
               type="submit"
-              className=" cursor-pointer w-full md:w-auto rounded-xl px-6 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-semibold shadow-lg hover:brightness-110 active:scale-95 transition-all duration-300"
+              className=" cursor-pointer w-full md:w-auto rounded-xl px-6 py-2 bg-gradient-to-r from-red-500 to-yellow-500 text-white font-semibold shadow-lg hover:brightness-110 active:scale-95 transition-all duration-300"
             >
               Submit Event
             </Button>

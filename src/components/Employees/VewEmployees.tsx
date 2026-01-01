@@ -118,10 +118,10 @@ export default function EmployeesView() {
   return (
     <div className="p-6 min-h-screen bg-gray-50">
       <section className="bg-white py-8 px-6 md:px-12 border-b border-gray-200 rounded-xl shadow-sm mb-10 overflow-hidden relative">
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-orange-400 to-[#cb301b] rounded-full opacity-20"></div>
+        <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-red-400 to-[#cb301b] rounded-full opacity-20"></div>
         <div className="absolute -bottom-12 -left-12 w-40 h-40 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full opacity-10"></div>
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
-          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-[#cb301b] text-white shadow-lg">
+          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-[#cb301b] text-white shadow-lg">
             <FaIdCard className="text-2xl" />
           </div>
           <div className="flex-1 text-center md:text-left">
@@ -377,7 +377,7 @@ export default function EmployeesView() {
             disabled={currentPage === 1}
             className={clsx(
               "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
-              "bg-[#ff6600] text-white shadow-sm hover:bg-[#e65c00]",
+              "bg-[#de2211] text-white shadow-sm hover:bg-[#dc1f0d]",
               "disabled:opacity-40 disabled:cursor-not-allowed"
             )}
           >
@@ -397,8 +397,8 @@ export default function EmployeesView() {
                 className={clsx(
                   "mx-1 px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 border cursor-pointer",
                   currentPage === pageNum
-                    ? "bg-[#ff6600] text-white border-transparent shadow-sm"
-                    : "bg-white text-neutral-700 border-neutral-300 hover:border-[#ff6600] hover:text-[#ff6600]"
+                    ? "bg-[#de2211] text-white border-transparent shadow-sm"
+                    : "bg-white text-neutral-700 border-neutral-300 hover:border-[#de2211] hover:text-[#de2211]"
                 )}
               >
                 {pageNum}
@@ -417,7 +417,7 @@ export default function EmployeesView() {
             disabled={currentPage === totalPages}
             className={clsx(
               "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
-              "bg-[#ff6600] text-white shadow-sm hover:bg-[#e65c00]",
+              "bg-[#de2211] text-white shadow-sm hover:bg-[#dc1f0d]",
               "disabled:opacity-40 disabled:cursor-not-allowed"
             )}
           >

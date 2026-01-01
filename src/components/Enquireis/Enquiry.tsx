@@ -244,13 +244,13 @@ export default function Enquiry() {
   return (
     <div className="w-full min-h-screen p-4 sm:p-6 bg-gradient-to-br from-gray-50 via-white to-gray-100 font-sans">
       <section className="bg-white py-8 px-6 md:px-12 border-b border-gray-200 rounded-xl shadow-sm mb-10 overflow-hidden relative ">
-        {/* <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-orange-400 to-[#cb301b] rounded-full opacity-20"></div> */}
+        {/* <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-red-400 to-[#cb301b] rounded-full opacity-20"></div> */}
         <div className="absolute -bottom-12 -left-12 w-40 h-40 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full opacity-10"></div>
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
           {/* Icon and Heading */}
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-[#cb301b] text-white flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-[#cb301b] text-white flex items-center justify-center shadow-lg">
               <FaFileInvoice className="text-2xl" />
             </div>
             <div>
@@ -315,7 +315,7 @@ export default function Enquiry() {
             disabled={pendingcurrentPage === 1}
             className={clsx(
               "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
-              "bg-[#ff6600] text-white shadow-sm hover:bg-[#e65c00]",
+              "bg-[#de2211] text-white shadow-sm hover:bg-[#dc1f0d]",
               "disabled:opacity-40 disabled:cursor-not-allowed"
             )}
           >
@@ -333,8 +333,8 @@ export default function Enquiry() {
                 className={clsx(
                   "mx-1 px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 border cursor-pointer",
                   pendingcurrentPage === page
-                    ? "bg-[#ff6600] text-white border-transparent shadow-sm"
-                    : "bg-white text-neutral-700 border-neutral-300 hover:border-[#ff6600] hover:text-[#ff6600]"
+                    ? "bg-[#de2211] text-white border-transparent shadow-sm"
+                    : "bg-white text-neutral-700 border-neutral-300 hover:border-[#de2211] hover:text-[#de2211]"
                 )}
               >
                 {page}
@@ -347,7 +347,7 @@ export default function Enquiry() {
             disabled={pendingcurrentPage === pendingtotalPages}
             className={clsx(
               "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
-              "bg-[#ff6600] text-white shadow-sm hover:bg-[#e65c00]",
+              "bg-[#de2211] text-white shadow-sm hover:bg-[#dc1f0d]",
               "disabled:opacity-40 disabled:cursor-not-allowed"
             )}
           >

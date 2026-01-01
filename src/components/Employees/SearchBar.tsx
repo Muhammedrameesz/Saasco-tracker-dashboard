@@ -20,25 +20,25 @@ export default function SearchBar({
   return (
     <div
       className={cn(
-        "w-full md:max-w-md flex items-center gap-3 bg-gradient-to-br from-orange-50 via-white to-red-50 border border-orange-200 rounded-2xl px-4 py-3 shadow-md hover:shadow-lg transition-all duration-300",
+        "w-full md:max-w-md flex items-center gap-3 bg-gradient-to-br from-red-50 via-white to-red-50 border border-red-200 rounded-2xl px-4 py-3 shadow-md hover:shadow-lg transition-all duration-300",
         className
       )}
     >
-      <Search className="w-5 h-5 text-orange-500 shrink-0" />
+      <Search className="w-5 h-5 text-red-500 shrink-0" />
 
       <input
         type="text"
         value={searchValue}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="flex-1 text-sm bg-transparent border-none ring-0 focus:ring-0 active:border-0 focus:outline-none text-gray-700 placeholder:text-orange-400"
+        className="flex-1 text-sm bg-transparent border-none ring-0 focus:ring-0 active:border-0 focus:outline-none text-gray-700 placeholder:text-red-400"
       />
 
       {searchValue && (
         <button
           type="button"
           onClick={() => onChange("")}
-          className="text-orange-400 hover:text-red-600 transition-colors"
+          className="text-red-400 hover:text-red-600 transition-colors"
           aria-label="Clear search"
         >
           <X className="w-4 h-4" />

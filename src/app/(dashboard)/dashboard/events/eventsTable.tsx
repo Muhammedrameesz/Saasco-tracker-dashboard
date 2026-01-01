@@ -24,7 +24,7 @@ export default function EventTable() {
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       setSearch(searchInput.toLowerCase().trim());
-    }, 800);
+    }, 1600);
 
     return () => clearTimeout(delayDebounce);
   }, [searchInput]);
@@ -63,7 +63,7 @@ export default function EventTable() {
 
       <section className="flex flex-col md:flex-row items-center md:items-center justify-between w-full gap-4 px-6 py-4 bg-white  rounded-lg mt-6 mb-2">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-gradient-to-tr from-orange-500 to-red-500 rounded-full text-white shadow-md transform transition-transform hover:scale-110">
+          <div className="p-2 bg-gradient-to-tr from-red-500 to-red-500 rounded-full text-white shadow-md transform transition-transform hover:scale-110">
             <BsCalendar2EventFill className="w-4 h-4" />
           </div>
           <h2 className="text-xl font-semibold text-gray-800">
@@ -73,12 +73,12 @@ export default function EventTable() {
 
         <Link
           href="/dashboard/events/new"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-tr from-white via-orange-50 to-red-50 
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-tr from-white via-red-50 to-red-50 
              shadow-md hover:shadow-lg border border-red-100 transition-all duration-300 group active:scale-95"
         >
           <Plus
             size={18}
-            className="text-orange-500 group-hover:rotate-90 group-hover:scale-110 transition-transform duration-300"
+            className="text-red-500 group-hover:rotate-90 group-hover:scale-110 transition-transform duration-300"
           />
           <span className="text-sm font-semibold text-gray-800 group-hover:text-red-600 tracking-wide">
             Add Event
@@ -94,7 +94,7 @@ export default function EventTable() {
         <>
           <div className="overflow-x-auto border-b  border-gray-300 ">
             <table className="min-w-full table-auto divide-y divide-gray-200 overflow-auto">
-              <thead className="bg-gradient-to-r from-orange-50 to-red-50 text-gray-800 sticky top-0 rounded-t-md">
+              <thead className="bg-gradient-to-r from-red-50 to-red-50 text-gray-800 sticky top-0 rounded-t-md">
                 <tr>
                   {[
                     "#",
@@ -131,7 +131,7 @@ export default function EventTable() {
                     >
                       <td className="px-4 py-3 text-gray-600">{idx + 1}</td>
                       <td className="flex  items-center px-4 py-3 space-x-3">
-                        <div className="w-10 h-10 rounded-full overflow-hidden border border-orange-500 flex items-center justify-center bg-orange-50">
+                        <div className="w-10 h-10 rounded-full overflow-hidden border border-red-500 flex items-center justify-center bg-red-50">
                           {event.image ? (
                             <Image
                               src={event.image}
@@ -141,7 +141,7 @@ export default function EventTable() {
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <ImageOff className="text-orange-500 w-5 h-5" />
+                            <ImageOff className="text-red-500 w-5 h-5" />
                           )}
                         </div>
 

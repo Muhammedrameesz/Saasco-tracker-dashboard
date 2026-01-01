@@ -296,7 +296,7 @@ export default function EditEvents({ event }: EditEventsProps) {
               <Button
                 disabled={loading}
                 type="submit"
-                className="w-full bg-red-600 text-white hover:bg-orange-700 cursor-pointer mt-3"
+                className="w-full bg-red-600 text-white hover:bg-red-700 cursor-pointer mt-3"
               >
                 {loading ? "Updating" : "Update Event"}
               </Button>

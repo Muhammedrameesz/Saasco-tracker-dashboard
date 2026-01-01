@@ -15,13 +15,13 @@ export default function NoSearchMatch() {
         initial={{ scale: 0.6 }}
         animate={{ scale: [1.1, 1] }}
         transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
-        className="p-6 bg-gradient-to-tr from-pink-100 via-orange-50 to-yellow-100 rounded-full shadow-xl"
+        className="p-6 bg-gradient-to-tr from-pink-100 via-red-50 to-yellow-100 rounded-full shadow-xl"
       >
-        <BiSearchAlt2 className="text-orange-500 w-16 h-16 drop-shadow-lg" />
+        <BiSearchAlt2 className="text-red-500 w-16 h-16 drop-shadow-lg" />
       </motion.div>
 
       <motion.h1
-        className="text-2xl sm:text-3xl md:text-4xl mt-6 font-semibold text-center bg-clip-text text-transparent bg-gradient-to-r from-orange-400 via-red-500 to-pink-500"
+        className="text-2xl sm:text-3xl md:text-4xl mt-6 font-semibold text-center bg-clip-text text-transparent bg-gradient-to-r from-red-400 via-red-500 to-pink-500"
         initial={{ scale: 0.9 }}
         animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 200 }}

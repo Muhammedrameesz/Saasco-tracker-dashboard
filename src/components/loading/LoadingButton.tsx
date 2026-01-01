@@ -16,7 +16,7 @@ export default function LoadingButton({ text = "Submitting", loading = true }: L
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
       disabled={loading}
-      className="relative inline-flex items-center gap-3 rounded-xl px-6 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-semibold shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95 transition-all duration-300 disabled:cursor-not-allowed"
+      className="relative inline-flex items-center gap-3 rounded-xl px-6 py-2 bg-gradient-to-r from-red-500 to-yellow-500 text-white font-semibold shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95 transition-all duration-300 disabled:cursor-not-allowed"
     >
       {loading && (
         <motion.span

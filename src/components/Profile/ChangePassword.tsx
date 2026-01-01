@@ -162,7 +162,7 @@ export default function ChangePasswordDialog() {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-red-600 hover:bg-orange-700 text-white cursor-pointer"
+              className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
             >
               {isSubmitting ? "Saving..." : "Update Password"}
             </Button>
