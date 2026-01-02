@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus } from "lucide-react";
+import { Eye, EyeOff, Plus } from "lucide-react";
 import { baseUrl } from "@/api/const";
 
 /* ------------------ ZOD SCHEMA ------------------ */
@@ -78,7 +78,8 @@ export default function CreateAdminModal() {
     }
   };
 
-  /* ------------------ UI ------------------ */
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -159,11 +160,33 @@ export default function CreateAdminModal() {
           {/* PASSWORD */}
           <div className="space-y-1">
             <Label>Password</Label>
-            <Input
-              {...register("password")}
-              type="password"
-              placeholder="********"
-            />
+
+            <div className="relative">
+              <Input
+                {...register("password")}
+                type={showPassword ? "text" : "password"}
+                placeholder="********"
+                className="pr-10"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="
+        absolute right-2 top-1/2 -translate-y-1/2
+        text-slate-400 hover:text-slate-600
+        transition-colors
+      "
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
+            </div>
+
             {errors.password && (
               <p className="text-sm text-red-500">{errors.password.message}</p>
             )}

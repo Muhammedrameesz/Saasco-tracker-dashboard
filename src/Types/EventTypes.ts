@@ -26,6 +26,7 @@ export interface HiringAgreementRemarks {
 }
 
 export interface HiringAgreement {
+  haSequence?:number;
   carNumber: string;
 
   items: HiringAgreementItem[];

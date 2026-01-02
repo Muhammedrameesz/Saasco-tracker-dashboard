@@ -33,11 +33,12 @@ export default function HiringAgreementPDF({ event, agreement }: Props) {
 
           {/* Document Title */}
           <Text style={styles.title}>HIRING AGREEMENT</Text>
-          <Text style={styles.sub}>Event ID: {event._id}</Text>
+          <Text style={styles.sub}>HA Number: {agreement.haSequence}</Text>
         </View>
 
         {/* ================= BASIC DETAILS ================= */}
         <View style={styles.box}>
+          <InfoRow label="Event Name" value={event.eventName} />
           <InfoRow label="Client Name" value={event.clientName} />
           <InfoRow label="Contact" value={event.contactPersonNumber} />
 

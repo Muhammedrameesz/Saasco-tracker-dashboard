@@ -12,7 +12,7 @@ export default function Page() {
       <PageTitle
         title="Events"
         breadcrumbs={[
-          { title: "Dashboard", href: "/dashboard/events" },
+          { title: "Dashboard", href: "/dashboard" },
           { title: "Events" },
         ]}
       >

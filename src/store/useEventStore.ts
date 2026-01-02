@@ -8,6 +8,7 @@ import { UpdateEventStatusPayload } from "@/Types/EventStatusTypes";
 interface IEventStore {
   events: IEvent[];
   loading: boolean;
+  delLoading: boolean;
   error: string | null;
   currentPage: number | null;
   totalPage: number | null;
@@ -19,7 +20,7 @@ interface IEventStore {
   fetchEvents: (
     page?: number | null,
     search?: string,
-    status?: string,
+    status?: string
   ) => Promise<void>;
   addEvent: (event: FormData) => Promise<boolean>;
   deleteEvent: (eventId: string) => Promise<boolean>;
@@ -35,11 +36,13 @@ interface IEventStore {
     payload: UpdateEventStatusPayload,
     pickUpPersonId: string | null
   ) => Promise<boolean>;
+  deleteHiringAgreement: (eventId: string) => Promise<boolean>;
 }
 
 export const useEventStore = create<IEventStore>((set, get) => ({
   events: [],
   loading: false,
+  delLoading: false,
   error: null,
   currentPage: 1,
   totalPage: null,
@@ -182,7 +185,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
       );
 
       if (res.status === 200) {
-        console.log("single event [][][][][]",res.data.event)
+        console.log("single event [][][][][]", res.data.event);
         set({ selectedEvent: res.data.event });
       }
     } catch (error) {
@@ -292,6 +295,45 @@ export const useEventStore = create<IEventStore>((set, get) => ({
       return false;
     } finally {
       set({ loading: false });
+    }
+  },
+
+  deleteHiringAgreement: async (eventId: string) => {
+    set({ delLoading: true, error: null });
+
+    try {
+      const res = await axios.delete(
+        `${LocalUrl}/event/delete-hiring-agreement`,
+        {
+          data: { eventId }, // ✅ DELETE with body
+          withCredentials: true,
+        }
+      );
+
+      if (res.status === 200) {
+        toast.success(res.data?.message || "Hiring agreement deleted");
+
+        // ✅ Update selectedEvent locally
+        set((state) => ({
+          selectedEvent: state.selectedEvent
+            ? { ...state.selectedEvent, hiringAgreement: [] }
+            : null,
+        }));
+
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      const err = error as AxiosError<{ message?: string }>;
+      const message =
+        err.response?.data?.message || "Failed to delete hiring agreement";
+
+      toast.error(message);
+      set({ error: message });
+      return false;
+    } finally {
+      set({ delLoading: false });
     }
   },
 }));
