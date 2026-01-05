@@ -32,6 +32,8 @@ import {
   Save,
   X,
   PencilLine,
+  PencilLineIcon,
+  CheckCheck,
 } from "lucide-react";
 import { format } from "date-fns";
 import { useEventStore } from "@/store/useEventStore";
@@ -254,6 +256,23 @@ export default function HiringAgreementPage() {
     if (!selectedEvent) return;
   }, [selectedEvent, reset]);
 
+  const haSequence = selectedEvent?.hiringAgreement?.[0]?.haSequence;
+
+  const [haValue, setHaValue] = useState("");
+  const [isEditingHA, setIsEditingHA] = useState(true);
+
+  useEffect(() => {
+    if (haSequence !== undefined && haSequence !== null) {
+      // Existing agreement
+      setHaValue(String(haSequence));
+      setIsEditingHA(false);
+    } else {
+      // New agreement
+      setHaValue("");
+      setIsEditingHA(true);
+    }
+  }, [eventId, haSequence]);
+
   /* ================= SUBMIT ================= */
 
   const onSubmit = async (data: AgreementFormValues) => {
@@ -271,6 +290,7 @@ export default function HiringAgreementPage() {
       eventId,
       hiringAgreement: [
         {
+          haSequence: haValue || "",
           carNumber: data.carNumber,
           items: data.items,
           remarks: {
@@ -330,8 +350,6 @@ export default function HiringAgreementPage() {
     await deleteHiringAgreement(selectedEvent._id);
   };
 
-  const haSequence = selectedEvent?.hiringAgreement?.[0]?.haSequence;
-
   const displayedTotalAmount = totalAmount;
   // totalPerDay > 0
   //   ? autoTotalAmount
@@ -362,39 +380,66 @@ export default function HiringAgreementPage() {
                     Hiring Agreement
                   </h1>
 
-                  {haSequence && (
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="
-        inline-flex items-center gap-2
-        px-[14px] py-2
-        rounded-[10px]
-        border border-slate-200
-        bg-gradient-to-br from-slate-50 to-slate-100
-        shadow-[0_1px_2px_rgba(0,0,0,0.04)]
-        transition-all duration-200 ease-in-out
-        hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]
-        hover:-translate-y-[1px]
-      "
-                      >
-                        {/* Label */}
-                        <span className="text-[10px] font-semibold uppercase tracking-[0.8px] text-slate-500">
-                          HA Number
-                        </span>
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="
+      inline-flex items-center gap-2
+      px-[14px] py-2
+      rounded-[10px]
+      border border-slate-200
+      bg-gradient-to-br from-slate-50 to-slate-100
+      shadow-[0_1px_2px_rgba(0,0,0,0.04)]
+      transition-all duration-200 ease-in-out
+      hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]
+    "
+                    >
+                      {/* Label */}
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.8px] text-slate-500">
+                        HA Number
+                      </span>
 
-                        {/* Divider */}
-                        <div className="w-px h-4 bg-gradient-to-b from-transparent via-slate-300 to-transparent" />
+                      {/* Divider */}
+                      <div className="w-px h-4 bg-gradient-to-b from-transparent via-slate-300 to-transparent" />
 
-                        {/* Value */}
+                      {/* Input OR Value */}
+                      {isEditingHA ? (
+                        <input
+                          value={haValue}
+                          onChange={(e) => setHaValue(e.target.value)}
+                          placeholder="Enter HA number"
+                          className="
+          bg-transparent outline-none
+          text-[13px] font-mono font-bold text-slate-800
+          tracking-[0.3px] w-[140px]
+          border-b border-slate-300
+          focus:border-slate-600
+        "
+                        />
+                      ) : (
                         <code className="text-[13px] font-mono font-bold text-slate-800 tracking-[0.3px]">
-                          {haSequence}
+                          {haValue}
                         </code>
-                      </div>
+                      )}
 
-                      {/* Vertical Divider */}
-                      <span className="h-5 w-px bg-gradient-to-b from-transparent via-slate-200 to-transparent" />
+                      {/* Edit / Save */}
+                      <button
+                        type="button"
+                        onClick={() => setIsEditingHA((p) => !p)}
+                        className="ml-1 text-slate-400 hover:text-slate-600 transition cursor-pointer"
+                        title={
+                          isEditingHA ? "Save HA number" : "Edit HA number"
+                        }
+                      >
+                        {isEditingHA ? (
+                          <Check size={18} />
+                        ) : (
+                          <PencilLine size={18} />
+                        )}
+                      </button>
                     </div>
-                  )}
+
+                    <span className="h-5 w-px bg-gradient-to-b from-transparent via-slate-200 to-transparent" />
+                  </div>
                 </div>
 
                 {/* Right Side: Action Buttons */}
@@ -799,7 +844,7 @@ export default function HiringAgreementPage() {
   "
                               title="Edit total amount"
                             >
-                              <PencilLine className="w-4 h-4" />
+                              <PencilLine className="w-5 h-5" />
                             </button>
                           </div>
                         ) : (

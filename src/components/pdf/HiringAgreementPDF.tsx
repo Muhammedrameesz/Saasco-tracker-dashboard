@@ -137,7 +137,7 @@ export default function HiringAgreementPDF({ event, agreement }: Props) {
         </Section>
 
         {/* ================= FOOTER ================= */}
-        <View break>
+        {/* <View break> */}
         <View style={styles.footerWrapper}>
           {/* Red title bar */}
           <View style={styles.footerTitleBar}>
@@ -172,7 +172,7 @@ export default function HiringAgreementPDF({ event, agreement }: Props) {
             </View>
           </View>
         </View>
-        </View>
+        {/* </View> */}
       </Page>
     </Document>
   );

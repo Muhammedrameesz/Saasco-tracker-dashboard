@@ -66,7 +66,7 @@ export default function HiringAgreementNoPricingPDF({
               </View>
 
               {agreement.items.map((item: any, index: number) => (
-                <View key={index} style={styles.tableRow}>
+                <View key={index} style={styles.tableRow} wrap={false}>
                   <Text style={[styles.td, styles.colSno]}>{index + 1}</Text>
                   <Text style={[styles.td, styles.colQty]}>{item.qty}</Text>
                   <Text style={[styles.td, styles.colItem]}>{item.item}</Text>
@@ -370,13 +370,14 @@ const styles = StyleSheet.create({
     marginLeft: -160,
     marginTop: -160,
   },
-  footerWrapper: {
-    position: "absolute",
-    bottom: 20,
-    left: 36,
-    right: 36,
-    alignItems: "center",
-  },
+ footerWrapper: {
+  marginTop: 24,
+  paddingTop: 12,
+  borderTopWidth: 1,
+  borderTopColor: "#e5e7eb",
+  alignItems: "center",
+},
+
 
   /* RED TITLE BAR */
   footerTitleBar: {

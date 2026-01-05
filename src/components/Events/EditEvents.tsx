@@ -121,7 +121,9 @@ export default function EditEvents({ event }: EditEventsProps) {
       Object.entries(data).forEach(([key, value]) => {
         if (key === "image" && value) {
           formData.append("image", value as File);
-        } else {
+        } else if (value instanceof Date) {
+          formData.append(key, value.toISOString());
+        } else if (value !== undefined) {
           formData.append(key, value as string);
         }
       });
@@ -180,14 +182,14 @@ export default function EditEvents({ event }: EditEventsProps) {
                 ))}
               </section>
 
-              <section className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+              <section className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 z-50">
                 <div>
                   <Label>Start Date</Label>
                   <Controller
                     control={control}
                     name="date"
                     render={({ field }) => (
-                      <Popover>
+                      <Popover modal={false}>
                         <PopoverTrigger asChild>
                           <Button
                             variant="outline"
@@ -198,22 +200,25 @@ export default function EditEvents({ event }: EditEventsProps) {
                               : "Pick a date"}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent>
+                        <PopoverContent className="z-[9999]">
                           <Calendar
                             mode="single"
                             selected={field.value}
                             onSelect={field.onChange}
                             captionLayout="dropdown"
-                            fromYear={new Date().getFullYear()}
-                            toYear={new Date().getFullYear() + 50}
-                            disabled={(date) =>
-                              date < new Date(new Date().setHours(0, 0, 0, 0))
+                            fromYear={
+                              field.value
+                                ? field.value.getFullYear() - 50
+                                : new Date().getFullYear()
                             }
+                            toYear={new Date().getFullYear() + 50}
+                            disabled={false}
                           />
                         </PopoverContent>
                       </Popover>
                     )}
                   />
+
                   {errors.date && (
                     <p className="text-sm text-red-600">
                       {errors.date.message}
@@ -227,7 +232,7 @@ export default function EditEvents({ event }: EditEventsProps) {
                     control={control}
                     name="endDate"
                     render={({ field }) => (
-                      <Popover>
+                      <Popover modal={false}>
                         <PopoverTrigger asChild>
                           <Button
                             variant="outline"
@@ -238,22 +243,25 @@ export default function EditEvents({ event }: EditEventsProps) {
                               : "Pick a date"}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent>
+                        <PopoverContent className="z-[9999]">
                           <Calendar
                             mode="single"
                             selected={field.value}
                             onSelect={field.onChange}
                             captionLayout="dropdown"
-                            fromYear={new Date().getFullYear()}
-                            toYear={new Date().getFullYear() + 50}
-                            disabled={(date) =>
-                              date < new Date(new Date().setHours(0, 0, 0, 0))
+                            fromYear={
+                              field.value
+                                ? field.value.getFullYear() - 50
+                                : new Date().getFullYear()
                             }
+                            toYear={new Date().getFullYear() + 50}
+                            disabled={false}
                           />
                         </PopoverContent>
                       </Popover>
                     )}
                   />
+
                   {errors.endDate && (
                     <p className="text-sm text-red-600">
                       {errors.endDate.message}
