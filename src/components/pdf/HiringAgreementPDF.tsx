@@ -65,7 +65,7 @@ export default function HiringAgreementPDF({ event, agreement }: Props) {
               </View>
 
               {agreement.items.map((item: any, index: number) => (
-                <View key={index} style={styles.tableRow}>
+                <View key={index} style={styles.tableRow} wrap={false}>
                   <Text style={[styles.td, styles.colSno]}>{index + 1}</Text>
                   <Text style={[styles.td, styles.colQty]}>{item.qty}</Text>
                   <Text style={[styles.td, styles.colItem]}>{item.item}</Text>
@@ -137,6 +137,7 @@ export default function HiringAgreementPDF({ event, agreement }: Props) {
         </Section>
 
         {/* ================= FOOTER ================= */}
+        <View break>
         <View style={styles.footerWrapper}>
           {/* Red title bar */}
           <View style={styles.footerTitleBar}>
@@ -170,6 +171,7 @@ export default function HiringAgreementPDF({ event, agreement }: Props) {
               </Text>
             </View>
           </View>
+        </View>
         </View>
       </Page>
     </Document>
@@ -411,12 +413,13 @@ const styles = StyleSheet.create({
     marginTop: -160,
   },
   footerWrapper: {
-    position: "absolute",
-    bottom: 20,
-    left: 36,
-    right: 36,
-    alignItems: "center",
-  },
+  marginTop: 24,
+  paddingTop: 12,
+  borderTopWidth: 1,
+  borderTopColor: "#e5e7eb",
+  alignItems: "center",
+},
+
 
   /* RED TITLE BAR */
   footerTitleBar: {
