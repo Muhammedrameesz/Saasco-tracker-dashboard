@@ -23,6 +23,7 @@ import {
   FaFileInvoice,
   FaCheckCircle,
 } from "react-icons/fa";
+import { UserX } from "lucide-react";
 import { format } from "date-fns";
 import { EmployeeI } from "@/Types/EmployeeTypes";
 import clsx from "clsx";
@@ -81,13 +82,22 @@ const EnquirySkeletonLoader = () => (
 );
 
 const EmptyState = () => (
-  <div className="text-center py-20 px-6 bg-white rounded-2xl shadow-sm">
-    <FaCheckCircle className="mx-auto text-5xl text-green-500 mb-4" />
-    <h2 className="text-2xl font-bold text-gray-800">All Caught Up!</h2>
-    <p className="text-gray-500 mt-2">
-      There are no new pending enquiries to review.
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+    className="flex flex-col items-center justify-center py-20 text-center bg-gray-50 rounded-xl max-w-7xl mx-auto border border-gray-100 shadow-sm"
+  >
+    <div className="bg-primary/10 p-6 rounded-full mb-6">
+      <UserX className="h-12 w-12 text-primary" />
+    </div>
+    <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+      All Caught Up!
+    </h2>
+    <p className="text-muted-foreground text-sm max-w-md">
+      There are no new pending enquiries to review. Great job keeping it clean!
     </p>
-  </div>
+  </motion.div>
 );
 
 //================================================================//
@@ -126,7 +136,7 @@ const EnquiryCard = ({ employee, onUpdateStatus }: EnquiryCardProps) => {
           )}
 
           <div>
-            <h2 className="text-xl font-bold text-[#cb301b] flex items-center gap-2">
+            <h2 className="text-xl font-bold text-primary flex items-center gap-2">
               <FaUserTie /> {employee.name}
             </h2>
             <Badge variant="secondary">{employee.role}</Badge>
@@ -250,11 +260,11 @@ export default function Enquiry() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
           {/* Icon and Heading */}
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-[#cb301b] text-white flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/80 text-white flex items-center justify-center shadow-lg">
               <FaFileInvoice className="text-2xl" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-[#cb301b] tracking-tight">
+              <h1 className="text-3xl font-bold text-primary tracking-tight">
                 Pending Enquiries
               </h1>
               <p className="text-gray-600 text-base">
@@ -297,64 +307,66 @@ export default function Enquiry() {
         </>
       )}
 
-      <div className="mt-10 flex flex-col items-center gap-4">
-        <div className="flex gap-2 flex-wrap items-center justify-center">
-          <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-md shadow-sm mr-5">
-            Showing
-            <span className="font-semibold text-gray-800 ml-1">
-              {pendingcurrentPage}
-            </span>{" "}
-            of{" "}
-            <span className="font-semibold text-gray-800">
-              {pendingtotalPages}
+      {pendingtotalPages > 0 && (
+        <div className="mt-10 flex flex-col items-center gap-4">
+          <div className="flex gap-2 flex-wrap items-center justify-center">
+            <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-md shadow-sm mr-5">
+              Showing
+              <span className="font-semibold text-gray-800 ml-1">
+                {pendingcurrentPage}
+              </span>{" "}
+              of{" "}
+              <span className="font-semibold text-gray-800">
+                {pendingtotalPages}
+              </span>
             </span>
-          </span>
 
-          <button
-            onClick={() => handlePageClick(pendingcurrentPage - 1)}
-            disabled={pendingcurrentPage === 1}
-            className={clsx(
-              "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
-              "bg-[#de2211] text-white shadow-sm hover:bg-[#dc1f0d]",
-              "disabled:opacity-40 disabled:cursor-not-allowed"
-            )}
-          >
-            ← Previous
-          </button>
+            <button
+              onClick={() => handlePageClick(pendingcurrentPage - 1)}
+              disabled={pendingcurrentPage === 1}
+              className={clsx(
+                "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
+                "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
+                "disabled:opacity-40 disabled:cursor-not-allowed"
+              )}
+            >
+              ← Previous
+            </button>
 
-          {/* Page Numbers */}
-          {Array.from({ length: pendingtotalPages }, (_, i) => {
-            const page = i + 1;
-            return (
-              <button
-                key={page}
-                onClick={() => handlePageClick(page)}
-                disabled={pendingcurrentPage === page}
-                className={clsx(
-                  "mx-1 px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 border cursor-pointer",
-                  pendingcurrentPage === page
-                    ? "bg-[#de2211] text-white border-transparent shadow-sm"
-                    : "bg-white text-neutral-700 border-neutral-300 hover:border-[#de2211] hover:text-[#de2211]"
-                )}
-              >
-                {page}
-              </button>
-            );
-          })}
+            {/* Page Numbers */}
+            {Array.from({ length: pendingtotalPages }, (_, i) => {
+              const page = i + 1;
+              return (
+                <button
+                  key={page}
+                  onClick={() => handlePageClick(page)}
+                  disabled={pendingcurrentPage === page}
+                  className={clsx(
+                    "mx-1 px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 border cursor-pointer",
+                    pendingcurrentPage === page
+                      ? "bg-primary text-primary-foreground border-transparent shadow-sm"
+                      : "bg-white text-neutral-700 border-neutral-300 hover:border-primary hover:text-primary"
+                  )}
+                >
+                  {page}
+                </button>
+              );
+            })}
 
-          <button
-            onClick={() => handlePageClick(pendingcurrentPage + 1)}
-            disabled={pendingcurrentPage === pendingtotalPages}
-            className={clsx(
-              "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
-              "bg-[#de2211] text-white shadow-sm hover:bg-[#dc1f0d]",
-              "disabled:opacity-40 disabled:cursor-not-allowed"
-            )}
-          >
-            Next →
-          </button>
+            <button
+              onClick={() => handlePageClick(pendingcurrentPage + 1)}
+              disabled={pendingcurrentPage >= pendingtotalPages}
+              className={clsx(
+                "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
+                "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
+                "disabled:opacity-40 disabled:cursor-not-allowed"
+              )}
+            >
+              Next →
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -73,8 +73,8 @@ export default function EditAdminProfileDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <div className="flex  items-center bg-white gap-2 p-1 rounded-lg border border-red-200 hover:shadow-md transition cursor-pointer">
-          <div className="bg-red-100 text-red-600 p-3 rounded-full text-lg">
+        <div className="flex  items-center bg-white gap-2 p-1 rounded-lg border border-primary/20 hover:shadow-md transition cursor-pointer">
+          <div className="bg-primary/10 text-primary p-3 rounded-full text-lg">
             <FaEdit />
           </div>
           <h1 className="text-gray-800 font-medium text-sm">Edit Profile</h1>
@@ -83,7 +83,7 @@ export default function EditAdminProfileDialog() {
 
       <DialogContent className="max-w-md w-full">
         <DialogHeader>
-          <DialogTitle className="text-red-600 text-lg font-bold">
+          <DialogTitle className="text-primary text-lg font-bold">
             Edit Admin Profile
           </DialogTitle>
         </DialogHeader>
@@ -95,7 +95,7 @@ export default function EditAdminProfileDialog() {
             </label>
             <Input {...register("name")} />
             {errors.name && (
-              <p className="text-red-500 text-sm">{errors.name.message}</p>
+              <p className="text-destructive text-sm">{errors.name.message}</p>
             )}
           </div>
 
@@ -105,7 +105,7 @@ export default function EditAdminProfileDialog() {
             </label>
             <Input {...register("phone")} />
             {errors.phone && (
-              <p className="text-red-500 text-sm">{errors.phone.message}</p>
+              <p className="text-destructive text-sm">{errors.phone.message}</p>
             )}
           </div>
 
@@ -131,7 +131,7 @@ export default function EditAdminProfileDialog() {
             />
 
             {errors.role && (
-              <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>
+              <p className="text-destructive text-sm mt-1">{errors.role.message}</p>
             )}
           </div>
 
@@ -139,7 +139,7 @@ export default function EditAdminProfileDialog() {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
             >
               {isSubmitting ? "Saving..." : "Save Changes"}
             </Button>

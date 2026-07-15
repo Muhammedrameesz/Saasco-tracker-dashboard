@@ -40,9 +40,10 @@ import { motion } from "framer-motion";
 import { format } from "date-fns";
 import Image from "next/image";
 import axios, { AxiosError } from "axios";
-import { LocalUrl } from "@/api/const";
 import { toast } from "sonner";
 import clsx from "clsx";
+import PageTitle from "@/components/pageTitle/pageTitle";
+import { LocalUrl } from "@/api/const";
 
 const roles = ["Driver", "Manager", "Event-Organiser"];
 
@@ -186,18 +187,27 @@ export default function AddEmployeeForm() {
   };
 
   return (
+    <>
+      <PageTitle
+        title="New Employee"
+        breadcrumbs={[
+          { title: "Dashboard", href: "/dashboard" },
+          { title: "Employees", href: "/dashboard/employees" },
+          { title: "New Employee" },
+        ]}
+      />
     <motion.div
-      className="w-full mx-auto p-6 bg-white shadow-lg rounded-xl border"
+      className="w-full max-w-4xl mx-auto p-8 bg-white shadow-xl rounded-2xl border border-slate-100 mt-6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <h2 className="text-2xl font-bold text-green-700 mb-6 flex items-center gap-2">
-        <FaUserTie className="text-green-600" /> Employee Register
+      <h2 className="text-2xl font-bold text-primary mb-8 flex items-center gap-2">
+        <FaUserTie className="text-primary" /> Employee Register
       </h2>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
@@ -205,7 +215,7 @@ export default function AddEmployeeForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel> 
-                    <FaUser className="inline mr-2 text-green-600 mb-1" /> Name
+                    <FaUser className="inline mr-2 text-primary mb-1" /> Name
                   </FormLabel>
                   <FormControl>
                     <Input placeholder="John Doe" {...field} />
@@ -221,7 +231,7 @@ export default function AddEmployeeForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    <FaEnvelope className="inline mr-2 text-green-600 mb-1" /> Email
+                    <FaEnvelope className="inline mr-2 text-primary mb-1" /> Email
                   </FormLabel>
                   <FormControl>
                     <Input placeholder="john@example.com" {...field} />
@@ -237,7 +247,7 @@ export default function AddEmployeeForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    <FaPhone className="inline mr-2 mb-1 text-green-600 rotate-90" /> Phone
+                    <FaPhone className="inline mr-2 mb-1 text-primary rotate-90" /> Phone
                   </FormLabel>
                   <FormControl>
                     <Input placeholder="9876543210" {...field} />
@@ -253,7 +263,7 @@ export default function AddEmployeeForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    <FaUserTie className="inline mr-2 text-green-600 mb-1" /> Role
+                    <FaUserTie className="inline mr-2 text-primary mb-1" /> Role
                   </FormLabel>
                   <Select
                     onValueChange={field.onChange}
@@ -280,7 +290,7 @@ export default function AddEmployeeForm() {
 
           {watchRole === "Driver" && (
             <motion.div
-              className="flex flex-col  gap-6 mt-6 bg-green-50 p-6 rounded-lg"
+              className="flex flex-col gap-6 mt-8 bg-primary/5 p-8 rounded-xl border border-primary/10"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
@@ -290,14 +300,14 @@ export default function AddEmployeeForm() {
                 name="LicenceImage"
                 render={({}) => (
                   <FormItem className="flex-1">
-                    <FormLabel className="text-sm font-medium text-green-700">
-                      <FaIdCard className="inline mr-2 text-green-600" />{" "}
+                    <FormLabel className="text-sm font-medium text-primary">
+                      <FaIdCard className="inline mr-2 text-primary" />{" "}
                       Licence Image
                     </FormLabel>
                     <FormControl>
-                      <div className="relative border-2 border-dashed border-green-400 rounded-lg p-4 flex flex-col items-center justify-center text-center hover:bg-green-100 transition">
-                        <FaUpload className="text-green-600 mb-2 text-xl" />
-                        <span className="text-sm text-green-700">
+                      <div className="relative border-2 border-dashed border-primary/30 rounded-xl p-6 flex flex-col items-center justify-center text-center hover:bg-primary/10 transition cursor-pointer">
+                        <FaUpload className="text-primary mb-3 text-2xl" />
+                        <span className="text-sm text-primary font-medium">
                           Click to upload licence image
                         </span>
                         <Input
@@ -327,8 +337,8 @@ export default function AddEmployeeForm() {
                 name="LicenceValidityDate"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormLabel className="text-sm font-medium text-green-700">
-                      <FaCalendarAlt className="inline mr-2 text-green-600" />{" "}
+                    <FormLabel className="text-sm font-medium text-primary">
+                      <FaCalendarAlt className="inline mr-2 text-primary" />{" "}
                       Licence Validity
                     </FormLabel>
                     <Popover>
@@ -374,10 +384,10 @@ export default function AddEmployeeForm() {
               disabled={loading}
               type="submit"
               className={clsx(
-                "text-white w-full transition-all duration-300",
+                "text-primary-foreground w-full transition-all duration-300 py-3 text-base rounded-xl mt-4",
                 loading
-                  ? "bg-green-400 hover:bg-green-400 cursor-not-allowed animate-pulse"
-                  : "bg-green-600 hover:bg-green-700 cursor-pointer"
+                  ? "bg-primary/50 cursor-not-allowed animate-pulse"
+                  : "bg-primary hover:bg-primary/90 cursor-pointer shadow-md hover:shadow-lg"
               )}
             >
               {loading ? "Please wait..." : "Register"}
@@ -386,5 +396,6 @@ export default function AddEmployeeForm() {
         </form>
       </Form>
     </motion.div>
+    </>
   );
 }

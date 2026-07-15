@@ -84,8 +84,8 @@ export default function BannedRejectedEmployees() {
         transition={{ duration: 0.5 }}
         className="flex flex-col items-center justify-center py-20 text-center bg-gray-50 rounded-xl max-w-7xl mx-auto"
       >
-        <div className="bg-red-500/10 p-6 rounded-full mb-6">
-          <UserX className="h-12 w-12 text-red-500" />
+        <div className="bg-destructive/10 p-6 rounded-full mb-6">
+          <UserX className="h-12 w-12 text-destructive" />
         </div>
         <h2 className="text-2xl font-semibold text-gray-900 mb-2">
           No Banned or Rejected Employees
@@ -101,14 +101,14 @@ export default function BannedRejectedEmployees() {
   return (
     <div className="p-6 min-h-screen bg-gray-50">
       <section className="bg-white py-8 px-6 md:px-12 border-b border-gray-200 rounded-xl shadow-sm mb-10 overflow-hidden relative">
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-red-400 to-[#cb301b] rounded-full opacity-20"></div>
+        <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-primary/40 to-primary rounded-full opacity-20"></div>
         <div className="absolute -bottom-12 -left-12 w-40 h-40 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full opacity-10"></div>
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
-          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-[#cb301b] text-white shadow-lg">
+          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-primary/80 to-primary text-white shadow-lg">
             <FaIdCard className="text-2xl" />
           </div>
           <div className="flex-1 text-center md:text-left">
-            <h1 className="text-3xl font-bold text-[#cb301b] mb-2 tracking-tight">
+            <h1 className="text-3xl font-bold text-primary mb-2 tracking-tight">
               Banned & Rejected Employees
             </h1>
             <p className="text-gray-600 text-base max-w-xl mx-auto md:mx-0">
@@ -129,8 +129,8 @@ export default function BannedRejectedEmployees() {
             className={clsx(
               "rounded-xl relative border-t-8 p-5 bg-white/90 backdrop-blur shadow-md space-y-4",
               employee.status === "rejected"
-                ? "border-t-red-400"
-                : "border-t-green-400"
+                ? "border-t-destructive"
+                : "border-t-success"
             )}
           >
             {employee.role === "Driver" && employee.LicenceImage ? (
@@ -152,7 +152,7 @@ export default function BannedRejectedEmployees() {
             )}
 
             <div className="space-y-1">
-              <h2 className="text-xl font-semibold text-[#cb301b] flex items-center gap-2">
+              <h2 className="text-xl font-semibold text-primary flex items-center gap-2">
                 <FaUserTie /> {employee.name}
               </h2>
               <p className="text-sm text-gray-700 flex items-center">
@@ -168,9 +168,9 @@ export default function BannedRejectedEmployees() {
                 Status:{" "}
                 <span
                   className={clsx("capitalize font-semibold", {
-                    "text-green-600": employee.status === "approved",
-                    "text-yellow-600": employee.status === "pending",
-                    "text-red-600": employee.status === "rejected",
+                    "text-success": employee.status === "approved",
+                    "text-warning": employee.status === "pending",
+                    "text-destructive": employee.status === "rejected",
                   })}
                 >
                   {employee.status}
@@ -180,7 +180,7 @@ export default function BannedRejectedEmployees() {
                 Active:{" "}
                 <span
                   className={
-                    employee.isActive ? "text-green-600" : "text-red-600"
+                    employee.isActive ? "text-success" : "text-destructive"
                   }
                 >
                   {employee.isActive ? "Yes" : "No"}
@@ -209,15 +209,15 @@ export default function BannedRejectedEmployees() {
                   <Button
                     title="Delete Employee"
                     onClick={() => setOpenDialogId(employee._id)}
-                    className="bg-red-500/20 hover:bg-red-500/40 text-white w-fit transition-colors duration-200 cursor-pointer"
+                    className="bg-destructive/20 hover:bg-destructive/40 text-white w-fit transition-colors duration-200 cursor-pointer"
                   >
-                    <FaTrash className="mr-0 text-red-500" />
+                    <FaTrash className="mr-0 text-destructive" />
                   </Button>
                 </DialogTrigger>
 
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle className="text-red-500">
+                    <DialogTitle className="text-destructive">
                       Confirm Deletion
                     </DialogTitle>
                   </DialogHeader>
@@ -233,7 +233,7 @@ export default function BannedRejectedEmployees() {
                       Cancel
                     </Button>
                     <Button
-                      className="bg-red-500 hover:bg-red-600 text-white cursor-pointer"
+                      className="bg-destructive hover:bg-destructive/90 text-white cursor-pointer"
                       onClick={() => {
                         deleteEmployee(employee._id);
                         setOpenDialogId(null);
@@ -281,7 +281,7 @@ export default function BannedRejectedEmployees() {
                       onClick={() =>
                         handleStatusChange(employee._id, "rejected")
                       }
-                      className="bg-red-500 hover:bg-red-600 text-white cursor-pointer"
+                      className="bg-destructive hover:bg-destructive/90 text-white cursor-pointer"
                     >
                       <FaTimes/>
                       Reject
@@ -305,14 +305,14 @@ export default function BannedRejectedEmployees() {
                 className={clsx(
                   "text-white w-fit px-3 py-2 rounded-md cursor-pointer flex items-center justify-center gap-2 transition duration-200",
                   employee.isActive
-                    ? "bg-red-500/20 hover:bg-red-500/40"
+                    ? "bg-destructive/20 hover:bg-destructive/40"
                     : "bg-purple-500/20 hover:bg-purple-500/40"
                 )}
               >
                 {employee.isActive ? (
                   <>
-                    <FaBan className="text-red-500" />
-                    <span className="text-red-600 font-medium">Ban</span>
+                    <FaBan className="text-destructive" />
+                    <span className="text-destructive font-medium">Ban</span>
                   </>
                 ) : (
                   <>
@@ -324,8 +324,8 @@ export default function BannedRejectedEmployees() {
             </div>
 
             {employee.isActive === false && (
-              <div className="absolute right-[-20px] top-5 transform rotate-12 bg-red-100 border border-red-300 text-red-600 text-xs font-semibold px-3 py-1 rounded-md shadow-md flex items-center gap-1">
-                <FaBan className="text-red-500 text-sm" />
+              <div className="absolute right-[-20px] top-5 transform rotate-12 bg-destructive/10 border border-destructive/30 text-destructive text-xs font-semibold px-3 py-1 rounded-md shadow-md flex items-center gap-1">
+                <FaBan className="text-destructive text-sm" />
                 <span>Banned</span>
               </div>
             )}
@@ -352,7 +352,7 @@ export default function BannedRejectedEmployees() {
             disabled={currentPage === 1}
             className={clsx(
               "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
-              "bg-[#de2211] text-white shadow-sm hover:bg-[#dc1f0d]",
+              "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
               "disabled:opacity-40 disabled:cursor-not-allowed"
             )}
           >
@@ -372,8 +372,8 @@ export default function BannedRejectedEmployees() {
                 className={clsx(
                   "mx-1 px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 border cursor-pointer",
                   currentPage === pageNum
-                    ? "bg-[#de2211] text-white border-transparent shadow-sm"
-                    : "bg-white text-neutral-700 border-neutral-300 hover:border-[#de2211] hover:text-[#de2211]"
+                    ? "bg-primary text-primary-foreground border-transparent shadow-sm"
+                    : "bg-white text-neutral-700 border-neutral-300 hover:border-primary hover:text-primary"
                 )}
               >
                 {pageNum}
@@ -392,7 +392,7 @@ export default function BannedRejectedEmployees() {
             disabled={currentPage === totalPages}
             className={clsx(
               "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
-              "bg-[#de2211] text-white shadow-sm hover:bg-[#dc1f0d]",
+              "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
               "disabled:opacity-40 disabled:cursor-not-allowed"
             )}
           >

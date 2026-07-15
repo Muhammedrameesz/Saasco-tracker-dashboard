@@ -323,7 +323,7 @@ export default function HiringAgreementPage() {
   /* ================= UI ================= */
 
   if (!eventId) {
-    return <div className="p-6 text-red-600">Invalid Event ID</div>;
+    return <div className="p-6 text-destructive">Invalid Event ID</div>;
   }
 
   if (loading) return <Loading />;
@@ -333,10 +333,10 @@ export default function HiringAgreementPage() {
         className="
   flex items-center gap-2
   max-w-lg mx-auto
-  rounded-lg border border-red-200
-  bg-red-50 px-4 py-3
+  rounded-lg border border-destructive/20
+  bg-destructive/10 px-4 py-3
   text-sm md:text-base
-  font-medium text-red-600
+  font-medium text-destructive
 "
       >
         <AlertCircle className="h-5 w-5" />
@@ -455,7 +455,7 @@ export default function HiringAgreementPage() {
               </div>
 
               {/* Subtle Decorative Accent */}
-              <div className="absolute bottom-[-1px] left-6 w-24 h-0.5 bg-red-600"></div>
+              <div className="absolute bottom-[-1px] left-6 w-24 h-0.5 bg-primary"></div>
             </header>
 
             <div className="p-8 sm:p-10 space-y-10">
@@ -630,9 +630,9 @@ export default function HiringAgreementPage() {
                                 <button
                                   type="button"
                                   onClick={() => remove(index)}
-                                  className="group p-2 hover:bg-red-50 rounded-lg transition-colors"
+                                  className="group p-2 hover:bg-destructive/10 rounded-lg transition-colors"
                                 >
-                                  <Trash2 className="w-4 h-4 text-red-500 group-hover:text-red-600 transition-colors cursor-pointer" />
+                                  <Trash2 className="w-4 h-4 text-destructive group-hover:text-destructive/90 transition-colors cursor-pointer" />
                                 </button>
                               )}
                             </TableCell>

@@ -106,13 +106,13 @@ export default function ForgotEmailView({
             />
           </div>
           {errors.email && (
-            <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+            <p className="text-sm text-destructive mt-1">{errors.email.message}</p>
           )}
         </div>
 
         <Button
           type="submit"
-          className="w-full bg-gray-900 hover:bg-gray-900/90 transition duration-200 cursor-pointer"
+          className="w-full transition duration-200 cursor-pointer"
           disabled={loading}
         >
           {loading ? "Sending..." : "Reset Password"}
@@ -121,9 +121,9 @@ export default function ForgotEmailView({
         <button
           onClick={handleClick}
           type="button"
-          className="flex ml-auto cursor-pointer items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800 transition-all duration-300 group"
+          className="flex ml-auto cursor-pointer items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-all duration-300 group"
         >
-          <LogIn className="w-4 h-4 text-blue-500 group-hover:-translate-x-1 transition-transform duration-300" />
+          <LogIn className="w-4 h-4 text-primary group-hover:-translate-x-1 transition-transform duration-300" />
           <span>Back to Sign-in</span>
         </button>
       </form>

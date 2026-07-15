@@ -164,7 +164,7 @@ export default function EditEmployeeDialog({
       </DialogTrigger>
       <DialogContent className="max-w-md bg-white rounded-xl shadow-lg p-6 max-h-[90%] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-[#cb301b]">
+          <DialogTitle className="text-xl font-semibold text-primary">
             Edit Employee
           </DialogTitle>
         </DialogHeader>
@@ -174,21 +174,21 @@ export default function EditEmployeeDialog({
             <Label>Name</Label>
             <Input {...register("name")} placeholder="Enter name" />
             {errors.name && (
-              <p className="text-red-500 text-sm">{errors.name.message}</p>
+              <p className="text-destructive text-sm mt-1">{errors.name.message}</p>
             )}
           </div>
           <div>
             <Label>Email</Label>
             <Input {...register("email")} placeholder="Enter email" />
             {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
+              <p className="text-destructive text-sm mt-1">{errors.email.message}</p>
             )}
           </div>
           <div>
             <Label>Phone</Label>
             <Input {...register("phone")} placeholder="Enter phone" />
             {errors.phone && (
-              <p className="text-red-500 text-sm">{errors.phone.message}</p>
+              <p className="text-destructive text-sm mt-1">{errors.phone.message}</p>
             )}
           </div>
 
@@ -254,9 +254,9 @@ export default function EditEmployeeDialog({
             <Button
               disabled={loading}
               type="submit"
-              className="bg-[#cb301b] hover:bg-red-600 text-white cursor-pointer"
+              className="cursor-pointer transition duration-200"
             >
-              {loading ? "Please waite.." : "Update"}
+              {loading ? "Please wait.." : "Update"}
             </Button>
           </DialogFooter>
         </form>

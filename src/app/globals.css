@@ -93,6 +93,27 @@
   --radius-md:calc(var(--radius) - 2px);
   --radius-lg:var(--radius);
   --radius-xl:calc(var(--radius) + 4px);
+
+  /* Brand Palette */
+  --color-brand-50: #fde8e8;
+  --color-brand-100: #fbd5d5;
+  --color-brand-200: #f8b4b4;
+  --color-brand-300: #f98080;
+  --color-brand-400: #f05252;
+  --color-brand-500: #e74646;
+  --color-brand-600: #e7000b;
+  --color-brand-700: #c81e1e;
+  --color-brand-800: #9b1c1c;
+  --color-brand-900: #771d1d;
+  --color-brand-950: #3f0708;
+
+  /* Semantic Palettes (Standardized) */
+  --color-success: #10b981; /* emerald-500 */
+  --color-success-foreground: #ffffff;
+  --color-warning: #f59e0b; /* amber-500 */
+  --color-warning-foreground: #ffffff;
+  --color-info: #3b82f6; /* blue-500 */
+  --color-info-foreground: #ffffff;
 }
 
 :root {
@@ -103,8 +124,8 @@
   --card-foreground:oklch(0.145 0 0);
   --popover:oklch(1 0 0);
   --popover-foreground:oklch(0.145 0 0);
-  --primary:oklch(0.205 0 0);
-  --primary-foreground:oklch(0.985 0 0);
+  --primary: #e7000b;
+  --primary-foreground: #ffffff;
   --secondary:oklch(0.97 0 0);
   --secondary-foreground:oklch(0.205 0 0);
   --muted:oklch(0.97 0 0);
@@ -137,8 +158,8 @@
   --card-foreground:oklch(0.985 0 0);
   --popover:oklch(0.205 0 0);
   --popover-foreground:oklch(0.985 0 0);
-  --primary:oklch(0.922 0 0);
-  --primary-foreground:oklch(0.205 0 0);
+  --primary: #e7000b;
+  --primary-foreground: #ffffff;
   --secondary:oklch(0.269 0 0);
   --secondary-foreground:oklch(0.985 0 0);
   --muted:oklch(0.269 0 0);

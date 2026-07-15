@@ -6,6 +6,7 @@ import { useEventStore } from "@/store/useEventStore";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { FaUser, FaCalendarAlt, FaFileAlt, FaUserPlus } from "react-icons/fa";
+import PageTitle from "@/components/pageTitle/pageTitle";
 import EditEvents from "@/components/Events/EditEvents";
 import { EditPickUpPerson } from "@/components/PickUp/editPickUpPerson";
 import AddPickupPerson from "@/components/PickUp/AddPickupPerson";
@@ -40,18 +41,27 @@ export default function EventViewPage() {
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto ">
+    <>
+      <PageTitle
+        title="View Event"
+        breadcrumbs={[
+          { title: "Dashboard", href: "/dashboard" },
+          { title: "Events", href: "/dashboard/events" },
+          { title: "View Event" },
+        ]}
+      />
+      <div className="p-6 max-w-6xl mx-auto ">
       <section className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-5">
-        <div className="text-3xl font-bold text-red-600 flex items-center gap-2">
-          <span className="bg-red-100  p-3 rounded-full">
-            <BsCalendar2EventFill className="text-red-400  text-2xl" />
+        <div className="text-3xl font-bold text-primary flex items-center gap-2">
+          <span className="bg-primary/10  p-3 rounded-full">
+            <BsCalendar2EventFill className="text-primary  text-2xl" />
           </span>
           <h2>{capitalize(selectedEvent.eventName)}</h2>
         </div>
 
         {selectedEvent.status === "delayed" && selectedEvent.delayedReason && (
-          <div className="bg-red-50 text-red-700 border border-red-200 px-4 py-2 rounded-xl shadow-sm text-sm font-medium flex items-center gap-2">
-            <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-semibold">
+          <div className="bg-destructive/10 text-destructive border border-destructive/20 px-4 py-2 rounded-xl shadow-sm text-sm font-medium flex items-center gap-2">
+            <span className="bg-destructive/20 text-destructive px-2 py-1 rounded-full text-xs font-semibold">
               Delayed
             </span>
             {selectedEvent.delayedReason}
@@ -63,7 +73,7 @@ export default function EventViewPage() {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="bg-white shadow-xl rounded-3xl p-6 space-y-6 border border-red-100"
+        className="bg-white shadow-xl rounded-3xl p-6 space-y-6 border border-primary/20"
       >
         <div className="flex flex-col md:flex-row justify-evenly  mb-10">
           {/* Image */}
@@ -168,7 +178,7 @@ export default function EventViewPage() {
                     : selectedEvent.endDate.toISOString()
                   : ""
               )}
-              color="bg-red-200"
+              color="bg-brand-200"
             />
 
             <Info
@@ -181,7 +191,7 @@ export default function EventViewPage() {
               label="Status"
               icon={<FaFileAlt />}
               value={capitalize(selectedEvent.status)}
-              color="bg-red-200 "
+              color="bg-brand-200 "
             />
             {selectedEvent.dateStatus && (
               <Info
@@ -232,6 +242,7 @@ export default function EventViewPage() {
         <p className="text-center text-gray-400">No location data available.</p>
       )}
     </div>
+    </>
   );
 }
 

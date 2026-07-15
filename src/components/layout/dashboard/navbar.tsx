@@ -28,7 +28,7 @@ function Navbar() {
           {/* Left Section - Page Title */}
           <div className="flex items-center pl-0 md:pl-64">
             <div className="flex items-center gap-3">
-              <div className="hidden md:flex w-1 h-8 bg-gradient-to-b from-red-500 to-red-600 rounded-full" />
+              <div className="hidden md:flex w-1 h-8 bg-gradient-to-b from-brand-500 to-brand-700 rounded-full" />
               <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 bg-clip-text text-transparent">
                 Dashboard
               </h1>
@@ -47,12 +47,12 @@ function Navbar() {
                 transition-all duration-200
                 border border-transparent
                 hover:border-gray-200
-                focus:outline-none focus:ring-2 focus:ring-red-500/20
+                focus:outline-none focus:ring-2 focus:ring-primary/20
               "
             >
               {/* Avatar */}
-              <Avatar className="h-9 w-9 border-2 border-gray-200 ring-2 ring-transparent group-hover:ring-red-500/10 transition-all duration-200">
-                <AvatarFallback className="bg-gradient-to-br from-red-500 to-red-600 text-white text-sm font-semibold">
+              <Avatar className="h-9 w-9 border-2 border-gray-200 ring-2 ring-transparent group-hover:ring-primary/10 transition-all duration-200">
+                <AvatarFallback className="bg-gradient-to-br from-brand-500 to-brand-700 text-white text-sm font-semibold">
                   {getInitials(adminDatas?.name)}
                 </AvatarFallback>
               </Avatar>
@@ -94,7 +94,7 @@ function Navbar() {
                     <div className="p-4 bg-gradient-to-br from-gray-50 to-white border-b border-gray-100">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-12 w-12 border-2 border-white shadow-md">
-                          <AvatarFallback className="bg-gradient-to-br from-red-500 to-red-600 text-white font-semibold">
+                          <AvatarFallback className="bg-gradient-to-br from-brand-500 to-brand-700 text-white font-semibold">
                             {getInitials(adminDatas?.name)}
                           </AvatarFallback>
                         </Avatar>
@@ -125,9 +125,9 @@ function Navbar() {
                           group
                         "
                       >
-                        <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-red-50 transition-colors">
+                        <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                           <svg
-                            className="w-4 h-4 text-gray-600 group-hover:text-red-600"
+                            className="w-4 h-4 text-gray-600 group-hover:text-primary"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -153,13 +153,13 @@ function Navbar() {
                         className=" cursor-pointer
                           w-full flex items-center gap-3 
                           px-3 py-2.5 rounded-lg
-                          text-sm font-medium text-red-600
-                          hover:bg-red-50
+                          text-sm font-medium text-destructive
+                          hover:bg-destructive/10
                           transition-colors duration-150
                           group
                         "
                       >
-                        <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center group-hover:bg-red-100 transition-colors">
+                        <div className="w-8 h-8 rounded-lg bg-destructive/10 flex items-center justify-center group-hover:bg-destructive/20 transition-colors">
                           <LogOut className="w-4 h-4" />
                         </div>
                         <span>Sign Out</span>

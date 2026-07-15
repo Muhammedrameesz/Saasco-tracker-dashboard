@@ -18,16 +18,16 @@ export const LocationDisplay = ({ selectedEvent }: { selectedEvent: IEvent }) =>
       {/* Start Location */}
       {selectedEvent?.startLocation && (
         <motion.div
-          className="relative w-full flex-1 rounded-3xl p-6 bg-white bg-opacity-70 backdrop-blur-md border border-indigo-200 shadow-[0_4px_30px_rgba(0,0,0,0.05)]"
+          className="relative w-full flex-1 rounded-3xl p-6 bg-white bg-opacity-70 backdrop-blur-md border border-primary/20 shadow-[0_4px_30px_rgba(0,0,0,0.05)]"
           variants={sectionVariants}
           initial="hidden"
           animate="visible"
         >
-          <div className="absolute -top-6 -left-6 bg-gradient-to-br from-indigo-400 to-purple-500 p-3 rounded-full shadow-md">
+          <div className="absolute -top-6 -left-6 bg-gradient-to-br from-primary/80 to-primary p-3 rounded-full shadow-md">
             <FaMapMarkerAlt className="text-white text-xl" />
           </div>
 
-          <h2 className="text-xl font-bold text-indigo-700 mb-4 pl-2">
+          <h2 className="text-xl font-bold text-primary mb-4 pl-2">
             Start Location
           </h2>
           <div className="space-y-3 pl-3">
@@ -61,16 +61,16 @@ export const LocationDisplay = ({ selectedEvent }: { selectedEvent: IEvent }) =>
       {/* Destination Location */}
       {selectedEvent?.destinationLocation && (
         <motion.div
-          className="relative w-full flex-1 rounded-3xl p-6 bg-white bg-opacity-70 backdrop-blur-md border border-pink-200 shadow-[0_4px_30px_rgba(0,0,0,0.05)]"
+          className="relative w-full flex-1 rounded-3xl p-6 bg-white bg-opacity-70 backdrop-blur-md border border-brand-200 shadow-[0_4px_30px_rgba(0,0,0,0.05)]"
           variants={sectionVariants}
           initial="hidden"
           animate="visible"
         >
-          <div className="absolute -top-6 -left-6 bg-gradient-to-br from-pink-400 to-red-500 p-3 rounded-full shadow-md">
+          <div className="absolute -top-6 -left-6 bg-gradient-to-br from-brand-400 to-brand-600 p-3 rounded-full shadow-md">
             <FaMapMarkerAlt className="text-white text-xl" />
           </div>
 
-          <h2 className="text-xl font-bold text-pink-700 mb-4 pl-2">
+          <h2 className="text-xl font-bold text-brand-700 mb-4 pl-2">
             Destination
           </h2>
           <div className="space-y-3 pl-3">

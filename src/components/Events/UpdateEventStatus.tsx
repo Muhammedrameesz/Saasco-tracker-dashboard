@@ -77,7 +77,7 @@ export default function UpdateEventStatusDialog({
       <DialogTrigger asChild>
         <Button
           type="button"
-          className="cursor-pointer flex items-center gap-2 bg-purple-100 text-purple-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-200 transition"
+          className="cursor-pointer flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:bg-secondary/80 transition"
         >
           <GrEdit /> Update Status
         </Button>
@@ -146,7 +146,7 @@ export default function UpdateEventStatusDialog({
             disabled={loading}
             variant="default"
             onClick={handleStatusUpdate}
-            className="bg-red-500 hover:bg-red-600 text-white cursor-pointer"
+            className="w-full cursor-pointer transition duration-200"
           >
             {loading ? "Updating..." : "Update Status"}
           </Button>

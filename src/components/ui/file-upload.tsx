@@ -304,7 +304,7 @@ export const FileUploaderItem = forwardRef<
       <button
         type="button"
         className={cn(
-          "absolute text-red-500",
+          "absolute text-destructive",
           direction === "rtl" ? "top-1 left-1" : "top-1 right-1"
         )}
         onClick={() => removeFileFromSet(index)}
@@ -372,7 +372,7 @@ export const FileInput = forwardRef<
            dropzoneState.isDragAccept
              ? "border-green-500"
              : dropzoneState.isDragReject || isFileTooBig
-             ? "border-red-500"
+             ? "border-destructive"
              : "border-gray-300"
          }`,
           className

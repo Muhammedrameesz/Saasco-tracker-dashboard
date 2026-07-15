@@ -44,8 +44,8 @@ export default function AdminActionsPanel() {
         <ChangePasswordDialog/>
       {items.map((item, index) => {
         const content = (
-          <div className="flex items-center bg-white gap-2 p-1 rounded-lg border border-red-200   hover:shadow-md transition">
-            <div className="bg-red-100 text-red-600 p-3 rounded-full text-lg">
+          <div className="flex items-center bg-white gap-2 p-1 rounded-lg border border-primary/20 hover:shadow-md transition">
+            <div className="bg-primary/10 text-primary p-3 rounded-full text-lg">
               {item.icon}
             </div>
             <h1 className="text-gray-800 font-medium text-sm">{item.label}</h1>

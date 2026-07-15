@@ -87,15 +87,15 @@ export default function CreateAdminModal() {
           className=" cursor-pointer
       group relative inline-flex items-center gap-3 
       px-5 py-3 rounded-xl
-      bg-gradient-to-r from-red-600 to-red-700
+      bg-gradient-to-r from-brand-600 to-brand-700
       text-white font-semibold text-sm
-      border border-red-500/20
-      shadow-lg shadow-red-500/25
-      hover:shadow-xl hover:shadow-red-500/40
+      border border-primary/20
+      shadow-lg shadow-brand-500/25
+      hover:shadow-xl hover:shadow-brand-500/40
       hover:scale-[1.02]
       active:scale-[0.98]
       transition-all duration-200 ease-out
-      focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2
+      focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
       disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
     "
           type="button"
@@ -106,7 +106,7 @@ export default function CreateAdminModal() {
         flex items-center justify-center
         w-8 h-8 rounded-lg
         bg-white/95 
-        text-red-600
+        text-primary
         shadow-sm
         group-hover:bg-white
         group-hover:rotate-90
@@ -144,7 +144,7 @@ export default function CreateAdminModal() {
             <Label>Name</Label>
             <Input {...register("name")} placeholder="Admin name" />
             {errors.name && (
-              <p className="text-sm text-red-500">{errors.name.message}</p>
+              <p className="text-sm text-destructive">{errors.name.message}</p>
             )}
           </div>
 
@@ -153,7 +153,7 @@ export default function CreateAdminModal() {
             <Label>Email</Label>
             <Input {...register("email")} placeholder="admin@email.com" />
             {errors.email && (
-              <p className="text-sm text-red-500">{errors.email.message}</p>
+              <p className="text-sm text-destructive">{errors.email.message}</p>
             )}
           </div>
 
@@ -188,7 +188,7 @@ export default function CreateAdminModal() {
             </div>
 
             {errors.password && (
-              <p className="text-sm text-red-500">{errors.password.message}</p>
+              <p className="text-sm text-destructive">{errors.password.message}</p>
             )}
           </div>
 
@@ -216,7 +216,7 @@ export default function CreateAdminModal() {
               </SelectContent>
             </Select>
             {errors.role && (
-              <p className="text-sm text-red-500">{errors.role.message}</p>
+              <p className="text-sm text-destructive">{errors.role.message}</p>
             )}
           </div>
 

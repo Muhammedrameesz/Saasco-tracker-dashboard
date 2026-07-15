@@ -56,7 +56,7 @@ const Pagination = ({
         disabled={currentPage === 1}
         className={clsx(
           "px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
-          "bg-[#de2211] text-white shadow-sm hover:bg-[#dc1f0d]",
+          "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
           "disabled:opacity-40 disabled:cursor-not-allowed"
         )}
         onClick={() => handlePageClick(currentPage - 1)}
@@ -72,8 +72,8 @@ const Pagination = ({
           className={clsx(
             "mx-1 px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 border cursor-pointer",
             page === currentPage
-              ? "bg-[#de2211] text-white border-transparent shadow-sm"
-              : "bg-white text-neutral-700 border-neutral-300 hover:border-[#de2211] hover:text-[#de2211]",
+              ? "bg-primary text-primary-foreground border-transparent shadow-sm"
+              : "bg-white text-neutral-700 border-neutral-300 hover:border-primary hover:text-primary",
             page === "..." &&
               "cursor-default text-neutral-400 border-none hover:text-neutral-400"
           )}
@@ -88,7 +88,7 @@ const Pagination = ({
         disabled={currentPage === totalPages}
         className={clsx(
           "px-4 ml-1.5 py-2 rounded-md font-medium text-sm transition-all duration-200 cursor-pointer",
-          "bg-[#de2211] text-white shadow-sm hover:bg-[#dc1f0d]",
+          "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
           "disabled:opacity-40 disabled:cursor-not-allowed"
         )}
         onClick={() => handlePageClick(currentPage + 1)}

@@ -19,14 +19,14 @@ export default function AdminProfile() {
   return (
     <section>
       <section className="bg-white py-8 px-6 md:px-12 mt-7 border-b border-gray-200 rounded-xl shadow-sm  overflow-hidden relative mx-5">
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-red-400 to-[#cb301b] rounded-full opacity-20"></div>
-        <div className="absolute -bottom-12 -left-12 w-40 h-40 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full opacity-10"></div>
+        <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-brand-400 to-brand-700 rounded-full opacity-20"></div>
+        <div className="absolute -bottom-12 -left-12 w-40 h-40 bg-gradient-to-br from-primary/40 to-primary/20 rounded-full opacity-10"></div>
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
-          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-[#cb301b] text-white shadow-lg">
+          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-lg">
             <RiAdminFill className="text-2xl" />
           </div>
           <div className="flex-1 text-center md:text-left">
-            <h1 className="text-3xl font-bold text-[#cb301b] mb-2 tracking-tight">
+            <h1 className="text-3xl font-bold text-brand-700 mb-2 tracking-tight">
               Welcome, {adminDatas.name || "Admin"}
             </h1>
             <p className="text-gray-600 text-base max-w-xl mx-auto md:mx-0">
@@ -63,8 +63,8 @@ export default function AdminProfile() {
 
             {/* Info */}
             <div className="w-full space-y-5">
-              <h2 className="text-2xl md:text-3xl font-bold text-red-700 flex items-center gap-3">
-                <FaUserShield className="text-red-500" />
+              <h2 className="text-2xl md:text-3xl font-bold text-brand-700 flex items-center gap-3">
+                <FaUserShield className="text-brand-500" />
                 {adminDatas.name || "Admin Name"}
               </h2>
 
@@ -114,7 +114,7 @@ const InfoLine = ({ icon, label, value }: InfoLineProps) => (
     animate={{ opacity: 1, x: 0 }}
     transition={{ duration: 0.3 }}
   >
-    <div className="text-red-600 mt-1">{icon}</div>
+    <div className="text-brand-600 mt-1">{icon}</div>
     <div>
       <p className="text-xs font-semibold text-gray-500 uppercase">{label}</p>
       <p className="text-sm font-medium text-gray-800">{value || "N/A"}</p>

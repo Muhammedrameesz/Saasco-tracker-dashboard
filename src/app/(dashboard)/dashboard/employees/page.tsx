@@ -28,8 +28,8 @@ export default function page() {
           >
             <Link
               href="/dashboard/employees/new"
-              className="shadow-md flex items-center cursor-pointer py-2 gap-2  px-4 font-semibold rounded-md w-full  text-xs
-          hover:shadow-lg active:scale-95 transition-all duration-300 bg-white text-gray-800"
+              className="shadow-lg flex items-center cursor-pointer py-2.5 gap-2 px-5 font-semibold rounded-lg text-sm
+          hover:shadow-xl hover:bg-primary/90 active:scale-95 transition-all duration-300 bg-primary text-primary-foreground"
             >
               <Plus size={16} />
               Add Employees

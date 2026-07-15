@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/file-upload";
 import { CalendarIcon, ClipboardList, CloudUpload } from "lucide-react";
 import Image from "next/image";
+import PageTitle from "@/components/pageTitle/pageTitle";
 import { useEventStore } from "@/store/useEventStore";
 import { toast } from "sonner";
 // import Maps from "@/components/Map/Map";
@@ -158,11 +159,20 @@ export default function NewEventPage() {
   };
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-8">
-      <header className="bg-white rounded-xl shadow-md border border-red-100 px-6 py-5 mb-6">
+    <>
+      <PageTitle
+        title="New Event"
+        breadcrumbs={[
+          { title: "Dashboard", href: "/dashboard" },
+          { title: "Events", href: "/dashboard/events" },
+          { title: "New Event" },
+        ]}
+      />
+      <main className="max-w-5xl mx-auto px-4 py-8">
+      <header className="bg-white rounded-xl shadow-md border border-primary/20 px-6 py-5 mb-6">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded-full bg-red-100 text-red-600">
+            <div className="p-3 rounded-full bg-primary/10 text-primary">
               <ClipboardList className="w-6 h-6" />
             </div>
             <div>
@@ -244,7 +254,7 @@ export default function NewEventPage() {
                 )}
 
                 {errors[name] && (
-                  <p className="text-sm text-red-600 mt-1">
+                  <p className="text-sm text-destructive mt-1">
                     {errors[name]?.message as string}
                   </p>
                 )}
@@ -313,7 +323,7 @@ export default function NewEventPage() {
                 className="   "
               >
                 {errors.startLocation && (
-                  <p className="text-sm text-red-600 mt-1">
+                  <p className="text-sm text-destructive mt-1">
                     {errors.startLocation.message}
                   </p>
                 )}
@@ -353,12 +363,12 @@ export default function NewEventPage() {
                 className=""
               >
                 {errors.destinationLocation && (
-                  <p className="text-sm text-red-600 mt-1">
+                  <p className="text-sm text-destructive mt-1">
                     {errors.destinationLocation.message}
                   </p>
                 )}
                 <div className="flex items-center gap-2 mb-2">
-                  <FaMapMarkerAlt className="text-red-600" />
+                  <FaMapMarkerAlt className="text-primary" />
                   <Label className="text-lg font-semibold text-gray-700">
                     Destination Location
                   </Label>
@@ -412,7 +422,7 @@ export default function NewEventPage() {
           ) : (
             <Button
               type="submit"
-              className=" cursor-pointer w-full md:w-auto rounded-xl px-6 py-2 bg-gradient-to-r from-red-500 to-yellow-500 text-white font-semibold shadow-lg hover:brightness-110 active:scale-95 transition-all duration-300"
+              className=" cursor-pointer w-full md:w-auto rounded-xl px-6 py-2 bg-primary text-primary-foreground font-semibold shadow-lg hover:bg-primary/90 active:scale-95 transition-all duration-300"
             >
               Submit Event
             </Button>
@@ -420,5 +430,6 @@ export default function NewEventPage() {
         </div>
       </form>
     </main>
+    </>
   );
 }

@@ -151,7 +151,7 @@ export default function EditEvents({ event }: EditEventsProps) {
       <section className="w-full h-full flex justify-center">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button className="w-full flex cursor-pointer items-center gap-2 bg-blue-100 text-blue-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-200 transition">
+            <Button className="w-full flex cursor-pointer items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/20 transition">
               <FaEdit />
               Edit
             </Button>
@@ -171,7 +171,7 @@ export default function EditEvents({ event }: EditEventsProps) {
                     <Label htmlFor={field}>{label}</Label>
                     <Input id={field} {...register(field)} />
                     {errors[field as keyof EventFormData] && (
-                      <p className="text-sm text-red-600">
+                      <p className="text-sm text-destructive mt-1">
                         {
                           errors[field as keyof EventFormData]
                             ?.message as string
@@ -220,7 +220,7 @@ export default function EditEvents({ event }: EditEventsProps) {
                   />
 
                   {errors.date && (
-                    <p className="text-sm text-red-600">
+                    <p className="text-sm text-destructive mt-1">
                       {errors.date.message}
                     </p>
                   )}
@@ -263,7 +263,7 @@ export default function EditEvents({ event }: EditEventsProps) {
                   />
 
                   {errors.endDate && (
-                    <p className="text-sm text-red-600">
+                    <p className="text-sm text-destructive mt-1">
                       {errors.endDate.message}
                     </p>
                   )}
@@ -295,7 +295,7 @@ export default function EditEvents({ event }: EditEventsProps) {
                   className="w-full border rounded-md px-3 py-2"
                 />
                 {errors.description && (
-                  <p className="text-sm text-red-600">
+                  <p className="text-sm text-destructive mt-1">
                     {errors.description.message}
                   </p>
                 )}
@@ -304,7 +304,7 @@ export default function EditEvents({ event }: EditEventsProps) {
               <Button
                 disabled={loading}
                 type="submit"
-                className="w-full bg-red-600 text-white hover:bg-red-700 cursor-pointer mt-3"
+                className="w-full cursor-pointer mt-3 transition duration-200"
               >
                 {loading ? "Updating" : "Update Event"}
               </Button>

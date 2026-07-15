@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import { IoIosEyeOff, IoIosEye } from "react-icons/io";
 import { LocalUrl } from "@/api/const";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const ResetPasswordSchema = z
   .object({
@@ -80,7 +81,7 @@ export default function ResetPasswordView({
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br from-white  to-red-50">
+    <div className="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br from-white to-brand-50">
       <motion.div
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
@@ -113,8 +114,8 @@ export default function ResetPasswordView({
               type={showPassword ? "text" : "password"}
               placeholder="Enter new password"
               {...register("password")}
-              className={`w-full pl-4 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-customBlue bg-[#f9f9f9] ${
-                errors.password ? "border-red-500" : "border-gray-300"
+              className={`w-full pl-4 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-[#f9f9f9] ${
+                errors.password ? "border-destructive" : "border-border"
               }`}
             />
             {showPassword ? (
@@ -131,7 +132,7 @@ export default function ResetPasswordView({
               />
             )}
             {errors.password && (
-              <p className="text-sm text-red-500 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {errors.password.message}
               </p>
             )}
@@ -150,8 +151,8 @@ export default function ResetPasswordView({
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm new password"
               {...register("confirmPassword")}
-              className={`w-full pl-4 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-customBlue bg-[#f9f9f9] ${
-                errors.confirmPassword ? "border-red-500" : "border-gray-300"
+              className={`w-full pl-4 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-[#f9f9f9] ${
+                errors.confirmPassword ? "border-destructive" : "border-border"
               }`}
             />
             {showConfirmPassword ? (
@@ -168,28 +169,28 @@ export default function ResetPasswordView({
               />
             )}
             {errors.confirmPassword && (
-              <p className="text-sm text-red-500 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {errors.confirmPassword.message}
               </p>
             )}
           </div>
 
-          <button
+          <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-gray-900 text-white py-2 rounded-md font-semibold hover:bg-gray-800 transition duration-200 disabled:opacity-60 cursor-pointer"
+            className="w-full transition duration-200 disabled:opacity-60 cursor-pointer"
           >
             {loading ? "Resetting..." : "Reset Password"}
-          </button>
+          </Button>
         </form>
 
-        <p className="text-center text-xs mt-6 text-gray-500 px-8 pb-8">
+        <p className="text-center text-xs mt-6 text-muted-foreground px-8 pb-8">
           By resetting your password, you accept the{" "}
-          <span className="underline cursor-pointer text-blue-600 hover:text-blue-800">
+          <span className="underline cursor-pointer text-primary hover:text-primary/80">
             TrackingApp Terms of Service
           </span>{" "}
           and acknowledge our{" "}
-          <span className="underline cursor-pointer text-blue-600 hover:text-blue-800">
+          <span className="underline cursor-pointer text-primary hover:text-primary/80">
             Privacy Policy
           </span>
           .

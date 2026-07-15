@@ -26,7 +26,7 @@ export default function DownloadAgreementBtn2({
       {({ loading }) => (
         <button
          className="flex items-center gap-2 px-4 py-2 text-sm font-medium cursor-pointer
-                     bg-red-50 text-blue-950 rounded-lg hover:bg-red-100 border border-slate-400 hover:border-red-200  transform transition-colors "
+                     bg-primary/10 text-blue-950 rounded-lg hover:bg-primary/20 border border-slate-400 hover:border-primary/30  transform transition-colors "
         >
           <Download className="w-4 h-4" />
            {loading

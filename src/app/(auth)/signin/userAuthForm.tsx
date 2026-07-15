@@ -113,7 +113,7 @@ export function UserAuthForm({
                   {...register("email")}
                 />
                 {errors.email && (
-                  <p className="text-sm text-red-600 mt-1">
+                  <p className="text-sm text-destructive mt-1">
                     {errors.email.message}
                   </p>
                 )}
@@ -148,7 +148,7 @@ export function UserAuthForm({
                   )}
                 </button>
                 {errors.password && (
-                  <p className="text-sm text-red-600 mt-1">
+                  <p className="text-sm text-destructive mt-1">
                     {errors.password.message}
                   </p>
                 )}
@@ -157,7 +157,7 @@ export function UserAuthForm({
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full mt-2 flex items-center justify-center gap-2 cursor-pointer text-white bg-gray-900 hover:bg-gray-800 transition-colors duration-200"
+                className="w-full mt-2 flex items-center justify-center gap-2 cursor-pointer transition-colors duration-200"
               >
                 {loading && <Icons.spinner className="h-4 w-4 animate-spin" />}
                 Sign In
@@ -167,10 +167,10 @@ export function UserAuthForm({
                 <button
                   onClick={() => setOpenEmailView(true)}
                   type="button"
-                  className="inline-flex items-center cursor-pointer gap-2 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors duration-300 group"
+                  className="inline-flex items-center cursor-pointer gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors duration-300 group"
                   title="Recover your password"
                 >
-                  <FaLock className="text-blue-500 group-hover:rotate-12 transition-transform duration-300" />
+                  <FaLock className="text-primary group-hover:rotate-12 transition-transform duration-300" />
                   Forgot Password?
                 </button>
               </div>
