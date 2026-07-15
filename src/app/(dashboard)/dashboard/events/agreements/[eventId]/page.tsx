@@ -38,7 +38,7 @@ import {
 import { format } from "date-fns";
 import { useEventStore } from "@/store/useEventStore";
 import Loading from "@/components/loading/loading";
-import axios from "axios";
+import axiosInstance from "@/api/axios";
 import { baseUrl } from "@/api/const";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -122,7 +122,7 @@ export default function HiringAgreementPage() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${baseUrl}/products/get-products`);
+      const res = await axiosInstance.get(`${baseUrl}/products/get-products`);
       setProducts(res.data || []);
     } catch (err) {
       console.log("Failed to fetch products", err);
@@ -304,10 +304,9 @@ export default function HiringAgreementPage() {
     };
 
     try {
-      await axios.post(`${baseUrl}/event/hiring-agreement`, payload, {
+      await axiosInstance.post(`${baseUrl}/event/hiring-agreement`, payload, {
         headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
+        });
 
       toast.success("Hiring agreement saved successfully ✅");
 

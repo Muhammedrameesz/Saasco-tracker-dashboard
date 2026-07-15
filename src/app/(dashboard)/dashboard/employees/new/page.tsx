@@ -39,11 +39,11 @@ import {
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import Image from "next/image";
-import axios, { AxiosError } from "axios";
+import axiosInstance from "@/api/axios";
 import { toast } from "sonner";
 import clsx from "clsx";
 import PageTitle from "@/components/pageTitle/pageTitle";
-import { LocalUrl } from "@/api/const";
+
 
 const roles = ["Driver", "Manager", "Event-Organiser"];
 
@@ -139,15 +139,14 @@ export default function AddEmployeeForm() {
         formData.append("image", fileInput.files[0]);
       }
 
-      const res = await axios.post(
-        `${LocalUrl}/employees/add-employees`,
+      const res = await axiosInstance.post(
+        `/employees/add-employees`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-          withCredentials: true,
-        }
+          }
       );
 
       if (res.status === 200) {
@@ -164,7 +163,7 @@ export default function AddEmployeeForm() {
         setImageUrl("");
       }
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       const errorMessage = err.response?.data?.message;
       toast.error(errorMessage || "Something went wrong");
     } finally {
@@ -298,7 +297,7 @@ export default function AddEmployeeForm() {
               <FormField
                 control={form.control}
                 name="LicenceImage"
-                render={({}) => (
+                render={() => (
                   <FormItem className="flex-1">
                     <FormLabel className="text-sm font-medium text-primary">
                       <FaIdCard className="inline mr-2 text-primary" />{" "}

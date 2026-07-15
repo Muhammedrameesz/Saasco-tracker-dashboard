@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import axios, { AxiosError } from "axios";
-import { LocalUrl } from "@/api/const";
+import axiosInstance from "@/api/axios";
+
 import { EmployeeI } from "@/Types/EmployeeTypes";
 import { toast } from "sonner";
 
@@ -48,10 +48,9 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     set({ loading: true, error: null });
 
     try {
-      const res = await axios.get(`${LocalUrl}/employees/get-employees`, {
+      const res = await axiosInstance.get(`/employees/get-employees`, {
         params: { page, limit: LIMIT },
-        withCredentials: true,
-      });
+        });
 
       const { data, currentPage, totalPages, totalEmployees } = res.data;
 
@@ -63,7 +62,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         loading: false,
       });
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       toast.error(err.response?.data?.message || "Failed to fetch employees");
       set({ loading: false, error: err.message });
     }
@@ -73,11 +72,8 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
   deleteEmployee: async (id: string) => {
     set({ loading: true, error: null });
     try {
-      const deleted = await axios.delete(
-        `${LocalUrl}/employees/delete-employees/${id}`,
-        {
-          withCredentials: true,
-        }
+      const deleted = await axiosInstance.delete(
+        `/employees/delete-employees/${id}`
       );
 
       if (deleted.status === 200) {
@@ -85,7 +81,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         await get().fetchEmployees(get().currentPage);
       }
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       toast.error(err.response?.data?.message || "Failed to delete employee");
       set({ loading: false, error: err.message });
     }
@@ -94,10 +90,9 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
   updateEmployeeStatus: async (id: string, status: string) => {
     set({ loading: true, error: null });
     try {
-      const res = await axios.patch(
-        `${LocalUrl}/employees/update-status/${id}`,
-        { status },
-        { withCredentials: true }
+      const res = await axiosInstance.patch(
+        `/employees/update-status/${id}`,
+        { status }
       );
 
       if (res.status === 200) {
@@ -108,7 +103,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         toast.error("Unexpected response from server");
       }
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       toast.error(err.response?.data?.message || "Failed to update status");
       set({ error: err.message });
     } finally {
@@ -119,10 +114,9 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
   updateEmployeeActiveStatus: async (id, isActive) => {
     set({ loading: true, error: null });
     try {
-      const res = await axios.patch(
-        `${LocalUrl}/employees/updateActiveStatus/${id}`,
-        { isActive },
-        { withCredentials: true }
+      const res = await axiosInstance.patch(
+        `/employees/updateActiveStatus/${id}`,
+        { isActive }
       );
 
       if (res.status === 200) {
@@ -132,7 +126,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         );
       }
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       toast.error(
         err.response?.data?.message || "Failed to update active status"
       );
@@ -144,12 +138,9 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     set({ loading: true });
 
     try {
-      const res = await axios.put(
-        `${LocalUrl}/employees/edit-employees/${id}`,
-        updatedData,
-        {
-          withCredentials: true,
-        }
+      const res = await axiosInstance.put(
+        `/employees/edit-employees/${id}`,
+        updatedData
       );
 
       if (res.status === 200) {
@@ -163,7 +154,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         set({ loading: false });
       }
     } catch (err) {
-      const error = err as AxiosError<{ message?: string }>;
+      const error = err as any;
       toast.error(error.response?.data?.message || "Failed to update employee");
       set({ loading: false });
     }
@@ -177,11 +168,8 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
   getPendingEmployees: async (page = 1) => {
     set({ loading: true, error: null });
     try {
-      const res = await axios.get(
-        `${LocalUrl}/employees/pendingEmployees?page=${page}`,
-        {
-          withCredentials: true,
-        }
+      const res = await axiosInstance.get(
+        `/employees/pendingEmployees?page=${page}`
       );
 
       if (res.status === 200) {
@@ -193,7 +181,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         });
       }
     } catch (err) {
-      const error = err as AxiosError<{ message?: string }>;
+      const error = err as any;
       const errorMessage =
         error?.response?.data?.message || "Failed to fetch pending employees";
       set({ error: errorMessage });

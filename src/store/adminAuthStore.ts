@@ -1,7 +1,6 @@
 "use client";
 import { create } from "zustand";
-import axios, { AxiosError } from "axios";
-import { LocalUrl } from "@/api/const";
+import axiosInstance from "@/api/axios";
 import { toast } from "sonner";
 
 export type FormData = {
@@ -78,11 +77,12 @@ export const adminAuthStore = create<Store>((set, get) => ({
     set({ loading: true, error: null, message: "" });
 
     try {
-      const res = await axios.post(`${LocalUrl}/admin/admin-login`, data, {
-        withCredentials: true,
-      });
+      const res = await axiosInstance.post(`/admin/admin-login`, data);
 
       if (res.status === 200) {
+        if (res.data.token) {
+          localStorage.setItem("AdminToken", res.data.token);
+        }
         toast.success(res.data.message || "Login successful");
         set({ message: res.data.message || "Login successful" });
 
@@ -91,8 +91,8 @@ export const adminAuthStore = create<Store>((set, get) => ({
       } else {
         throw new Error("Invalid login response");
       }
-    } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+    } catch (error: any) {
+      const err = error;
       const errorMessage =
         err.response?.data?.message || err.message || "Login failed";
       set({ error: errorMessage });
@@ -107,13 +107,7 @@ export const adminAuthStore = create<Store>((set, get) => ({
     set({ loading: true, error: null });
 
     try {
-      const res = await axios.post(
-        `${LocalUrl}/admin/verify-admin`,
-        {},
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await axiosInstance.post(`/admin/verify-admin`, {});
 
       if (res.status === 200) {
         const successMessage =
@@ -137,7 +131,7 @@ export const adminAuthStore = create<Store>((set, get) => ({
         throw new Error("Invalid token response");
       }
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       const errorMessage =
         err.response?.data?.message ||
         err.message ||
@@ -158,11 +152,7 @@ export const adminAuthStore = create<Store>((set, get) => ({
 
   updateAdminProfile: async (data: adminData) => {
     try {
-      const res = await axios.put(
-        `${LocalUrl}/admin/edit-admin/${get().adminDatas.id}`,
-        data,
-        { withCredentials: true }
-      );
+      const res = await axiosInstance.put(`/admin/edit-admin/${get().adminDatas.id}`, data);
 
       if (res.status === 200) {
         set({
@@ -177,8 +167,8 @@ export const adminAuthStore = create<Store>((set, get) => ({
         });
         toast.success(res.data.message || "Profile updated successfully");
       }
-    } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+    } catch (error: any) {
+      const err = error;
       const errorMessage =
         err.response?.data?.message ||
         err.message ||
@@ -192,10 +182,9 @@ export const adminAuthStore = create<Store>((set, get) => ({
     newPassword,
   }: adminPasswordData) => {
     try {
-      const res = await axios.put(
-        `${LocalUrl}/admin/change-password/${get().adminDatas.id}`,
-        { currentPassword, newPassword },
-        { withCredentials: true }
+      const res = await axiosInstance.put(
+        `/admin/change-password/${get().adminDatas.id}`,
+        { currentPassword, newPassword }
       );
 
       if (res.status === 200) {
@@ -204,7 +193,7 @@ export const adminAuthStore = create<Store>((set, get) => ({
       }
       return false;
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       const errorMessage =
         err.response?.data?.message ||
         err.message ||
@@ -217,11 +206,7 @@ export const adminAuthStore = create<Store>((set, get) => ({
   logout: async () => {
      set({loading:true})
     try {
-      const response = await axios.post(
-        `${LocalUrl}/admin/logout`,
-        {},
-        { withCredentials: true }
-      );
+      const response = await axiosInstance.post(`/admin/logout`, {});
       toast.success(response.data?.message || "Logged out successfully");
       set({
         adminDatas: {
@@ -238,8 +223,8 @@ export const adminAuthStore = create<Store>((set, get) => ({
       localStorage.clear();
       sessionStorage.clear();
       return true;
-    } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+    } catch (error: any) {
+      const err = error;
       const message =
         err.response?.data?.message || err.message || "Logout failed";
       toast.error(`Error: ${message}`);

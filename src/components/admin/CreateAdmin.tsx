@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "@/api/axios";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -62,17 +62,13 @@ export default function CreateAdminModal() {
     try {
       setLoading(true);
 
-      await axios.post(`${baseUrl}/admin/admin-register`, data);
+      await axiosInstance.post(`${baseUrl}/admin/admin-register`, data);
 
       toast.success("Admin created successfully");
       reset();
       setOpen(false);
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || "Failed to create admin");
-      } else {
-        toast.error("Something went wrong. Please try again.");
-      }
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Failed to create admin");
     } finally {
       setLoading(false);
     }

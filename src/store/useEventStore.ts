@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import axios, { AxiosError } from "axios";
+import axiosInstance from "@/api/axios";
 import { IEvent, PickUpPersonI } from "@/Types/EventTypes";
-import { LocalUrl } from "@/api/const";
+
 import { toast } from "sonner";
 import { UpdateEventStatusPayload } from "@/Types/EventStatusTypes";
 
@@ -64,8 +64,8 @@ export const useEventStore = create<IEventStore>((set, get) => ({
       if (search.trim()) params.append("search", search.trim());
       if (status.trim()) params.append("status", status.trim());
 
-      const { data } = await axios.get(
-        `${LocalUrl}/event/get-events?${params.toString()}`
+      const { data } = await axiosInstance.get(
+        `/event/get-events?${params.toString()}`
       );
 
       set({
@@ -76,7 +76,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
         totalEvents: data.totalEvents,
       });
     } catch (error) {
-      const err = error as AxiosError;
+      const err = error as any;
       set({ error: err.message, loading: false });
     }
   },
@@ -84,12 +84,11 @@ export const useEventStore = create<IEventStore>((set, get) => ({
   addEvent: async (event) => {
     set({ loading: true, error: null });
     try {
-      const res = await axios.post(`${LocalUrl}/event/add-events`, event, {
+      const res = await axiosInstance.post(`/event/add-events`, event, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        withCredentials: true,
-      });
+        });
 
       if (res.status === 200) {
         toast.success(res.data.message || "Event added successfully");
@@ -98,7 +97,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
       }
       return false;
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       const errorMessage = err.response?.data?.message || "Failed to add event";
       set({ error: errorMessage });
       toast.error(errorMessage);
@@ -111,9 +110,8 @@ export const useEventStore = create<IEventStore>((set, get) => ({
   deleteEvent: async (eventId) => {
     set({ loading: true });
     try {
-      const res = await axios.delete(
-        `${LocalUrl}/event/delete-events/${eventId}`,
-        { withCredentials: true }
+      const res = await axiosInstance.delete(
+        `/event/delete-events/${eventId}`
       );
       if (res.status === 200) {
         set((state) => ({
@@ -127,7 +125,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
       }
       return false;
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       const errorMessage = err.response?.data?.message;
       set({ error: errorMessage });
       toast.error(errorMessage || "Failed to delete event");
@@ -141,15 +139,14 @@ export const useEventStore = create<IEventStore>((set, get) => ({
     set({ loading: true });
 
     try {
-      const res = await axios.put(
-        `${LocalUrl}/event/edit-events/${eventId}`,
+      const res = await axiosInstance.put(
+        `/event/edit-events/${eventId}`,
         updatedEvent,
         {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-          withCredentials: true,
-        }
+          }
       );
 
       if (res.status === 200) {
@@ -166,7 +163,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
         toast.success(res.data.message || "Event updated successfully 🎉");
       }
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       const errorMessage =
         err.response?.data?.message || "Failed to update event";
       set({ error: errorMessage });
@@ -179,9 +176,8 @@ export const useEventStore = create<IEventStore>((set, get) => ({
   getEventsById: async (eventId: string) => {
     set({ loading: true, error: null });
     try {
-      const res = await axios.get<{ event: IEvent }>(
-        `${LocalUrl}/event/get-events-by/${eventId}`,
-        { withCredentials: true }
+      const res = await axiosInstance.get<{ event: IEvent }>(
+        `/event/get-events-by/${eventId}`
       );
 
       if (res.status === 200) {
@@ -189,7 +185,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
         set({ selectedEvent: res.data.event });
       }
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       const errorMsg = err.response?.data?.message || "Something went wrong";
       set({ error: errorMsg, selectedEvent: null });
     } finally {
@@ -199,16 +195,15 @@ export const useEventStore = create<IEventStore>((set, get) => ({
 
   fetchPickUpPerson: async () => {
     try {
-      const res = await axios.get<{ data: PickUpPersonI[] }>(
-        `${LocalUrl}/employees/get-drivers`,
-        { withCredentials: true }
+      const res = await axiosInstance.get<{ data: PickUpPersonI[] }>(
+        `/employees/get-drivers`
       );
 
       set({
         pickUpPersonList: res.data.data, // ✅ renamed
       });
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       const errorMessage =
         err.response?.data?.message ||
         err.message ||
@@ -219,9 +214,8 @@ export const useEventStore = create<IEventStore>((set, get) => ({
 
   addPickUpPerson: async (eventId, pickupPersonId) => {
     try {
-      await axios.patch(
-        `${LocalUrl}/event/add-pickupPerson`,
-        {},
+      await axiosInstance.patch(
+        `/event/add-pickupPerson`,
         {
           params: {
             eventId,
@@ -232,7 +226,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
       toast.success("Pickup person Assigned successfully");
       await get().getEventsById(eventId);
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       const message =
         err.response?.data?.message || "Failed to assign pickup person";
       toast.error(message);
@@ -242,22 +236,20 @@ export const useEventStore = create<IEventStore>((set, get) => ({
 
   editPickUpPerson: async (eventId: string, newPickupPersonId: string) => {
     try {
-      await axios.patch(
-        `${LocalUrl}/event/edit-pickupPerson`,
-        {},
+      await axiosInstance.patch(
+        `/event/edit-pickupPerson`,
         {
           params: {
             eventId,
             newPickupPersonId,
           },
-          withCredentials: true,
-        }
+          }
       );
 
       toast.success("Pickup person updated successfully");
       await get().getEventsById(eventId);
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       const message =
         err.response?.data?.message || "Failed to update pickup person";
       toast.error(message);
@@ -268,8 +260,8 @@ export const useEventStore = create<IEventStore>((set, get) => ({
   updateEventStatus: async (eventId, payload, pickUpPersonId) => {
     set({ loading: true });
     try {
-      const res = await axios.patch(
-        `${LocalUrl}/event/eventsStatusUpdate`,
+      const res = await axiosInstance.patch(
+        `/event/eventsStatusUpdate`,
         {
           ...payload,
           events: [eventId],
@@ -302,12 +294,11 @@ export const useEventStore = create<IEventStore>((set, get) => ({
     set({ delLoading: true, error: null });
 
     try {
-      const res = await axios.delete(
-        `${LocalUrl}/event/delete-hiring-agreement`,
+      const res = await axiosInstance.delete(
+        `/event/delete-hiring-agreement`,
         {
           data: { eventId }, // ✅ DELETE with body
-          withCredentials: true,
-        }
+          }
       );
 
       if (res.status === 200) {
@@ -325,7 +316,7 @@ export const useEventStore = create<IEventStore>((set, get) => ({
 
       return false;
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       const message =
         err.response?.data?.message || "Failed to delete hiring agreement";
 

@@ -1,6 +1,6 @@
 "use client";
-import { LocalUrl } from "@/api/const";
-import axios, { AxiosError } from "axios";
+
+import axiosInstance from "@/api/axios";
 import { useEffect, useState } from "react";
 
 type EventCounts = {
@@ -27,10 +27,10 @@ export const useGetEventCounts = () => {
       try {
         const [pastRes, currentRes, upcomingRes, deliveredRes] =
           await Promise.all([
-            axios.get(`${LocalUrl}/event/getPastEvents?page=1&limit=1`),
-            axios.get(`${LocalUrl}/event/getCurrentEvents?page=1&limit=1`),
-            axios.get(`${LocalUrl}/event/getUpcomingEvents?page=1&limit=1`),
-            axios.get(`${LocalUrl}/event/getDeliveredEvents?page=1&limit=1`),
+            axiosInstance.get(`/event/getPastEvents?page=1&limit=1`),
+            axiosInstance.get(`/event/getCurrentEvents?page=1&limit=1`),
+            axiosInstance.get(`/event/getUpcomingEvents?page=1&limit=1`),
+            axiosInstance.get(`/event/getDeliveredEvents?page=1&limit=1`),
           ]);
 
         setCounts({
@@ -40,7 +40,7 @@ export const useGetEventCounts = () => {
           delivered: deliveredRes.data?.totalEvents || 0,
         });
       } catch (error) {
-        const err = error as AxiosError<{ message?: string }>;
+        const err = error as any;
         setError(
           err?.response?.data?.message || "Failed to fetch event counts"
         );

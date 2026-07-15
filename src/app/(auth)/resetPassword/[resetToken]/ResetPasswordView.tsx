@@ -4,12 +4,12 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import axios, { AxiosError } from "axios";
+import axiosInstance from "@/api/axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { IoIosEyeOff, IoIosEye } from "react-icons/io";
-import { LocalUrl } from "@/api/const";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -59,8 +59,8 @@ export default function ResetPasswordView({
   const onSubmit = async (data: ResetPasswordInput) => {
     setLoading(true);
     try {
-      const res = await axios.post(
-        `${LocalUrl}/admin/reset-password/${resetToken}`,
+      const res = await axiosInstance.post(
+        `/admin/reset-password/${resetToken}`,
         {
           password: data.password,
         }
@@ -72,7 +72,7 @@ export default function ResetPasswordView({
         router.push("/signin");
       }
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       const errorMessage =
         err?.response?.data?.message || "Something went wrong";
       toast.error(errorMessage);

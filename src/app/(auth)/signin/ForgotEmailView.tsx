@@ -8,8 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FaEnvelope } from "react-icons/fa";
 import { useState } from "react";
-import axios, { AxiosError } from "axios";
-import { LocalUrl } from "@/api/const";
+import axiosInstance from "@/api/axios";
+
 import { toast } from "sonner";
 import { LogIn } from "lucide-react";
 
@@ -47,7 +47,7 @@ export default function ForgotEmailView({
   const onSubmit = async (data: ForgotPasswordSchema) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${LocalUrl}/admin/forgot-password`, {
+      const res = await axiosInstance.post(`/admin/forgot-password`, {
         email: data.email,
       });
 
@@ -58,7 +58,7 @@ export default function ForgotEmailView({
         reset();
       }
     } catch (error) {
-      const err = error as AxiosError<{ message?: string }>;
+      const err = error as any;
       const errorMessage = err?.response?.data?.message;
       toast.error(errorMessage || "Something went wrong");
     }

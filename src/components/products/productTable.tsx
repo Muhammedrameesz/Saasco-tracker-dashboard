@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "@/api/axios";
 import {
   Table,
   TableHeader,
@@ -39,7 +39,7 @@ export default function ProductTable() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${baseUrl}/products/get-products`);
+      const res = await axiosInstance.get(`${baseUrl}/products/get-products`);
       setProducts(res.data || []);
     } catch (err) {
       console.log("Failed to fetch products", err);
@@ -59,7 +59,7 @@ export default function ProductTable() {
     try {
       if (editingProduct) {
         // Update
-        const res = await axios.put(
+        const res = await axiosInstance.put(
           `${baseUrl}/products/update-products/${editingProduct._id}`,
           {
             name: productName,
@@ -71,7 +71,7 @@ export default function ProductTable() {
         );
       } else {
         // Create
-        const res = await axios.post(`${baseUrl}/products/create-products`, {
+        const res = await axiosInstance.post(`${baseUrl}/products/create-products`, {
           name: productName,
         });
         setProducts((prev) => [...prev, res.data]);
@@ -87,7 +87,7 @@ export default function ProductTable() {
   /* ---------------- Delete ---------------- */
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`${baseUrl}/products/delete-products/${id}`);
+      await axiosInstance.delete(`${baseUrl}/products/delete-products/${id}`);
       setProducts((prev) => prev.filter((p) => p._id !== id));
     } catch (err) {
       console.error("Delete failed", err);
